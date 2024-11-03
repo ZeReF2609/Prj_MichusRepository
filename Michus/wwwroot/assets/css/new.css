@@ -1,0 +1,161 @@
+:root {
+    --space-grid-columns: 20px;
+    --overlapping-circle-width: 25px;
+
+    --green-light: #dfffea;
+    --red-light: #ffe7ec;
+}
+
+
+.checkbox-custom * {
+    box-sizing: inherit;
+}
+
+.checkbox-custom *:before,
+.checkbox-custom *:after {
+    box-sizing: inherit;
+}
+
+.nav-tab-style-2 .nav-tabs .nav-link {
+    color: var(--themecolor3);
+    border: none;
+    border-bottom: 3.5px solid transparent;
+    display: flex;
+    align-items: center;
+    opacity: .6;
+    font-weight: 600;
+    justify-content: center;
+    /* font-size: 17px; */
+
+    padding: .5rem .55rem;
+}
+
+
+.nav-tab-style-2 .nav-tabs .nav-link.active {
+    opacity: 1;
+    color: var(--themeblack);
+    /* font-weight: 600; */
+    border-bottom-color: var(--themecolor1hvr);
+    background: transparent !important;
+}
+
+.nav-tab-style-2 .nav-tabs .nav-link i {
+    font-size: 20px;
+}
+
+.bootstrap-select .dropdown-item,
+.bootstrap-select .custom-content {
+    display: flex;
+    align-items: center;
+}
+
+.bootstrap-select .dropdown-item {
+    padding: .25rem 1rem;
+}
+
+.filter-white {
+    filter: invert(100%) sepia(0%) saturate(3480%) hue-rotate(218deg) brightness(90%) contrast(108%);
+}
+
+.icon-md {
+    font-size: 20px;
+}
+
+.icon-lg {
+    font-size: 22px;
+}
+
+.overlapping-circles {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.overlapping-circle-item {
+    margin-left: calc((var(--overlapping-circle-width) + 17px) * -1);
+    transition: margin 0.3s ease, transform 0.3s ease, z-index 0.3s ease;
+    z-index: 1;
+    max-width: var(--overlapping-circle-width);
+    padding: 0;
+}
+
+.overlapping-circle-item img {
+    display: block;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    width: var(--overlapping-circle-width);
+}
+
+.overlapping-circles:hover .overlapping-circle-item {
+    margin-left: calc(calc(var(--overlapping-circle-width) * 2) * -1);
+}
+
+.overlapping-circles:hover .overlapping-circle-item:first-child,
+.overlapping-circle-item:first-child {
+    margin-left: calc(var(--overlapping-circle-width) * -1);
+}
+
+
+.overlapping-circle-item:hover {
+    z-index: 10;
+    transform: scale(1.25) translateY(-3px);
+}
+
+.text-sm {
+    font-size: var(--text-size-200);
+}
+
+.text-md {
+    font-size: var(--text-size-300);
+}
+
+.text-xl {
+    font-size: var(--text-size-500);
+}
+
+.tag-dcto-1 {
+    background: #f1a6ff;
+    background: #fbc3bc;
+}
+
+.tag-dcto-2 {
+    background: #4befde;
+    background: #ccdbfd;
+}
+
+
+.filter-gray {
+    filter: grayscale(1);
+}
+
+.flip {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+.opacity-hvr-1 {
+    opacity: .3;
+    transition: opacity .3s ease;
+}
+
+.opacity-hvr-1:hover {
+    opacity: 1;
+}
+
+.bg-green-light {
+    background-color: var(--green-light);
+}
+
+.bg-danger-light {
+    background-color: var(--red-light);
+}
+
+.icon-9xl {
+    font-size: 90px;
+}
+
+@media (max-width: 780px) {
+    .nav-tab-style-2 .nav-tabs .nav-link {
+        font-size: 14px;
+    } 
+}

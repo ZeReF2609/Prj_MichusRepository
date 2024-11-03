@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Inicio Sesión | Michus";
+    Layout = "~/Views/Shared/layout_blanco.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/favicon.ico">
+    <link rel="stylesheet" href="~/assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/plugins/boxicons-2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="~/assets/css/LoginStyle.css"> 
+</head>
+<body>
+    <div class="conteiner">
+        <div class="conteiner-form">
+            <form id="loginForm" method="post" autocomplete="off" class="sign-in">
+                <h2>Inicio Sesión</h2>
+                <div class="social-networks">
+                    <a href="https://www.instagram.com/michus.cyb?igsh=MWsydTlxM2oyeWxyZQ%3D%3D">
+                        <ion-icon name="logo-instagram"></ion-icon>
+                    </a>
+                    <a href="#">
+                        <ion-icon name="logo-tiktok"></ion-icon>
+                    </a>
+                </div>
+                <span>Use su correo y contraseña</span>
+                <div class="conteiner-input ghost-input-group mb-2">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <input type="text" name="email" placeholder="Correo electrónico" minlength="3" maxlength="100" autocomplete="username" required class="form-control">
+                </div>
+                <div class="conteiner-input ghost-input-group mb-2">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input type="password" name="password" placeholder="Contraseña" minlength="3" maxlength="25" autocomplete="current-password" required class="form-control">
+                </div>
+                <div class="form-msj text-danger">
+                </div>
+                <button type="submit" class="button">Iniciar Sesión</button>
+            </form>
+        </div>
+        <div class="conteiner-welcome">
+            <div class="welcome">
+                <h3>Bienvenido</h3>
+                <img src="~/assets/img/mishus.png" alt="Logo Michus">
+                <p>Disfruta de nuestro entorno</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/assets/js/LoginFuction.js"></script>
+    <script src="~/assets/js/jquery-3.5.1.min.js"></script>
+    <script src="~/assets/bootstrap/popper.min.js"></script>
+    <script src="~/assets/bootstrap/bootstrap.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
