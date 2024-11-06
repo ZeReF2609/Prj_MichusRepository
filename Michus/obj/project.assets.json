@@ -8655,19 +8655,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\HP\\.nuget\\packages\\": {}
+    "C:\\Users\\USER\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Michus\\Michus\\Michus\\Michus.csproj",
+      "projectUniqueName": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Michus.csproj",
       "projectName": "Michus",
-      "projectPath": "C:\\Michus\\Michus\\Michus\\Michus.csproj",
-      "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-      "outputPath": "C:\\Michus\\Michus\\Michus\\obj\\",
+      "projectPath": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Michus.csproj",
+      "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
+      "outputPath": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
