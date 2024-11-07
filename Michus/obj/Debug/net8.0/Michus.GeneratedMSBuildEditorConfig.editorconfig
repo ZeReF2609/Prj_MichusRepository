@@ -26,6 +26,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\josej\Documents\CIBERTEC\CICLO6\PROYECTO_INTEGRADOR\PROYECTOS\COMPARTIDO\Prj_MichusRepository\Michus
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Descuentos/listadescuentos.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVzY3VlbnRvc1xsaXN0YWRlc2N1ZW50b3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Login/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
