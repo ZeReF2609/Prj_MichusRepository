@@ -1,0 +1,187 @@
+﻿@model IEnumerable<Michus.Models.DescuentoCab>
+
+@{
+    ViewData["Title"] = "Lista de Descuentos";
+}
+
+<h1 class="ml-3">Lista de Descuentos</h1>
+
+<p class="ml-3">
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Crear Nuevo
+    </a>
+</p>
+
+<div class="table-container">
+    <table id="descuentosTable" class="custom-table table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdDescuento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FechaInicio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FechaFin)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrecioDescuento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TipoDescuento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Estado)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TiSitu)
+                </th>
+                <th>
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdDescuento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaInicio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaFin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrecioDescuento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TipoDescuento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estado)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TiSitu)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" class="btn btn-info"><i class="fas fa-edit"></i></a>
+                        <a asp-action="Details" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                        <a asp-action="Delete" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    a {
+        text-decoration: none;
+    }
+
+    .table-container {
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #2c2f3d;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #1e242d;
+        color: #fff;
+    }
+
+        .custom-table th, .custom-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #3c414d;
+        }
+
+        .custom-table th {
+            background-color: #3c414d;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .custom-table td {
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .custom-table tr:nth-child(even) {
+            background-color: #2c323d;
+        }
+
+        .custom-table tr:hover {
+            background-color: #3a3e47 !important;
+        }
+
+        .custom-table td:last-child, .custom-table th:last-child {
+            text-align: center;
+        }
+
+        .custom-table td {
+            text-align: center;
+        }
+
+    .btn {
+        margin: 0 5px;
+        padding: 6px 12px;
+        text-align: center;
+    }
+
+    .btn-info {
+        
+        color: white;
+        border: none;
+    }
+
+        .btn-info:hover {
+            
+            color: white;
+        }
+
+    .btn-danger {
+        color: white;
+        border: none;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            color: white;
+        }
+
+    table.dataTable tbody tr:hover td {
+        background-color: transparent !important;
+    }
+
+    table.dataTable tbody tr.selected, table.dataTable tbody tr.selected td {
+        background-color: #2c323d !important;
+    }
+
+    .custom-table tr:nth-child(odd) {
+        background-color: #1e242d;
+    }
+
+    .custom-table tr:nth-child(even) {
+        background-color: #2c323d;
+    }
+
+    .custom-table td, .custom-table th {
+        background-color: transparent !important;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#descuentosTable').DataTable();
+    });
+</script>
