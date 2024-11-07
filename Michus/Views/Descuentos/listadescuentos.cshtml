@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Michus.Models.DescuentoCab>
+﻿@model IEnumerable<Michus.Models.pa_lista_descuento>
 
 @{
     ViewData["Title"] = "Lista de Descuentos";
@@ -16,61 +16,68 @@
     <table id="descuentosTable" class="custom-table table table-bordered">
         <thead>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.IdDescuento)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FechaInicio)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FechaFin)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PrecioDescuento)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TipoDescuento)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Estado)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TiSitu)
-                </th>
-                <th>
-                    Acciones
-                </th>
+                <th>@Html.DisplayNameFor(model => model.IdDescuento)</th>
+                <th>@Html.DisplayNameFor(model => model.IdPromocion)</th>
+                <th>@Html.DisplayNameFor(model => model.IdEvento)</th>
+                <th>@Html.DisplayNameFor(model => model.FechaInicio)</th>
+                <th>@Html.DisplayNameFor(model => model.FechaFin)</th>
+                <th>@Html.DisplayNameFor(model => model.PrecioDescuento)</th>
+                <th>@Html.DisplayNameFor(model => model.TipoDescuento)</th>
+                <th>@Html.DisplayNameFor(model => model.IdCategoria)</th>
+                <th>@Html.DisplayNameFor(model => model.IdArticulos)</th>
+                <th>@Html.DisplayNameFor(model => model.Estado)</th>
+                <th>@Html.DisplayNameFor(model => model.TiSitu)</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
+                    <!-- Comprobación para IdDescuento -->
+                    <td>@(string.IsNullOrEmpty(item.IdDescuento) ? "NO APLICA" : item.IdDescuento)</td>
+
+                    <!-- Comprobación para IdPromocion -->
+                    <td>@(item.IdPromocion == null ? "NO APLICA" : item.IdPromocion.ToString())</td>
+
+                    <!-- Comprobación para IdEvento -->
+                    <td>@(string.IsNullOrEmpty(item.IdEvento) ? "NO APLICA" : item.IdEvento)</td>
+
+                    <!-- Comprobación para FechaInicio -->
+                    <td>@(item.FechaInicio == DateTime.MinValue ? "NO APLICA" : item.FechaInicio.ToString("dd/MM/yyyy"))</td>
+
+                    <!-- Comprobación para FechaFin -->
+                    <td>@(item.FechaFin == DateTime.MinValue ? "NO APLICA" : item.FechaFin.ToString("dd/MM/yyyy"))</td>
+
+                    <!-- Comprobación para PrecioDescuento -->
+                    <td>@(item.PrecioDescuento == 0 ? "NO APLICA" : item.PrecioDescuento.ToString("C"))</td>
+
+                    <!-- Comprobación para TipoDescuento -->
+                    <td>@(item.TipoDescuento == 0 ? "NO APLICA" : item.TipoDescuento.ToString())</td>
+
+                    <!-- Comprobación para IdCategoria -->
+                    <td>@(string.IsNullOrEmpty(item.IdCategoria) ? "NO APLICA" : item.IdCategoria)</td>
+
+                    <!-- Comprobación para IdArticulos -->
+                    <td>@(item.IdArticulos == null || !item.IdArticulos.Any() ? "NO APLICA" : string.Join(", ", item.IdArticulos))</td>
+
+                    <!-- Comprobación para Estado -->
+                    <td>@(item.Estado == 0 ? "NO APLICA" : item.Estado.ToString())</td>
+
+                    <!-- Comprobación para TiSitu -->
+                    <td>@(string.IsNullOrEmpty(item.TiSitu) ? "NO APLICA" : item.TiSitu)</td>
+
+                    <!-- Acciones -->
                     <td>
-                        @Html.DisplayFor(modelItem => item.IdDescuento)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FechaInicio)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FechaFin)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PrecioDescuento)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TipoDescuento)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Estado)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TiSitu)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" class="btn btn-info"><i class="fas fa-edit"></i></a>
-                        <a asp-action="Details" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                        <a asp-action="Delete" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                        <a asp-action="Edit" class="btn btn-warning">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a asp-action="Details" class="btn btn-info">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a asp-action="Delete" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este descuento?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
                     </td>
                 </tr>
             }
@@ -79,109 +86,17 @@
 </div>
 
 <style>
-    a {
-        text-decoration: none;
-    }
-
-    .table-container {
-        margin: 20px auto;
-        padding: 20px;
-        background-color: #2c2f3d;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .custom-table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: #1e242d;
-        color: #fff;
-    }
-
-        .custom-table th, .custom-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border: 1px solid #3c414d;
-        }
-
-        .custom-table th {
-            background-color: #3c414d;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .custom-table td {
-            font-size: 14px;
-            color: #bbb;
-        }
-
-        .custom-table tr:nth-child(even) {
-            background-color: #2c323d;
-        }
-
-        .custom-table tr:hover {
-            background-color: #3a3e47 !important;
-        }
-
-        .custom-table td:last-child, .custom-table th:last-child {
-            text-align: center;
-        }
-
-        .custom-table td {
-            text-align: center;
-        }
-
-    .btn {
-        margin: 0 5px;
-        padding: 6px 12px;
-        text-align: center;
-    }
-
-    .btn-info {
-        
-        color: white;
-        border: none;
-    }
-
-        .btn-info:hover {
-            
-            color: white;
-        }
-
-    .btn-danger {
-        color: white;
-        border: none;
-    }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-            color: white;
-        }
-
-    table.dataTable tbody tr:hover td {
-        background-color: transparent !important;
-    }
-
-    table.dataTable tbody tr.selected, table.dataTable tbody tr.selected td {
-        background-color: #2c323d !important;
-    }
-
-    .custom-table tr:nth-child(odd) {
-        background-color: #1e242d;
-    }
-
-    .custom-table tr:nth-child(even) {
-        background-color: #2c323d;
-    }
-
-    .custom-table td, .custom-table th {
-        background-color: transparent !important;
-    }
+    /* Aquí puedes agregar estilos adicionales si es necesario */
 </style>
 
 <script>
     $(document).ready(function () {
-        $('#descuentosTable').DataTable();
+        $('#descuentosTable').DataTable({
+            language: {
+                lengthMenu: "<span style='color: white; margin-left:10px'>Mostrar</span> _MENU_",
+                search: "",
+                searchPlaceholder: "Buscar..."
+            }
+        });
     });
 </script>
