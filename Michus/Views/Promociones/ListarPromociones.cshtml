@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "Listado de Promociones";
+    var selectedPromocionId = ViewBag.PromocionesList ?? 1;
+}
+
+<!-- Formulario para seleccionar una promoción -->
+<div class="container mt-4">
+    <h2>Seleccionar Promoción</h2>
+    <form method="get" action="@Url.Action("ListarPromociones")">
+        <div class="form-group">
+            <label for="idPromocion">Seleccionar Promoción:</label>
+            @Html.DropDownList("idPromocion", (SelectList)ViewBag.PromocionesList, "Seleccione una Promoción", new { @class = "form-control" })
+        </div>
+        <button type="submit" class="btn btn-primary">Ver Detalles</button>
+    </form>
+</div>
+
+<hr>
+
+<!-- Mostrar detalles de la promoción seleccionada -->
+<div class="container mt-4">
+    <h3>Detalles de la Promoción Seleccionada</h3>
+    @if (ViewBag.DetallePromocion != null && ViewBag.DetallePromocion.Count > 0)
+    {
+        <div class="table-responsive">
+            <table id="detallePromocionTable" class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID Detalle Promoción</th>
+                        <th>ID Producto</th>
+                        <th>Cantidad Aplicable</th>
+                        <th>Tipo Aplicación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detalle in ViewBag.DetallePromocion)
+                    {
+                        <tr>
+                            <td>@detalle.IdDetaPromocion</td>
+                            <td>@detalle.IdProducto</td>
+                            <td>@detalle.CantAplicable</td>
+                            <td>@detalle.TipoAplicacion</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>No se encontraron detalles para la promoción seleccionada.</p>
+    }
+</div>
+
+<hr>
+
+<!-- Información general de las promociones -->
+<div class="container mt-4">
+    <h3>Promociones Disponibles</h3>
+    @if (ViewBag.Promociones != null && ViewBag.Promociones.Count > 0)
+    {
+        <div class="table-responsive">
+            <table id="promocionesTable" class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Nombre de la Promoción</th>
+                        <th>Tipo de Promoción</th>
+                        <th>Descuento</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var promo in ViewBag.Promociones)
+                    {
+                        <tr>
+                            <td>@promo.NomPromo</td>
+                            <td>@promo.TipoPromocion</td>
+                            <td>@promo.Descuento</td>
+                            <td>@promo.FechaInicio</td>
+                            <td>@promo.FechaFin</td>
+                            <td>@promo.Estado</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>No se encontraron promociones.</p>
+    }
+</div>
+
+<hr>
+
+<style>
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+    }
+
+        .table th, .table td {
+            padding: 15px;
+            vertical-align: middle;
+            text-align: left;
+            border-top: 1px solid #dee2e6;
+        }
+
+    .thead-dark th {
+        background-color: #343a40;
+        color: #fff;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    tr:hover {
+        background-color: #eaeaea;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#promocionesTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthMenu": [10, 25, 50, 100], 
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/Spanish.json" 
+            }
+        });
+
+        $('#detallePromocionTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthMenu": [10, 25, 50, 100], 
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/Spanish.json" 
+            }
+        });
+    });
+</script>
