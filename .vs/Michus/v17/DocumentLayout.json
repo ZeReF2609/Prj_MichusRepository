@@ -1,9 +1,21 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Michus\\Michus\\",
+  "WorkspaceRootPath": "C:\\Users\\josej\\Documents\\CIBERTEC\\CICLO6\\PROYECTO_INTEGRADOR\\PROYECTOS\\COMPARTIDO\\Prj_MichusRepository\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus\\michus\\michus\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\users\\josej\\documents\\cibertec\\ciclo6\\proyecto_integrador\\proyectos\\compartido\\prj_michusrepository\\michus\\views\\promociones\\listarpromociones.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\views\\promociones\\listarpromociones.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\users\\josej\\documents\\cibertec\\ciclo6\\proyecto_integrador\\proyectos\\compartido\\prj_michusrepository\\michus\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\users\\josej\\documents\\cibertec\\ciclo6\\proyecto_integrador\\proyectos\\compartido\\prj_michusrepository\\michus\\controllers\\promocionescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\controllers\\promocionescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\users\\josej\\documents\\cibertec\\ciclo6\\proyecto_integrador\\proyectos\\compartido\\prj_michusrepository\\michus\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
@@ -14,32 +26,76 @@
       "DocumentGroups": [
         {
           "DockedWidth": 202,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Michus\\Michus\\Michus\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "Michus\\Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Michus\\Michus\\Michus\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "Michus\\Views\\Shared\\_Layout.cshtml",
-<<<<<<< HEAD
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAA4AAAAAAAAAA==",
-=======
-              "ViewState": "AgIAAAUAAAAAAAAAAAAUwBcAAABHAAAAAAAAAA==",
->>>>>>> 2c48dd7808eea53ff88f3fca4f6fc786e6e59323
+              "Title": "ListarPromociones.cshtml",
+              "DocumentMoniker": "C:\\Users\\josej\\Documents\\CIBERTEC\\CICLO6\\PROYECTO_INTEGRADOR\\PROYECTOS\\COMPARTIDO\\Prj_MichusRepository\\Michus\\Views\\Promociones\\ListarPromociones.cshtml",
+              "RelativeDocumentMoniker": "Michus\\Views\\Promociones\\ListarPromociones.cshtml",
+              "ToolTip": "C:\\Users\\josej\\Documents\\CIBERTEC\\CICLO6\\PROYECTO_INTEGRADOR\\PROYECTOS\\COMPARTIDO\\Prj_MichusRepository\\Michus\\Views\\Promociones\\ListarPromociones.cshtml",
+              "RelativeToolTip": "Michus\\Views\\Promociones\\ListarPromociones.cshtml",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAswLoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-03T18:39:10.22Z",
+              "WhenOpened": "2024-11-07T20:04:13.209Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\josej\\Documents\\CIBERTEC\\CICLO6\\PROYECTO_INTEGRADOR\\PROYECTOS\\COMPARTIDO\\Prj_MichusRepository\\Michus\\appsettings.json",
+              "RelativeDocumentMoniker": "Michus\\appsettings.json",
+              "ToolTip": "C:\\Users\\josej\\Documents\\CIBERTEC\\CICLO6\\PROYECTO_INTEGRADOR\\PROYECTOS\\COMPARTIDO\\Prj_MichusRepository\\Michus\\appsettings.json",
+              "RelativeToolTip": "Michus\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-11-07T16:54:52.976Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PromocionesController.cs",
+              "DocumentMoniker": "C:\\Users\\josej\\Documents\\CIBERTEC\\CICLO6\\PROYECTO_INTEGRADOR\\PROYECTOS\\COMPARTIDO\\Prj_MichusRepository\\Michus\\Controllers\\PromocionesController.cs",
+              "RelativeDocumentMoniker": "Michus\\Controllers\\PromocionesController.cs",
+              "ToolTip": "C:\\Users\\josej\\Documents\\CIBERTEC\\CICLO6\\PROYECTO_INTEGRADOR\\PROYECTOS\\COMPARTIDO\\Prj_MichusRepository\\Michus\\Controllers\\PromocionesController.cs",
+              "RelativeToolTip": "Michus\\Controllers\\PromocionesController.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwBgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-07T16:42:02.75Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\josej\\Documents\\CIBERTEC\\CICLO6\\PROYECTO_INTEGRADOR\\PROYECTOS\\COMPARTIDO\\Prj_MichusRepository\\Michus\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Michus\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\josej\\Documents\\CIBERTEC\\CICLO6\\PROYECTO_INTEGRADOR\\PROYECTOS\\COMPARTIDO\\Prj_MichusRepository\\Michus\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Michus\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-07T16:41:53.759Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 1123,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }
