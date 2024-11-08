@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Michus")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e4975f61e922045223ddbde262e548515928185d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a8f0f2917f51bece33519af992beb5bae966d711")]
 [assembly: System.Reflection.AssemblyProductAttribute("Michus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Michus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -17,59 +17,67 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Michus
 build_property.RootNamespace = Michus
-build_property.ProjectDir = C:\Users\josej\Documents\CIBERTEC\CICLO6\PROYECTO_INTEGRADOR\PROYECTOS\COMPARTIDO\Prj_MichusRepository\Michus\
+build_property.ProjectDir = C:\Michus\Michus\Michus\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\josej\Documents\CIBERTEC\CICLO6\PROYECTO_INTEGRADOR\PROYECTOS\COMPARTIDO\Prj_MichusRepository\Michus
+build_property.MSBuildProjectDirectory = C:\Michus\Michus\Michus
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Descuentos/listadescuentos.cshtml]
+[C:/Michus/Michus/Michus/Views/Descuentos/listadescuentos.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVzY3VlbnRvc1xsaXN0YWRlc2N1ZW50b3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Login/Login.cshtml]
+[C:/Michus/Michus/Michus/Views/Ecommerce/EcommerceProductosIndex.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXEVjb21tZXJjZVByb2R1Y3Rvc0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Michus/Michus/Michus/Views/Login/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Logistica/Productos.cshtml]
+[C:/Michus/Michus/Michus/Views/Logistica/Productos.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naXN0aWNhXFByb2R1Y3Rvcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Menu/Index.cshtml]
+[C:/Michus/Michus/Michus/Views/Menu/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Promociones/ListarPromociones.cshtml]
+[C:/Michus/Michus/Michus/Views/Promociones/ListarPromociones.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvbW9jaW9uZXNcTGlzdGFyUHJvbW9jaW9uZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Reservas/ListarClientes.cshtml]
+[C:/Michus/Michus/Michus/Views/Reservas/ListarClientes.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXNcTGlzdGFyQ2xpZW50ZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Reservas/ListarReserva.cshtml]
+[C:/Michus/Michus/Michus/Views/Reservas/ListarReserva.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXNcTGlzdGFyUmVzZXJ2YS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Shared/layout_blanco.cshtml]
+[C:/Michus/Michus/Michus/Views/Shared/layoutVentaEcommerce.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXGxheW91dFZlbnRhRWNvbW1lcmNlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Michus/Michus/Michus/Views/Shared/layout_blanco.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXGxheW91dF9ibGFuY28uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Michus/Michus/Michus/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/_ViewImports.cshtml]
+[C:/Michus/Michus/Michus/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/_ViewStart.cshtml]
+[C:/Michus/Michus/Michus/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josej/Documents/CIBERTEC/CICLO6/PROYECTO_INTEGRADOR/PROYECTOS/COMPARTIDO/Prj_MichusRepository/Michus/Views/Shared/_Layout.cshtml]
+[C:/Michus/Michus/Michus/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-unqkfnbi2o

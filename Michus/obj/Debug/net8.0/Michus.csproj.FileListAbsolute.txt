@@ -262,3 +262,4 @@ C:\Michus\Michus\Michus\obj\Debug\net8.0\refint\Michus.dll
 C:\Michus\Michus\Michus\obj\Debug\net8.0\Michus.pdb
 C:\Michus\Michus\Michus\obj\Debug\net8.0\Michus.genruntimeconfig.cache
 C:\Michus\Michus\Michus\obj\Debug\net8.0\ref\Michus.dll
+C:\Michus\Michus\Michus\obj\Debug\net8.0\Michus.sourcelink.json
