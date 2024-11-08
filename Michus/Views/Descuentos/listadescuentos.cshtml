@@ -4,6 +4,8 @@
     ViewData["Title"] = "Lista de Descuentos";
 }
 
+<link rel="stylesheet" href="~/assets/css/DescuentoStyle.css">
+
 <h1 class="ml-3">Lista de Descuentos</h1>
 
 <p class="ml-3">
@@ -12,82 +14,38 @@
     </a>
 </p>
 
-<div class="table-container">
-    <table id="descuentosTable" class="custom-table table table-bordered">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.IdDescuento)</th>
-                <th>@Html.DisplayNameFor(model => model.IdPromocion)</th>
-                <th>@Html.DisplayNameFor(model => model.IdEvento)</th>
-                <th>@Html.DisplayNameFor(model => model.FechaInicio)</th>
-                <th>@Html.DisplayNameFor(model => model.FechaFin)</th>
-                <th>@Html.DisplayNameFor(model => model.PrecioDescuento)</th>
-                <th>@Html.DisplayNameFor(model => model.TipoDescuento)</th>
-                <th>@Html.DisplayNameFor(model => model.IdCategoria)</th>
-                <th>@Html.DisplayNameFor(model => model.IdArticulos)</th>
-                <th>@Html.DisplayNameFor(model => model.Estado)</th>
-                <th>@Html.DisplayNameFor(model => model.TiSitu)</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <!-- Comprobación para IdDescuento -->
-                    <td>@(string.IsNullOrEmpty(item.IdDescuento) ? "NO APLICA" : item.IdDescuento)</td>
+<div class="ag-format-container">
+    <div class="ag-courses_box">
+        @foreach (var item in Model)
+        {
+            <div class="ag-courses_item">
+                <a href="#" class="ag-courses-item_link">
+                    <div class="ag-courses-item_bg"></div>
 
-                    <!-- Comprobación para IdPromocion -->
-                    <td>@(item.IdPromocion == null ? "NO APLICA" : item.IdPromocion.ToString())</td>
+                    <div class="ag-courses-item_title">
+                        <!-- Nombre o título del descuento -->
+                        Descuento: @(string.IsNullOrEmpty(item.IdDescuento) ? "NO APLICA" : item.IdDescuento)
+                    </div>
 
-                    <!-- Comprobación para IdEvento -->
-                    <td>@(string.IsNullOrEmpty(item.IdEvento) ? "NO APLICA" : item.IdEvento)</td>
-
-                    <!-- Comprobación para FechaInicio -->
-                    <td>@(item.FechaInicio == DateTime.MinValue ? "NO APLICA" : item.FechaInicio.ToString("dd/MM/yyyy"))</td>
-
-                    <!-- Comprobación para FechaFin -->
-                    <td>@(item.FechaFin == DateTime.MinValue ? "NO APLICA" : item.FechaFin.ToString("dd/MM/yyyy"))</td>
-
-                    <!-- Comprobación para PrecioDescuento -->
-                    <td>@(item.PrecioDescuento == 0 ? "NO APLICA" : item.PrecioDescuento.ToString("C"))</td>
-
-                    <!-- Comprobación para TipoDescuento -->
-                    <td>@(item.TipoDescuento == 0 ? "NO APLICA" : item.TipoDescuento.ToString())</td>
-
-                    <!-- Comprobación para IdCategoria -->
-                    <td>@(string.IsNullOrEmpty(item.IdCategoria) ? "NO APLICA" : item.IdCategoria)</td>
-
-                    <!-- Comprobación para IdArticulos -->
-                    <td>@(item.IdArticulos == null || !item.IdArticulos.Any() ? "NO APLICA" : string.Join(", ", item.IdArticulos))</td>
-
-                    <!-- Comprobación para Estado -->
-                    <td>@(item.Estado == 0 ? "NO APLICA" : item.Estado.ToString())</td>
-
-                    <!-- Comprobación para TiSitu -->
-                    <td>@(string.IsNullOrEmpty(item.TiSitu) ? "NO APLICA" : item.TiSitu)</td>
-
-                    <!-- Acciones -->
-                    <td>
-                        <a asp-action="Edit" class="btn btn-warning">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a asp-action="Details" class="btn btn-info">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        <a asp-action="Delete" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este descuento?');">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                    <div class="ag-courses-item_date-box">
+                        <span class="ag-courses-item_date">
+                            <strong>Promoción:</strong> @(item.IdPromocion == null ? "NO APLICA" : item.IdPromocion.ToString()) <br />
+                            <strong>Evento:</strong> @(string.IsNullOrEmpty(item.IdEvento) ? "NO APLICA" : item.IdEvento) <br />
+                            <strong>Inicio:</strong> @(item.FechaInicio == DateTime.MinValue ? "NO APLICA" : item.FechaInicio.ToString("dd/MM/yyyy")) <br />
+                            <strong>Fin:</strong> @(item.FechaFin == DateTime.MinValue ? "NO APLICA" : item.FechaFin.ToString("dd/MM/yyyy")) <br />
+                            <strong>Precio:</strong> @(item.PrecioDescuento == 0 ? "NO APLICA" : item.PrecioDescuento.ToString("C")) <br />
+                            <strong>Tipo:</strong> @(item.TipoDescuento == 0 ? "NO APLICA" : item.TipoDescuento.ToString()) <br />
+                            <strong>Categoría:</strong> @(string.IsNullOrEmpty(item.IdCategoria) ? "NO APLICA" : item.IdCategoria) <br />
+                            <strong>Artículos:</strong> @(item.IdArticulos == null || !item.IdArticulos.Any() ? "NO APLICA" : string.Join(", ", item.IdArticulos)) <br />
+                            <strong>Estado:</strong> @(item.Estado == 0 ? "NO APLICA" : item.Estado.ToString()) <br />
+                            <strong>Situación:</strong> @(string.IsNullOrEmpty(item.TiSitu) ? "NO APLICA" : item.TiSitu)
+                        </span>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
 </div>
-
-<style>
-    /* Aquí puedes agregar estilos adicionales si es necesario */
-</style>
 
 <script>
     $(document).ready(function () {
