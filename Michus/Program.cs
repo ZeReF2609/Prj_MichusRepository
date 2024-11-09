@@ -1,7 +1,9 @@
 using Michus.Models;
 using Michus.Service;
+using Michus.DAO; 
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,7 @@ builder.Services.AddScoped<LoginService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
     var connectionString = configuration.GetConnectionString("cn1");
-    var logger = provider.GetRequiredService<ILogger<LoginService>>(); 
+    var logger = provider.GetRequiredService<ILogger<LoginService>>();
     return new LoginService(connectionString, logger);
 });
 
@@ -20,6 +22,13 @@ builder.Services.AddScoped<MenuService>(provider =>
     var configuration = provider.GetRequiredService<IConfiguration>();
     var connectionString = configuration.GetConnectionString("cn1");
     return new MenuService(connectionString);
+});
+
+// Agregar ProductoDAO al contenedor de servicios
+builder.Services.AddScoped<ProductoDAO>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    return new ProductoDAO(configuration);
 });
 
 // Configurar DbContext
