@@ -20,11 +20,19 @@ namespace Michus.Controllers
             _menuService = menuService;
             _descuentosDAO = new DescuentosDAO(connectionString);
         }
-
+        /*
         public async Task<ActionResult> listadescuentos()
         {
             await LoadMenuDataAsync();
             var descuentos = await _descuentosDAO.GetDescuentosAsync();
+            return View(descuentos);
+        }
+        */
+
+        public async Task<ActionResult> listadescuentos()
+        {
+            await LoadMenuDataAsync();
+            var descuentos = await _descuentosDAO.GetDescuentosCartilla();
             return View(descuentos);
         }
 

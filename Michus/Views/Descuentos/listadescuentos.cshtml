@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Michus.Models.pa_lista_descuento>
+﻿@model IEnumerable<Michus.Models.pa_lista_descuento_carta>
 
 @{
     ViewData["Title"] = "Lista de Descuentos";
@@ -6,55 +6,50 @@
 
 <link rel="stylesheet" href="~/assets/css/DescuentoStyle.css">
 
-<h1 class="ml-3">Lista de Descuentos</h1>
+<div class="discount-manager">
+    <div class="add-button-container">
+        <button class="add-button">+</button>
+    </div>
 
-<p class="ml-3">
-    <a asp-action="Create" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Crear Nuevo
-    </a>
-</p>
+    <h1>Gestor de Descuentos</h1>
+    <div class="filters">
+        <select class="filter">
+            <option>Etiquetas</option>
+        </select>
+        <select class="filter">
+            <option>Descuentos</option>
+        </select>
+        <select class="filter">
+            <option>Webs</option>
+        </select>
+        <button class="filter-button">🔍</button>
+    </div>
 
-<div class="ag-format-container">
-    <div class="ag-courses_box">
-        @foreach (var item in Model)
+    <div class="discount-cards">
+        @foreach (var item in Model.Select((value, index) => new { value, index }))
         {
-            <div class="ag-courses_item">
-                <a href="#" class="ag-courses-item_link">
-                    <div class="ag-courses-item_bg"></div>
-
-                    <div class="ag-courses-item_title">
-                        <!-- Nombre o título del descuento -->
-                        Descuento: @(string.IsNullOrEmpty(item.IdDescuento) ? "NO APLICA" : item.IdDescuento)
+            <div class="discount-card">
+                <div class="discount-header">
+                    <span class="discount-badge">
+                        @if (item.value.TipoDescuento == 1)
+                        {
+                            @($"s/. {item.value.PrecioDescuento}")
+                        }
+                        else
+                        {
+                            @($"{item.value.PrecioDescuento}%")
+                        }
+                    </span>
+                    <div class="toggle">
+                        <input type="checkbox" id="btn-@item.index">
+                        <label for="btn-@item.index"></label>
                     </div>
-
-                    <div class="ag-courses-item_date-box">
-                        <span class="ag-courses-item_date">
-                            <strong>Promoción:</strong> @(item.IdPromocion == null ? "NO APLICA" : item.IdPromocion.ToString()) <br />
-                            <strong>Evento:</strong> @(string.IsNullOrEmpty(item.IdEvento) ? "NO APLICA" : item.IdEvento) <br />
-                            <strong>Inicio:</strong> @(item.FechaInicio == DateTime.MinValue ? "NO APLICA" : item.FechaInicio.ToString("dd/MM/yyyy")) <br />
-                            <strong>Fin:</strong> @(item.FechaFin == DateTime.MinValue ? "NO APLICA" : item.FechaFin.ToString("dd/MM/yyyy")) <br />
-                            <strong>Precio:</strong> @(item.PrecioDescuento == 0 ? "NO APLICA" : item.PrecioDescuento.ToString("C")) <br />
-                            <strong>Tipo:</strong> @(item.TipoDescuento == 0 ? "NO APLICA" : item.TipoDescuento.ToString()) <br />
-                            <strong>Categoría:</strong> @(string.IsNullOrEmpty(item.IdCategoria) ? "NO APLICA" : item.IdCategoria) <br />
-                            <strong>Artículos:</strong> @(item.IdArticulos == null || !item.IdArticulos.Any() ? "NO APLICA" : string.Join(", ", item.IdArticulos)) <br />
-                            <strong>Estado:</strong> @(item.Estado == 0 ? "NO APLICA" : item.Estado.ToString()) <br />
-                            <strong>Situación:</strong> @(string.IsNullOrEmpty(item.TiSitu) ? "NO APLICA" : item.TiSitu)
-                        </span>
-                    </div>
-                </a>
+                </div>
+                <h2>PIONIER WEB - 20% PANTALONES HASTA ABRIL 2024 TT</h2>
+                <div class="label">Cyber</div>
+                <p>Desde: @(item.value.FechaInicio == DateTime.MinValue ? "NO APLICA" : item.value.FechaInicio.ToString("dd/MM/yyyy"))</p>
+                <p>Hasta: @(item.value.FechaFin == DateTime.MinValue ? "NO APLICA" : item.value.FechaFin.ToString("dd/MM/yyyy"))</p>
             </div>
         }
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $('#descuentosTable').DataTable({
-            language: {
-                lengthMenu: "<span style='color: white; margin-left:10px'>Mostrar</span> _MENU_",
-                search: "",
-                searchPlaceholder: "Buscar..."
-            }
-        });
-    });
-</script>

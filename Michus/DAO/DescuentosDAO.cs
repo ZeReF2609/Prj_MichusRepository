@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using Michus.Models;
-using Newtonsoft.Json; // Asegúrate de instalar el paquete NuGet Newtonsoft.Json
+using Newtonsoft.Json;
 
 namespace Michus.DAO
 {
@@ -14,6 +14,7 @@ namespace Michus.DAO
             _connectionString = connectionString;
         }
 
+        #region PRIMER INTENTO DE DAO
         public async Task<List<pa_lista_descuento>> GetDescuentosAsync()
         {
             var lista = new List<pa_lista_descuento>();
@@ -72,5 +73,51 @@ namespace Michus.DAO
 
             return lista;
         }
+
+        #endregion
+
+        public async Task<List<pa_lista_descuento_carta>> GetDescuentosCartilla(DateTime? fechaInicio = null, DateTime? fechaFin = null, byte? tipoDescuento = null)
+        {
+            var lista = new List<pa_lista_descuento_carta>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new SqlCommand("SP_LISTAR_DESCUENTOS_CARTAS_PORFILTROS", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Añadir parámetros con valores predeterminados nulos
+                    command.Parameters.AddWithValue("@FECHA_INICIO", fechaInicio.HasValue ? (object)fechaInicio.Value : DBNull.Value);
+                    command.Parameters.AddWithValue("@FECHA_FIN", fechaFin.HasValue ? (object)fechaFin.Value : DBNull.Value);
+                    command.Parameters.AddWithValue("@TIPO_DESCUENTO", tipoDescuento.HasValue ? (object)tipoDescuento.Value : DBNull.Value);
+
+                    using (var dr = await command.ExecuteReaderAsync())
+                    {
+                        while (await dr.ReadAsync())
+                        {
+                            lista.Add(
+                                new pa_lista_descuento_carta()
+                                {
+                                    IdDescuento = dr.IsDBNull(0) ? null : dr.GetString(0),
+                                    FechaInicio = dr.IsDBNull(1) ? DateTime.MinValue : dr.GetDateTime(1),
+                                    FechaFin = dr.IsDBNull(2) ? DateTime.MinValue : dr.GetDateTime(2),
+                                    PrecioDescuento = dr.IsDBNull(3) ? 0 : dr.GetDecimal(3),
+                                    TipoDescuento = dr.IsDBNull(4) ? (byte)0 : dr.GetByte(4),
+                                    Estado = dr.IsDBNull(5) ? 0 : dr.GetInt32(5),
+                                    TiSitu = dr.IsDBNull(6) ? null : dr.GetString(6),
+                                });
+                        }
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+
+        
+
     }
 }
