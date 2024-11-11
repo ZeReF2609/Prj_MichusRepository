@@ -1,12 +1,121 @@
-﻿@{
-    ViewData["Title"] = "Index";
+﻿@model Michus.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="container-fluid">
-    <main class="py-2">
-        <div class="content-container">
-            <h1>Dashboard</h1>
+<h1>Michus Dashboard</h1>
 
+<link rel="stylesheet" href="~/assets/css/StyleDashboard.css">
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total Ventas</h5>
+                <p class="card-text">@Model.TotalSales.ToString("N0")</p>
+            </div>
         </div>
-    </main>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total Productos</h5>
+                <p class="card-text">@Model.TotalProducts.ToString("N0")</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total Clientes</h5>
+                <p class="card-text">@Model.TotalClients.ToString("N0")</p>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Productos por Categoria</h5>
+                <canvas id="productCountChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Productos valor por Categoria</h5>
+                <canvas id="productValueChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Bar Chart
+        var ctxBar = document.getElementById('productCountChart').getContext('2d');
+        var barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.ProductCountByCategory.Select(x => $"'{x.Category}'")))],
+                datasets: [{
+                    label: 'Product Count',
+                    data: [@string.Join(",", Model.ProductCountByCategory.Select(x => x.ProductCount))],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Pie Chart
+        var ctxPie = document.getElementById('productValueChart').getContext('2d');
+        var pieChart = new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.ProductValueByCategory.Select(x => $"'{x.Category}'")))],
+                datasets: [{
+                    data: [@string.Join(",", Model.ProductValueByCategory.Select(x => x.TotalValue))],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+}
