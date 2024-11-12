@@ -12,18 +12,18 @@
     </div>
 
     <h1>Gestor de Descuentos</h1>
-    <div class="filters">
-        <select class="filter">
-            <option>Etiquetas</option>
-        </select>
-        <select class="filter">
-            <option>Descuentos</option>
-        </select>
-        <select class="filter">
-            <option>Webs</option>
-        </select>
-        <button class="filter-button">🔍</button>
-    </div>
+    
+    @using (Html.BeginForm("listadescuentos", "Descuentos", FormMethod.Get))
+    {
+        <div class="filters">
+            @Html.DropDownList("FECHA_INICIO", (SelectList)ViewBag.AniosInicioDesc, "Seleccione", new { @class = "form-select" })
+            <br />
+            @Html.DropDownList("FECHA_FIN", (SelectList)ViewBag.AniosFinDesc, "Seleccione", new { @class = "form-select" })
+            <br />
+            <button class="filter-button" type="submit">🔍</button>
+            <br />
+        </div>
+    }
 
     <div class="discount-cards">
         @foreach (var item in Model.Select((value, index) => new { value, index }))
@@ -45,8 +45,17 @@
                         <label for="btn-@item.index"></label>
                     </div>
                 </div>
-                <h2>PIONIER WEB - 20% PANTALONES HASTA ABRIL 2024 TT</h2>
-                <div class="label">Cyber</div>
+                
+                    @if (item.value.TipoDescuento == 1)
+                    {
+                    <h2>Descuento Fijo</h2>
+                    }
+                    else
+                    {
+                    <h2>Descuento Porcentual</h2>
+                    }
+                
+                <div class="label">Michus</div>
                 <p>Desde: @(item.value.FechaInicio == DateTime.MinValue ? "NO APLICA" : item.value.FechaInicio.ToString("dd/MM/yyyy"))</p>
                 <p>Hasta: @(item.value.FechaFin == DateTime.MinValue ? "NO APLICA" : item.value.FechaFin.ToString("dd/MM/yyyy"))</p>
             </div>

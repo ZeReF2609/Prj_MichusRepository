@@ -5,6 +5,7 @@ using Michus.DAO;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Michus.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Michus.Controllers
 {
@@ -29,12 +30,21 @@ namespace Michus.Controllers
         }
         */
 
-        public async Task<ActionResult> listadescuentos()
+        public async Task<ActionResult> listadescuentos(int? FECHA_INICIO = null, int? FECHA_FIN = null)
         {
             await LoadMenuDataAsync();
-            var descuentos = await _descuentosDAO.GetDescuentosCartilla();
+
+            var aniosInicioDesc = await _descuentosDAO.GetAnioInicioDesc();
+            var aniosFinDesc = await _descuentosDAO.GetAnioFinDesc();
+
+            ViewBag.AniosInicioDesc = new SelectList(aniosInicioDesc, "anio", "anio");
+            ViewBag.AniosFinDesc = new SelectList(aniosFinDesc, "anio", "anio");
+
+            var descuentos = await _descuentosDAO.GetDescuentosCartilla(FECHA_INICIO, FECHA_FIN);
             return View(descuentos);
         }
+
+
 
         private async Task LoadMenuDataAsync()
         {
