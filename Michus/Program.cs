@@ -1,3 +1,5 @@
+
+using Michus.DAO;
 using Michus.Models;
 using Michus.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -29,6 +31,9 @@ builder.Services.AddDbContext<MichusContext>(options =>
     var connectionString = configuration.GetConnectionString("cn1");
     options.UseSqlServer(connectionString);
 });
+
+//servicio para el envio del correo
+builder.Services.AddTransient<CorreoHelper>();
 
 // Agregar controladores y vistas
 builder.Services.AddControllersWithViews();
