@@ -31,6 +31,8 @@ namespace Michus.Controllers
             _correoHelper = correoHelper;
         }
 
+        // PROBANDO SI FUNCIONA ENVIAR ARCHIVOS PUNTUALES
+
 
         [HttpGet]
         public async Task<IActionResult> EnviarTokenPorPromocion([FromQuery] string destinatario)
