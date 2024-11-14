@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Michus\\Michus\\Michus\\Michus.csproj": {}
+    "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Michus.csproj": {}
   },
   "projects": {
-    "C:\\Michus\\Michus\\Michus\\Michus.csproj": {
+    "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Michus.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Michus\\Michus\\Michus\\Michus.csproj",
+        "projectUniqueName": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Michus.csproj",
         "projectName": "Michus",
-        "projectPath": "C:\\Michus\\Michus\\Michus\\Michus.csproj",
-        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "C:\\Michus\\Michus\\Michus\\obj\\",
+        "projectPath": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Michus.csproj",
+        "packagesPath": "C:\\Users\\anyel\\.nuget\\packages\\",
+        "outputPath": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\anyel\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -46,6 +45,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.35, )"
+            },
             "Microsoft.AspNetCore.Authentication.Cookies": {
               "target": "Package",
               "version": "[2.1.34, )"
@@ -67,6 +70,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "System.Collections.NonGeneric": {
+              "target": "Package",
+              "version": "[4.3.0, )"
             },
             "System.Data.SqlClient": {
               "target": "Package",
@@ -92,7 +99,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

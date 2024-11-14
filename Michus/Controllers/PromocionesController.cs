@@ -12,12 +12,10 @@ namespace Michus.Controllers
 {
     public class PromocionesController : Controller
     {
-
         private readonly MenuService _menuService;
-
         private readonly string _cnx;
 
-        public PromocionesController(IConfiguration configuration,MenuService menuService)
+        public PromocionesController(IConfiguration configuration, MenuService menuService)
         {
             _cnx = configuration.GetConnectionString("cn1")!;
             _menuService = menuService;
@@ -35,7 +33,7 @@ namespace Michus.Controllers
             {
                 await connection.OpenAsync();
 
-                using(SqlCommand cmm = new SqlCommand("SP_LISTAR_PROMOCIONES", connection))
+                using (SqlCommand cmm = new SqlCommand("SP_LISTAR_PROMOCIONES", connection))
                 {
                     cmm.CommandType = CommandType.StoredProcedure;
 
@@ -53,7 +51,6 @@ namespace Michus.Controllers
                                 FechaInicio = rd["FECHA_INICIO"],
                                 FechaFin = rd["FECHA_FIN"],
                                 Estado = rd["ESTADO"]
-
                             });
                         }
                     }
@@ -83,17 +80,12 @@ namespace Michus.Controllers
                 }
             }
 
-            
-            
             ViewBag.Promociones = promociones;
             ViewBag.DetallePromocion = detallePromociones;
 
             await LoadMenuDataAsync();
             return View();
         }
-
-
-
 
         private string GetCurrentRoleId()
         {
@@ -143,9 +135,9 @@ namespace Michus.Controllers
             Response.Headers["Pragma"] = "no-cache";
             Response.Headers["Expires"] = "0";
         }
-    
-    // GET: PromocionesController/Details/5
-    public ActionResult Details(int id)
+
+        // GET: PromocionesController/Details/5
+        public ActionResult Details(int id)
         {
             return View();
         }
