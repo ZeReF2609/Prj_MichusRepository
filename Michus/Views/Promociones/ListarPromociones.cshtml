@@ -1,90 +1,63 @@
 ﻿@{
     ViewBag.Title = "Listado de Promociones";
-    var selectedPromocionId = ViewBag.PromocionesList ?? 1;
 }
 
-<!-- Formulario para seleccionar una promoción -->
-<div class="container mt-4">
-    <h2 class="text-white">Seleccionar Promoción</h2>
-    <form method="get" action="@Url.Action("ListarPromociones")">
-        <div class="form-group">
-            <label for="idPromocion" class="text-white">Seleccionar Promoción:</label>
-            @Html.DropDownList("idPromocion", (SelectList)ViewBag.PromocionesList, "Seleccione una Promoción", new { @class = "form-control" })
-        </div>
-        <button type="submit" class="btn btn-primary">Ver Detalles</button>
-    </form>
-</div>
+<link rel="stylesheet" href="~/assets/css/PromocionesStyle.css">
 
-<hr class="text-white">
 
-<!-- Mostrar detalles de la promoción seleccionada -->
-<div class="container mt-4">
-    <h3 class="text-white">Detalles de la Promoción Seleccionada</h3>
-    @if (ViewBag.DetallePromocion != null && ViewBag.DetallePromocion.Count > 0)
-    {
-        <div class="table-responsive">
-            <table id="detallePromocionTable" class="table table-dark table-bordered table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>ID Detalle Promoción</th>
-                        <th>ID Producto</th>
-                        <th>Cantidad Aplicable</th>
-                        <th>Tipo Aplicación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var detalle in ViewBag.DetallePromocion)
-                    {
-                        <tr>
-                            <td>@detalle.IdDetaPromocion</td>
-                            <td>@detalle.IdProducto</td>
-                            <td>@detalle.CantAplicable</td>
-                            <td>@detalle.TipoAplicacion</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <p class="text-white">No se encontraron detalles para la promoción seleccionada.</p>
-    }
-</div>
 
-<hr class="text-white">
-
-<!-- Información general de las promociones -->
 <div class="container mt-4">
     <h3 class="text-white">Promociones Disponibles</h3>
+
     @if (ViewBag.Promociones != null && ViewBag.Promociones.Count > 0)
     {
-        <div class="table-responsive">
-            <table id="promocionesTable" class="table table-dark table-bordered table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Nombre de la Promoción</th>
-                        <th>Tipo de Promoción</th>
-                        <th>Descuento</th>
-                        <th>Fecha Inicio</th>
-                        <th>Fecha Fin</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var promo in ViewBag.Promociones)
-                    {
-                        <tr>
-                            <td>@promo.NomPromo</td>
-                            <td>@promo.TipoPromocion</td>
-                            <td>@promo.Descuento</td>
-                            <td>@promo.FechaInicio</td>
-                            <td>@promo.FechaFin</td>
-                            <td>@promo.Estado</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="promociones-grid">
+            @foreach (var promo in ViewBag.Promociones)
+            {
+                <div class="nft position-relative">
+
+                    <!-- Descuento en la esquina superior izquierda -->
+                    <div class="discount-badge">
+                        @(promo.TipoPromocion == 1 ? "S/." : "%") @promo.Descuento
+                    </div>
+
+                    <!-- Interruptor -->
+                    <div class="toggle" data-toggle="modal" data-target="#exampleModalCenter" data-id="@promo.IdPromociones">
+                        <input type="checkbox" id="btn_@promo.IdPromociones" @(promo.Estado == 1 ? "checked" : "") onclick="return false;">
+                        <label for="btn_@promo.IdPromociones"></label>
+                    </div>
+
+                    <!-- Detalles de la Promoción -->
+                    <div class="main">
+                        <h2 data-toggle="modal" data-target="#newModal" data-id="@promo.IdPromociones">@promo.NomPromo</h2>
+                        <p class="description" data-toggle="modal" data-target="#newModal" data-id="@promo.IdPromociones">
+                            <strong>Desde:</strong> @promo.FechaInicio.ToString("dd/MM/yyyy")<br>
+                            <strong>Hasta:</strong> @promo.FechaFin.ToString("dd/MM/yyyy")<br>
+                        </p>
+                        <div class="tokenInfo" style="display: flex; justify-content: space-between; align-items: center;">
+                            <!-- "Michus" enmarcado en un cuadro negro -->
+                            <div style="background-color: black; color: white; padding: 5px 10px; border-radius: 5px;">
+                                Michus
+                            </div>
+
+                            <!-- Tipo de descuento a la derecha -->
+                            <div style="margin-left: auto;">
+                                <p style="margin: 0; padding-left: 5px;">
+                                    @if (promo.TipoPromocion == 1)
+                                    {
+                                        @:Fijo
+                                    }
+                                    else
+                                    {
+                                        @:Porcentual
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                </div>
+            }
         </div>
     }
     else
@@ -93,94 +66,165 @@
     }
 </div>
 
-<hr class="text-white">
+<!-- Modal -->
+<div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content rounded-0">
+            <div class="modal-body p-4 px-5">
+                <div class="main-content text-center">
+                    <a href="#" class="close-btn" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><span class="icon-close2"></span></span>
+                    </a>
+                    <div class="warp-icon mb-4">
+                        <span class="icon-lock2"></span>
+                    </div>
+                    <p id="mensajeModal" class="mb-4">Revisa tu correo para encontrar el token.</p>
+                    <input type="text" id="tokenInput" class="form-control mb-3" placeholder="Ingresa tu token aquí">
+                    <input type="hidden" id="promoIdInput">
+                    <button onclick="enviarCorreo()" class="btn btn-success">Generear Token</button>
+                    <button onclick="validarToken()" class="btn btn-primary">Validar Token</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<!-- Estilos personalizados -->
-<style>
-    body {
-        background-color: #2e3b4e; /* Fondo oscuro similar al tema de la página */
-        color: #fff;
-    }
 
-    .container {
-        background-color: #343a40; /* Fondo oscuro para la sección de contenido */
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
+<!-- Modal de Listado de Detalles -->
+<div id="newModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90%; max-height: 90vh;" role="document">
+        <div class="modal-content rounded-0" style="height: 100%; display: flex; flex-direction: column;">
+            <div class="modal-body p-4 px-5" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="row" style="flex: 1; display: flex; flex-direction: column;">
+                    <!-- Sección principal (arriba) -->
+                    <div class="col-md-12" style="flex: 1;">
+                        <div class="section-box" style="height: 100%; border: 1px solid #ccc; padding: 10px;">
+                            <h5>Contenido Principal</h5>
+                            <form id="formRegistrarDetalle" method="post" action="/TuControlador/RegistrarDetallePromo">
+                                <!-- Campo para seleccionar la promoción -->
 
-    .btn-primary {
-        background-color: #007bff;
-        border: none;
-    }
+                                <div class="mb-3">
+                                    <label for="idPromocion" class="form-label">Seleccionar Promoción</label>
+                                    @Html.DropDownList("idPromocion",
+                                             new SelectList(ViewBag.Promociones as List<dynamic>, "IdPromociones", "NomPromo", ViewBag.PromocionesList?.SelectedValue),
+                                             "Seleccione una promoción",
+                                             new { @class = "form-select custom-select-style", required = "required", onchange = "updatePromotionDetails()" })
+                                </div>
 
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
 
-    .table {
-        margin-top: 20px;
-        background-color: #212529; /* Fondo oscuro para la tabla */
-        color: #fff;
-        border: 1px solid #dee2e6;
-    }
+                                <!-- Contenedor de detalles de la promoción en cuadros separados -->
+                                <div id="promotionDetails" class="mb-3">
+                                    <div class="promotion-box mb-2 p-3 border rounded">
+                                        <strong>Tipo de Promoción:</strong>
+                                        <span id="tipoPromocion">-</span>
+                                    </div>
+                                    <div class="promotion-box mb-2 p-3 border rounded">
+                                        <strong>Descuento:</strong>
+                                        <span id="descuentoPromocion">-</span>
+                                    </div>
+                                    <div class="promotion-box mb-2 p-3 border rounded">
+                                        <strong>Descripción:</strong>
+                                        <span id="descripcionPromocion">-</span>
+                                    </div>
+                                </div>
 
-        .table th, .table td {
-            padding: 15px;
-            vertical-align: middle;
-            text-align: left;
-            background-color: #212529; /* Color de fondo de las celdas */
-        }
 
-    .table-hover tbody tr:hover {
-        background-color: #484848; /* Resalta las filas al pasar el mouse */
-    }
+                                <!-- Campo para seleccionar productos (JSON) -->
+                                <div class="mb-3">
+                                    <label for="productosJson" class="form-label">Productos (JSON)</label>
+                                    <textarea class="form-control" id="productosJson" name="productosJson" rows="3" required></textarea>
+                                    <small>Ejemplo de JSON: [{"id":1, "nombre":"Producto1"}, {"id":2, "nombre":"Producto2"}]</small>
+                                </div>
 
-    .thead-dark th {
-        background-color: #1d2124; /* Color de fondo de las cabeceras */
-        color: #fff;
-    }
+                                <!-- Campo para ingresar la cantidad aplicable -->
+                                <div class="mb-3">
+                                    <label for="cantidadAplicable" class="form-label">Cantidad Aplicable</label>
+                                    <input type="number" class="form-control" id="cantidadAplicable" name="cantidadAplicable" required>
+                                </div>
 
-    .table-bordered {
-        border: 1px solid #dee2e6;
-    }
+                                <!-- Botón de envío -->
+                                <button type="submit" class="btn btn-primary">Registrar Detalle</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
-    .table-responsive {
-        overflow-x: auto;
-    }
+                <div class="row mt-3" style="flex-shrink: 0;">
+                    <!-- Sección derecha (Lista de detalles) -->
+                    <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+                        <div class="section-box" style="width: 50%; border: 1px solid #ccc; padding: 10px;">
+                            <h5>Lista de Detalles</h5>
+                            <div class="table-container">
+                                <!-- Contenedor con desplazamiento -->
+                                @if (ViewBag.DetallePromocion != null && ViewBag.DetallePromocion.Count > 0)
+                                {
+                                    <table class="table table-bordered" style="background-color: #f8f9fa; border: 1px solid #333;">
+                                        <thead>
+                                            <tr style="background-color: #e9ecef;">
+                                                <th>Código</th>
+                                                <th>Promoción</th>
+                                                <th>Producto</th>
+                                                <th>Cantidad Aplicable</th>
+                                                <th>Tipo Aplicación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ViewBag.DetallePromocion)
+                                            {
+                                                <tr>
+                                                    <td>@item.IdDetalle</td>
+                                                    <td>@item.Promocion</td>
+                                                    <td>@item.Producto</td>
+                                                    <td>@item.CantAplicable</td>
+                                                    <td>
+                                                        @if (item.TipoAplicacion == 1)
+                                                        {
+                                                            @:Fijo
+                                                        }
+                                                        else
+                                                        {
+                                                            @:Porcentual
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <p>No hay detalles de promoción disponibles.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    hr {
-        border-top: 1px solid #dee2e6;
-    }
+                <!-- Cerrar Modal -->
+                <a href="#" class="close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">Cerrar</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
-    h2, h3 {
-        color: #fff;
-    }
-</style>
 
-<!-- Scripts de Datatables -->
+
+
+
+
+<script src="~/assets/js/PromocionesScript.js"></script>
+
 <script>
-    $(document).ready(function () {
-        $('#promocionesTable').DataTable({
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "lengthMenu": [10, 25, 50, 100],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/Spanish.json"
-            }
-        });
+    // Pasar promociones como variable global
+    window.promociones = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Promociones));
 
-        $('#detallePromocionTable').DataTable({
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "lengthMenu": [10, 25, 50, 100],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/Spanish.json"
-            }
-        });
+    $('#exampleModalCenter').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // El botón que abrió el modal
+        var promoId = button.data('id'); // Extraer el ID de la promoción
+
+        // Asignar el ID de la promoción al campo oculto en el modal
+        $('#promoIdInput').val(promoId);
     });
 </script>
