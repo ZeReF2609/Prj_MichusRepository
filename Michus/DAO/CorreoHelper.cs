@@ -10,7 +10,7 @@ namespace Michus.DAO
         public static string? Token { get; set; }
         public static DateTime Expiration { get; set; }
     }
-
+    // PROBANDO SI FUNCIONA ENVIAR ARCHIVOS PUNTUALES
     public class CorreoHelper
     {
         private readonly string _correoOrigen;
