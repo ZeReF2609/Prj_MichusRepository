@@ -1,11 +1,14 @@
 using Michus.Models;
 using Michus.Service;
-using Michus.DAO; 
+using Michus.DAO;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configurar DbContext
+builder.Services.AddDbContext<MichusContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("cn1")));
 
 // Agregar LoginService al contenedor de servicios
 builder.Services.AddScoped<LoginService>(provider =>
@@ -25,19 +28,7 @@ builder.Services.AddScoped<MenuService>(provider =>
 });
 
 // Agregar ProductoDAO al contenedor de servicios
-builder.Services.AddScoped<ProductoDAO>(provider =>
-{
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    return new ProductoDAO(configuration);
-});
-
-// Configurar DbContext
-builder.Services.AddDbContext<MichusContext>(options =>
-{
-    var configuration = builder.Configuration;
-    var connectionString = configuration.GetConnectionString("cn1");
-    options.UseSqlServer(connectionString);
-});
+builder.Services.AddScoped<ProductoDAO>();
 
 // Agregar controladores y vistas
 builder.Services.AddControllersWithViews();
@@ -62,6 +53,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
