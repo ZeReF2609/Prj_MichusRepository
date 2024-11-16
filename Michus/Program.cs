@@ -62,6 +62,6 @@ app.UseAuthorization();
 // Configuración de rutas
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=Login}/{id?}");
+    pattern: "{controller=Ecommerce}/{action=EcommerceProductosIndex}/{id?}");
 
 app.Run();

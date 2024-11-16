@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <!-- Sección para mensajes de notificación o alertas opcionales -->
+    @RenderSection("Notifications", required: false)
+
+    <!-- Aquí se cargará el contenido principal de cada vista -->
+    <main role="main" class="container">
+        @RenderBody()
+    </main>
+
+    <!-- Sección opcional de scripts específicos para cada vista -->
+    @RenderSection("Scripts", required: false)
+
+    <!-- Pie de página opcional -->
+    @RenderSection("Footer", required: false)
+</body>
+</html>
