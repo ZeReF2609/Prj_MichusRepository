@@ -1,0 +1,138 @@
+﻿/* producto-gestion.css */
+
+/* General Styles */
+body {
+    background-color: #f0e6ff;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(147, 112, 219, 0.2);
+    padding: 25px;
+    margin-top: 30px;
+}
+
+h2 {
+    color: #8a2be2;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+/* Table Styles */
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+    .table thead th {
+        background-color: #d8b5ff;
+        color: #4b0082;
+        border-color: #b19cd9;
+    }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f5eeff;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #9370db;
+    border-color: #9370db;
+    transition: all 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #8a2be2;
+        border-color: #8a2be2;
+    }
+
+.btn-info, .btn-danger {
+    padding: 4px 10px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-info {
+    background-color: #e6e6fa;
+    border-color: #d8b5ff;
+    color: #4b0082;
+}
+
+    .btn-info:hover {
+        background-color: #d8b5ff;
+        border-color: #b19cd9;
+    }
+
+.btn-danger {
+    background-color: #ffb6c1;
+    border-color: #ffc0cb;
+    color: #8b0000;
+}
+
+    .btn-danger:hover {
+        background-color: #ff69b4;
+        border-color: #ff1493;
+    }
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(147, 112, 219, 0.3);
+}
+
+.modal-header {
+    background-color: #e6e6fa;
+    color: #4b0082;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 20px 25px;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.modal-body {
+    padding: 25px;
+    background-color: #f8f4ff;
+}
+
+.modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 20px 25px;
+    background-color: #f8f4ff;
+}
+
+/* Form Styles */
+.form-label {
+    font-weight: 600;
+    color: #4b0082;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #d8b5ff;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+    .form-control:focus {
+        border-color: #9370db;
+        box-shadow: 0 0 0 0.2rem rgba(147, 112, 219, 0.25);
+    }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .table {
+        font-size: 0.9rem;
+    }
+
+    .btn-info, .btn-danger {
+        padding: 2px 8px;
+        font-size: 0.85rem;
+    }
+}
