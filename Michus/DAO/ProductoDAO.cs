@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using Michus.Models;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Michus.DAO
 {
@@ -14,7 +15,7 @@ namespace Michus.DAO
 
         public ProductoDAO(IConfiguration configuration)
         {
-            // cadena de conexión
+            // Cadena de conexión
             _connectionString = configuration.GetConnectionString("cn1")
                 ?? throw new ArgumentNullException("La cadena de conexión 'cn1' no está configurada.");
         }
@@ -23,6 +24,7 @@ namespace Michus.DAO
         public async Task<int> InsertarProducto(Producto producto)
         {
             int filasAfectadas;
+
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand("sp_InsertarProducto", connection) { CommandType = CommandType.StoredProcedure })
             {
@@ -36,6 +38,21 @@ namespace Michus.DAO
                 command.Parameters.AddWithValue("@Estado", producto.Estado);
 
                 await connection.OpenAsync();
+
+                // Verificar si el producto ya existe
+                using (var checkCommand = new SqlCommand("SELECT COUNT(1) FROM PRODUCTO WHERE ID_PRODUCTO = @IdProducto", connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@IdProducto", producto.IdProducto);
+                    var existe = (int)await checkCommand.ExecuteScalarAsync();
+
+                    if (existe > 0)
+                    {
+                        // El producto ya existe, no lo insertamos
+                        return 0;
+                    }
+                }
+
+                // Si no existe, se inserta el nuevo producto
                 filasAfectadas = await command.ExecuteNonQueryAsync();
             }
             return filasAfectadas;
@@ -46,7 +63,7 @@ namespace Michus.DAO
         {
             var productos = new List<Producto>();
             using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand("sp_ObtenerProducto", connection) { CommandType = CommandType.StoredProcedure })
+            using (var command = new SqlCommand("sp_ObtenerProductos", connection) { CommandType = CommandType.StoredProcedure })
             {
                 await connection.OpenAsync();
                 using (var reader = await command.ExecuteReaderAsync())
@@ -71,8 +88,6 @@ namespace Michus.DAO
                             Estado = (int)reader["ESTADO"]
                         });
                     }
-
-
                 }
             }
             return productos;
