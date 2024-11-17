@@ -13,7 +13,7 @@ namespace Michus.DAO
         {
             _connectionString = connectionString;
         }
-
+        
         public async Task<List<pa_lista_descuento_carta>> GetDescuentosCartilla(int? fechaInicio = null, int? fechaFin = null, byte? tipoDescuento = null)
         {
             var lista = new List<pa_lista_descuento_carta>();
@@ -113,6 +113,35 @@ namespace Michus.DAO
 
             return anioinicioDesc;
         }
+
+        public async Task RegistrarDescuentoAsync(Descuento descuento)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new SqlCommand("SP_CREAR_DESCUENTO", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parámetros para el procedimiento almacenado
+                    command.Parameters.AddWithValue("@ID_DESCUENTO", descuento.IdDescuento ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@ID_PROMOCION", descuento.IdPromocion ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@ID_EVENTO", descuento.IdEvento ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@FECHA_INICIO", descuento.FechaInicio);
+                    command.Parameters.AddWithValue("@FECHA_FIN", descuento.FechaFin);
+                    command.Parameters.AddWithValue("@PRECIO_DESCUENTO", descuento.PrecioDescuento);
+                    command.Parameters.AddWithValue("@TIPO_DESCUENTO", descuento.TipoDescuento);
+                    command.Parameters.AddWithValue("@APLICAR_CATEGORIA", descuento.AplicarCategoria);
+                    command.Parameters.AddWithValue("@ID_CATEGORIA", descuento.AplicarCategoria ? descuento.IdCategoria : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@ID_ARTICULOS", !descuento.AplicarCategoria ? descuento.IdArticulos : (object)DBNull.Value);
+
+                    // Ejecutar el comando
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
 
     }
 }

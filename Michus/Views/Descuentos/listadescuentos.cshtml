@@ -8,17 +8,19 @@
 
 <div class="discount-manager">
     <div class="add-button-container">
-        <button class="add-button">+</button>
+        <!-- Botón para abrir el modal -->
+        <button class="add-button open-modal">+</button>
     </div>
 
+
     <h1>Gestor de Descuentos</h1>
-    
+
     @using (Html.BeginForm("listadescuentos", "Descuentos", FormMethod.Get))
     {
         <div class="filters">
-            @Html.DropDownList("FECHA_INICIO", (SelectList)ViewBag.AniosInicioDesc, "Seleccione", new { @class = "form-select" })
+            @Html.DropDownList("FECHA_INICIO", (SelectList)ViewBag.AniosInicioDesc, "FECHA INICIO", new { @class = "form-select" })
             <br />
-            @Html.DropDownList("FECHA_FIN", (SelectList)ViewBag.AniosFinDesc, "Seleccione", new { @class = "form-select" })
+            @Html.DropDownList("FECHA_FIN", (SelectList)ViewBag.AniosFinDesc, "FECHA FIN", new { @class = "form-select" })
             <br />
             <button class="filter-button" type="submit">🔍</button>
             <br />
@@ -45,16 +47,16 @@
                         <label for="btn-@item.index"></label>
                     </div>
                 </div>
-                
-                    @if (item.value.TipoDescuento == 1)
-                    {
+
+                @if (item.value.TipoDescuento == 1)
+                {
                     <h2>Descuento Fijo</h2>
-                    }
-                    else
-                    {
+                }
+                else
+                {
                     <h2>Descuento Porcentual</h2>
-                    }
-                
+                }
+
                 <div class="label">Michus</div>
                 <p>Desde: @(item.value.FechaInicio == DateTime.MinValue ? "NO APLICA" : item.value.FechaInicio.ToString("dd/MM/yyyy"))</p>
                 <p>Hasta: @(item.value.FechaFin == DateTime.MinValue ? "NO APLICA" : item.value.FechaFin.ToString("dd/MM/yyyy"))</p>
@@ -62,3 +64,7 @@
         }
     </div>
 </div>
+
+
+
+

@@ -44,7 +44,20 @@ namespace Michus.Controllers
             return View(descuentos);
         }
 
-
+        [HttpPost]
+        public async Task<IActionResult> CrearDescuento([FromBody] Descuento descuento)
+        {
+            try
+            {
+                await _descuentosDAO.RegistrarDescuentoAsync(descuento);
+                return Ok("Descuento registrado correctamente.");
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores
+                return StatusCode(500, $"Error al registrar el descuento: {ex.Message}");
+            }
+        }
 
         private async Task LoadMenuDataAsync()
         {
