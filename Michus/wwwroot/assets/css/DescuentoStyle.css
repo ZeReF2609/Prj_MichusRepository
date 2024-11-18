@@ -49,14 +49,14 @@ p {
     }
 
 
+
 /* Filtros */
 .filters {
-    display: inline-flex;
+    display: flex;
     gap: 10px;
     margin-bottom: 20px;
     padding-left: 10px;
-    height: 40px;
-    width: 60px;
+    height: 35px;
 }
 
 .filter {
