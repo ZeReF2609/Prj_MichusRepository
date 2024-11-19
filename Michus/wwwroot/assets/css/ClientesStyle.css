@@ -1,0 +1,259 @@
+﻿
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+/* Aplicando el mismo diseño a los selects */
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    margin: 2px 0;
+}
+
+    /* Cuando el select está en foco */
+    .form-group select:focus {
+        border-color: #8e24aa;
+        outline: none;
+        box-shadow: 0 0 5px rgba(142, 36, 170, 0.5);
+    }
+
+/* Estilos para el botón de abrir modal */
+.open-modal-btn {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 15px;
+    margin-left: 0;
+    margin-bottom: 30px;
+}
+
+    .open-modal-btn i {
+        margin-right: 10px; /* Espacio entre el ícono y el texto */
+    }
+
+
+/* Estilos del modal */
+.custom-popup {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 600px; /* Ancho del modal */
+}
+
+.custom-header {
+    background-color: #6a1b9a;
+    color: #fff;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+}
+
+.custom-title {
+    font-size: 18px;
+}
+
+.custom-content {
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* Diseño de las columnas */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Espaciado entre las columnas */
+}
+
+/* Cada columna dentro de la fila */
+.form-group {
+    flex: 1 1 45%; /* Hace que cada input ocupe el 45% del ancho de su fila */
+    margin-bottom: 15px;
+}
+
+    /* Input */
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 5px;
+        box-sizing: border-box;
+        margin: 2px 0; /* Márgenes de 2px */
+    }
+
+        /* Cuando el input está en foco */
+        .form-group input:focus {
+            border-color: #8e24aa;
+            outline: none;
+            box-shadow: 0 0 5px rgba(142, 36, 170, 0.5);
+        }
+
+/* Estilos de los botones */
+.custom-confirm-btn {
+    background-color: #8e24aa;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.custom-cancel-btn {
+    background-color: #e53935;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+    .custom-confirm-btn:hover,
+    .custom-cancel-btn:hover {
+        opacity: 0.8;
+    }
+
+/* Responsividad */
+@media (max-width: 600px) {
+    .custom-popup {
+        width: 90%;
+    }
+
+    .form-group {
+        flex: 1 1 100%; 
+    }
+}
+
+
+table th, table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    font-size: 14px;
+}
+
+table thead {
+    background-color: #6a1b9a;
+    color: white;
+    font-weight: bold;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f3e5f5;
+}
+
+table tbody tr:hover {
+    background-color: #e1bee7;
+}
+
+table td a {
+    margin: 3px;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn-sm {
+    font-size: 12px;
+    padding: 5px 10px;
+}
+
+.table-responsive {
+    max-height: 500px;
+    overflow-x: auto;
+}
+
+/* Estilos de los botones */
+.btn-info {
+    background-color: #8e24aa;
+    border-color: #8e24aa;
+}
+
+.btn-warning {
+    background-color: #ffa726;
+    border-color: #ffa726;
+}
+
+.btn-danger {
+    background-color: #e53935;
+    border-color: #e53935;
+}
+
+/* Estilos del modal */
+.custom-popup {
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.custom-header {
+    background-color: #6a1b9a;
+    color: #fff;
+    font-weight: bold;
+}
+
+.custom-title {
+    font-size: 18px;
+}
+
+.custom-content {
+    padding: 15px;
+}
+
+.custom-confirm-btn {
+    background-color: #8e24aa;
+    color: white;
+}
+
+.custom-cancel-btn {
+    background-color: #e53935;
+    color: white;
+}
