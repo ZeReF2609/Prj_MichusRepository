@@ -129,3 +129,23 @@ function validarToken() {
         }
     });
 }
+
+
+
+// SECCION DE  SELECCION 
+// Evento que captura los productos seleccionados
+function updateSelectedProducts() {
+    // Obtenemos los checkboxes seleccionados
+    var selectedProducts = [];
+    $(".productoCheckbox:checked").each(function () {
+        selectedProducts.push($(this).data("producto-id"));
+    });
+
+    // Convertimos los IDs seleccionados a formato JSON
+    $("#productosSeleccionados").val(JSON.stringify(selectedProducts));
+}
+
+// Vinculamos el evento change al checkbox para que actualice el campo oculto
+$(".productoCheckbox").on("change", updateSelectedProducts);
+
+//Actualizado a la fecha 18/11/2024
