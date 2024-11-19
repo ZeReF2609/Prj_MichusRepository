@@ -13,7 +13,7 @@ namespace Michus.DAO
         {
             _connectionString = connectionString;
         }
-        
+
         public async Task<List<pa_lista_descuento_carta>> GetDescuentosCartilla(int? fechaInicio = null, int? fechaFin = null, byte? tipoDescuento = null)
         {
             var lista = new List<pa_lista_descuento_carta>();
@@ -66,7 +66,7 @@ namespace Michus.DAO
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    
+
                     using (var dr = await command.ExecuteReaderAsync())
                     {
                         while (dr.Read())
