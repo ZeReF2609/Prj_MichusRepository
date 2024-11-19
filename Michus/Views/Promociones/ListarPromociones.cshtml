@@ -7,7 +7,20 @@
 
 
 <div class="container mt-4">
-    <h3 class="text-white">Promociones Disponibles</h3>
+        <div class="d-flex align-items-center justify-content-between p-3"
+         style="background-color: #393153; border: 1px solid #444; border-radius: 10px; color: white; display: inline-flex; margin-left: 60px;">
+            <h3 class="m-0" style="margin-left: 10px;">Promociones Disponibles</h3>
+
+        <img id="agregar" src="~/assets/img/addPromociones.png"
+             width="50px" height="50px"
+             style="cursor:pointer; object-fit: cover;
+                margin-left: 20px; margin-right: 10px; margin-top: 4px;"
+             data-toggle="modal" data-target="#addPromoModal"
+             data-id="modalAgregar" />
+
+
+        </div>
+
 
     @if (ViewBag.Promociones != null && ViewBag.Promociones.Count > 0)
     {
@@ -22,7 +35,7 @@
                     </div>
 
                     <!-- Interruptor -->
-                    <div class="toggle" data-toggle="modal" data-target="#exampleModalCenter" data-id="@promo.IdPromociones">
+                    <div class="toggle" data-toggle="modal" data-target="#modalToken" data-id="@promo.IdPromociones">
                         <input type="checkbox" id="btn_@promo.IdPromociones" @(promo.Estado == 1 ? "checked" : "") onclick="return false;">
                         <label for="btn_@promo.IdPromociones"></label>
                     </div>
@@ -62,12 +75,12 @@
     }
     else
     {
-        <p class="text-white">No se encontraron promociones.</p>
+        <p class="text-white" style="color: black;">No se encontraron promociones.</p>
     }
 </div>
 
 <!-- Modal -->
-<div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div id="modalToken" class="modal fade modal-promo" tabindex="-1" role="dialog" aria-labelledby="modalTokenTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-0">
             <div class="modal-body p-4 px-5">
@@ -81,7 +94,7 @@
                     <p id="mensajeModal" class="mb-4">Revisa tu correo para encontrar el token.</p>
                     <input type="text" id="tokenInput" class="form-control mb-3" placeholder="Ingresa tu token aquí">
                     <input type="hidden" id="promoIdInput">
-                    <button onclick="enviarCorreo()" class="btn btn-success">Generear Token</button>
+                    <button onclick="enviarCorreo()" class="btn btn-success">Generar Token</button>
                     <button onclick="validarToken()" class="btn btn-primary">Validar Token</button>
                 </div>
             </div>
@@ -90,30 +103,99 @@
 </div>
 
 
+
+<!-- Modal de Agregar Promoción -->
+<div id="addPromoModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addPromoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90%; max-height: 90%;" role="document">
+        <div class="modal-content rounded-0" style="height: 100%; display: flex; flex-direction: column;">
+            <div class="modal-header" style="background-color: #007bff; color: white;">
+                <h2 class="modal-title" id="addPromoModalLabel">Agregar Nueva Promoción</h2>
+                <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-4 px-5" style="height: 100%; display: flex; flex-direction: column;">
+                <form id="promoForm" asp-action="CrearPromocion" asp-controller="Promociones" method="post" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                    <!-- Sección principal -->
+                    <div class="row" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div class="col-md-12" style="flex: 1;">
+                            <div class="section-box" style="height: 100%; border: 1px solid #ccc; padding: 10px; display: flex; flex-direction: column; justify-content: space-between;">
+                                <!-- Nombre de la Promoción -->
+                                <div class="form-group mb-3">
+                                    <input type="text" class="form-control" id="promocion" name="nombrePromocion" placeholder="Ingrese el nombre de la promoción" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                </div>
+
+                                <!-- Tipo de la Promoción -->
+                                <div class="form-group mb-3">
+                                    <select class="form-control" id="tipoPromocion" name="tipoPromocion" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                        <option value="0">Fijo</option>
+                                        <option value="1">Porcentual</option>
+                                    </select>
+                                </div>
+
+                                <!-- Descuento de la Promoción -->
+                                <div class="form-group mb-3">
+                                    <input type="number" class="form-control" id="descuento" name="descuento" placeholder="Descuento de la promoción" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                </div>
+
+                                <!-- Descripcion de la Promoción -->
+                                <div class="form-group mb-3">
+                                    <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción de la promoción" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                </div>
+
+                                <!-- Fecha de Inicio -->
+                                <div class="form-group mb-3">
+                                    <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                </div>
+
+                                <!-- Fecha de Finalización -->
+                                <div class="form-group mb-3">
+                                    <input type="date" class="form-control" id="fechaFin" name="fechaFin" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Guardar -->
+                    <button type="submit" class="btn btn-primary" style="background-color: #007bff; color: white; padding: 12px 25px; font-size: 16px; border-radius: 8px; border: none; cursor: pointer; margin-top: 20px;">
+                        Guardar Promoción
+                    </button>
+                </form>
+            </div>
+
+            <!-- Cerrar Modal -->
+            <a href="#" class="close-btn" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">Cerrar</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 <!-- Modal de Listado de Detalles -->
 <div id="newModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 90%; max-height: 90vh;" role="document">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90%; max-height: 90%;" role="document">
         <div class="modal-content rounded-0" style="height: 100%; display: flex; flex-direction: column;">
             <div class="modal-body p-4 px-5" style="height: 100%; display: flex; flex-direction: column;">
                 <div class="row" style="flex: 1; display: flex; flex-direction: column;">
                     <!-- Sección principal (arriba) -->
                     <div class="col-md-12" style="flex: 1;">
                         <div class="section-box" style="height: 100%; border: 1px solid #ccc; padding: 10px;">
-                            <h5>Contenido Principal</h5>
-                            <form id="formRegistrarDetalle" method="post" action="/TuControlador/RegistrarDetallePromo">
+                            <h5 style="font-weight: bold; color: black;">Gestion Principal</h5>
+                            <form id="formRegistrarDetalle" method="post" action="/Promociones/RegistrarDetallePromo">
                                 <!-- Campo para seleccionar la promoción -->
-
                                 <div class="mb-3">
-                                    <label for="idPromocion" class="form-label">Seleccionar Promoción</label>
                                     @Html.DropDownList("idPromocion",
                                              new SelectList(ViewBag.Promociones as List<dynamic>, "IdPromociones", "NomPromo", ViewBag.PromocionesList?.SelectedValue),
                                              "Seleccione una promoción",
                                              new { @class = "form-select custom-select-style", required = "required", onchange = "updatePromotionDetails()" })
                                 </div>
 
-
                                 <!-- Contenedor de detalles de la promoción en cuadros separados -->
-                                <div id="promotionDetails" class="mb-3">
+                                <div id="promotionDetails" class="mb-3 d-flex">
                                     <div class="promotion-box mb-2 p-3 border rounded">
                                         <strong>Tipo de Promoción:</strong>
                                         <span id="tipoPromocion">-</span>
@@ -126,34 +208,81 @@
                                         <strong>Descripción:</strong>
                                         <span id="descripcionPromocion">-</span>
                                     </div>
+
+                                    <!-- Campo para ingresar la cantidad aplicable -->
+                                <div class="mb-3 d-flex align-items-center" style="justify-content: flex-start;">
+                                    <!-- Campo de cantidad aplicable -->
+                                        <input type="number" class="form-control" id="cantidadAplicable" name="cantidadAplicable" required
+                                               style="width: 150px; padding: 10px; border-radius: 0.375rem; display: inline-block;" placeholder="Ingrese la cantidad">
+
+
+
+                                    <!-- Botón al lado izquierdo -->
+                                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Registrar Detalle</button>
+                                </div>
                                 </div>
 
 
-                                <!-- Campo para seleccionar productos (JSON) -->
-                                <div class="mb-3">
-                                    <label for="productosJson" class="form-label">Productos (JSON)</label>
-                                    <textarea class="form-control" id="productosJson" name="productosJson" rows="3" required></textarea>
-                                    <small>Ejemplo de JSON: [{"id":1, "nombre":"Producto1"}, {"id":2, "nombre":"Producto2"}]</small>
-                                </div>
-
-                                <!-- Campo para ingresar la cantidad aplicable -->
-                                <div class="mb-3">
-                                    <label for="cantidadAplicable" class="form-label">Cantidad Aplicable</label>
-                                    <input type="number" class="form-control" id="cantidadAplicable" name="cantidadAplicable" required>
-                                </div>
-
-                                <!-- Botón de envío -->
-                                <button type="submit" class="btn btn-primary">Registrar Detalle</button>
+                                <input type="hidden" id="productosSeleccionados" name="productosSeleccionados" />
                             </form>
                         </div>
                     </div>
                 </div>
 
-                <div class="row mt-3" style="flex-shrink: 0;">
-                    <!-- Sección derecha (Lista de detalles) -->
-                    <div class="col-md-12" style="display: flex; justify-content: flex-end;">
-                        <div class="section-box" style="width: 50%; border: 1px solid #ccc; padding: 10px;">
-                            <h5>Lista de Detalles</h5>
+                <!-- Listado de Productos y Detalles Promociones al mismo nivel (50% cada uno) -->
+                <div class="row mt-3" style="flex-shrink: 0; width: 100%; height: 90%; display: flex;">
+                    <!-- Sección de productos (60%) -->
+                    <div class="col-md-7" style="padding-right: 10px; width: 55%;">
+                        <div class="section-box" style="border: 1px solid #ccc; padding: 10px;">
+                            <h5 style="font-weight: bold; color: black;">Lista de Productos</h5>
+                            <div class="table-container">
+                                <!-- Contenedor con desplazamiento -->
+                                @if (ViewBag.Promociones != null && ViewBag.Promociones.Count > 0)
+                                {
+                                    <table class="table table-bordered" style="background-color: #f8f9fa; border: 1px solid #333;">
+                                        <thead>
+                                            <tr style="background-color: #e9ecef;">
+                                                <th style="width: 10%;">Seleccion</th>
+                                                <th>Producto</th>
+                                                <th>Descripcion</th>
+                                                <th>Categoria</th>
+                                                <th>Fecha Disponible</th>
+                                                <th>Precio</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var productos in ViewBag.Productos)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <label class="custom-checkbox">
+                                                            <input type="checkbox" class="productoCheckbox" data-producto-id="@productos.IdProductos" name="productosSeleccionados" value="@productos.IdProductos">
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </td>
+
+                                                    <td>@productos.Producto</td>
+                                                    <td>@productos.Descripcion</td>
+                                                    <td>@productos.Categoria</td>
+                                                    <td>@productos.FechaDisponible</td>
+                                                    <td>@productos.Precio</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <p>No hay productos disponibles.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de detalles de promoción (40%) -->
+                    <div class="col-md-5" style="padding-left: 10px; width: 45%;">
+                        <div class="section-box" style="border: 1px solid #ccc; padding: 10px;">
+                            <h5 style="font-weight: bold; color: black;">Lista de Detalles</h5>
                             <div class="table-container">
                                 <!-- Contenedor con desplazamiento -->
                                 @if (ViewBag.DetallePromocion != null && ViewBag.DetallePromocion.Count > 0)
@@ -200,6 +329,7 @@
                     </div>
                 </div>
 
+
                 <!-- Cerrar Modal -->
                 <a href="#" class="close-btn" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">Cerrar</span>
@@ -212,19 +342,30 @@
 
 
 
-
-
 <script src="~/assets/js/PromocionesScript.js"></script>
 
 <script>
     // Pasar promociones como variable global
     window.promociones = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Promociones));
 
-    $('#exampleModalCenter').on('show.bs.modal', function (event) {
+    $('#modalToken').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // El botón que abrió el modal
         var promoId = button.data('id'); // Extraer el ID de la promoción
 
         // Asignar el ID de la promoción al campo oculto en el modal
         $('#promoIdInput').val(promoId);
     });
+
+
+    $(document).ready(function () {
+        // Desactivar cualquier acción relacionada con el checkbox cuando se haga clic en la imagen
+        $('#agregar').click(function (event) {
+            // Prevenir que se activen otros modales, especialmente #exampleModalCenter
+            $('#exampleModalCenter').modal('hide'); // Cierra el modal de ejemplo
+            $('#addPromoModal').modal('show'); // Abre solo el modal de agregar promoción
+        });
+    });
+
+
 </script>
+<!-- Actualizado a la fecha 18/11/2024 -->
