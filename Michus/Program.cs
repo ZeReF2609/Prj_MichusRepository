@@ -37,11 +37,13 @@ builder.Services.AddScoped<ClientesDAO>(provider =>
     return new ClientesDAO(connectionString);
 });
 
+//servicio para el envio del correo
+builder.Services.AddTransient<CorreoHelper>();
 
 // Agregar controladores y vistas
 builder.Services.AddControllersWithViews();
 
-// Configuraci髇 de autenticaci髇
+// Configuraci贸n de autenticaci贸n
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -54,7 +56,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 var app = builder.Build();
 
-// Configuraci髇 del entorno
+// Configuraci贸n del entorno
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -67,7 +69,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configuraci髇 de rutas
+// Configuraci贸n de rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ecommerce}/{action=EcommerceProductosIndex}/{id?}");
