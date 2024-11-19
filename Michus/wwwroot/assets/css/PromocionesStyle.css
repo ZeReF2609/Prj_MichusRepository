@@ -12,6 +12,7 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+
 .promociones-grid {
     display: flex;
     flex-wrap: wrap;
@@ -201,13 +202,13 @@ input[type="checkbox"] {
     display: none;
     position: fixed;
     z-index: 1050;
-    left: 0;
+    left: -27px;
     top: 0;
-    width: 100%;
+    width: 105%;
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
-    padding-top: 50px;
+    padding-top: -2px;
 }
 
 /* Diálogo del modal */
@@ -225,7 +226,7 @@ input[type="checkbox"] {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    height: 100%; /* Asegura que el contenido ocupe todo el modal */
+    height: 85%; /* Asegura que el contenido ocupe todo el modal */
 }
 
 /* Cuerpo del modal */
@@ -467,10 +468,98 @@ input[type="checkbox"] {
 }
 
 
+/* Estilos específicos para el modal modal-promo */
+.modal-promo .modal-dialog {
+    max-width: 90%; /* Máximo ancho del modal */
+    max-height: 90vh; /* Máxima altura del modal */
+    margin: 30px auto;
+    width: 100%; /* El modal se adapta al 100% del ancho, pero con un máximo */
+    height: auto; /* La altura se ajusta de acuerdo al contenido */
+}
+
+/* Fondo oscuro del modal */
+.modal-backdrop.show {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Contenido del modal */
+.modal-content {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para el cuerpo del modal */
+.modal-body {
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    color: #666;
+    text-decoration: none;
+}
+
+    .close-btn:hover {
+        color: #333;
+    }
+
+/* Animación de entrada del modal */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal.fade .modal-dialog {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 767px) {
+    .modal-dialog {
+        margin: 20px;
+        width: 90%;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+}
 
 
 
-/*ESTILOS DE LOS DETALLES DE LA PROMOCION, APLICAR PROMO*/
+/* ESTILOS DE LOS DETALLES DE LA PROMOCIÓN, APLICAR PROMO */
 
 /* Estilos del cuadro */
 .promotion-box {
@@ -479,29 +568,33 @@ input[type="checkbox"] {
     border-radius: 5px; /* Bordes redondeados */
     padding: 10px 15px; /* Espaciado interno */
     margin-bottom: 10px; /* Espacio entre los cuadros */
-    display: inline-block; /* Hace que el tamaño del cuadro se ajuste al contenido */
-    width: 22%; /* El ancho es automático según el contenido */
-    min-width: 100px;
     color: #000; /* Texto en negro */
 }
 
+/* Contenedor que envuelve los cuadros de detalles */
 #promotionDetails {
-    display: flex;
-    flex-direction: column;
+    display: flex; /* Hace que los cuadros se alineen horizontalmente */
+    justify-content: space-between; /* Distribuye el espacio entre los cuadros */
     gap: 10px; /* Espacio entre los cuadros */
+    flex-wrap: wrap; /* Permite que los cuadros se envuelvan si no hay suficiente espacio */
 }
 
+/* Estilos de los cuadros de promoción */
+.promotion-box {
+    flex: 1 1 30%; /* Cada cuadro tomará un 30% del ancho del contenedor */
+    min-width: 250px; /* Tamaño mínimo para cada cuadro */
+}
+
+    /* Alineación de los contenidos dentro de cada cuadro */
     .promotion-box div {
         display: flex;
-        align-items: center;
+        align-items: center; /* Centra el contenido en el eje vertical */
     }
 
     .promotion-box strong {
         margin-right: 5px;
         font-weight: bold;
     }
-
-
 
 
 /*ESTILOS PARA EL SELECT LIST*/
@@ -536,3 +629,60 @@ input[type="checkbox"] {
 .mb-3 {
     margin-bottom: 20px; /* Separación entre los campos */
 }
+
+
+
+/*ESTILOS DEL CHECK BOX*/
+
+/* Estilo básico para el checkbox */
+.custom-checkbox {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+    /* Ocultar el checkbox por defecto */
+    .custom-checkbox input {
+        opacity: 0;
+        position: absolute;
+        z-index: -1; /* Oculta el checkbox original */
+    }
+
+    /* Crear el estilo del cuadro del checkbox */
+    .custom-checkbox .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 24px;
+        height: 24px;
+        border: 2px solid #007bff;
+        border-radius: 4px;
+        background-color: #fff;
+        transition: all 0.3s;
+    }
+
+    /* Efecto cuando el checkbox está marcado */
+    .custom-checkbox input:checked + .checkmark {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        /* Crear el "tick" dentro del checkbox cuando está marcado */
+        .custom-checkbox input:checked + .checkmark:after {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 9px;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 4px 4px 0;
+            transform: rotate(45deg);
+        }
+
+    /* Hover y cambio de color en el checkbox */
+    .custom-checkbox .checkmark:hover {
+        background-color: #e1f1ff;
+        border-color: #0056b3;
+    }
