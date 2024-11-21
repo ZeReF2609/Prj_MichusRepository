@@ -1,4 +1,4 @@
-﻿
+
     // Obtiene el modal
     var modal = document.getElementById('exampleModalCenter');
 
@@ -61,14 +61,15 @@ function updatePromotionDetails() {
 
     if (promocion) {
         // Actualizar los datos en la vista
-        document.getElementById("tipoPromocion").innerText = promocion.TipoPromocion == 1 ? "Fijo" : "Porcentual";
-        document.getElementById("descuentoPromocion").innerText = `${promocion.TipoPromocion == 1 ? 'S/.' : '%'} ${promocion.Descuento}`;
+        document.getElementById("descuentoPromocion").innerText = promocion.TipoPromocion == 1
+            ? `S/. ${promocion.Descuento} - Promoción Fija`
+            : `% ${promocion.Descuento} - Promoción Porcentual`;
+
         document.getElementById("descripcionPromocion").innerText = promocion.Descripcion;
     } else {
         // Si no hay selección válida, limpiar los datos
-        document.getElementById("tipoPromocion").innerText = "-";
-        document.getElementById("descuentoPromocion").innerText = "-";
-        document.getElementById("descripcionPromocion").innerText = "-";
+        document.getElementById("descuentoPromocion").innerText = "Seleccione una Promoción";
+        document.getElementById("descripcionPromocion").innerText = "Seleccione una Promoción";
     }
 }
 
@@ -148,4 +149,4 @@ function updateSelectedProducts() {
 // Vinculamos el evento change al checkbox para que actualice el campo oculto
 $(".productoCheckbox").on("change", updateSelectedProducts);
 
-//Actualizado a la fecha 18/11/2024
+//Actualizado a la fecha 21/11/2024
