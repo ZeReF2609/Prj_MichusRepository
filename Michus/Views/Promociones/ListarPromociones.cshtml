@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Listado de Promociones";
 }
 
@@ -109,7 +109,7 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 90%; max-height: 90%;" role="document">
         <div class="modal-content rounded-0" style="height: 100%; display: flex; flex-direction: column;">
             <div class="modal-header" style="background-color: #007bff; color: white;">
-                <h2 class="modal-title" id="addPromoModalLabel">Agregar Nueva Promoción</h2>
+                <h2 class="modal-title" id="addPromoModalLabel" style="margin-left: 30px;">Agregar Nueva Promoción</h2>
                 <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -164,8 +164,8 @@
             </div>
 
             <!-- Cerrar Modal -->
-            <a href="#" class="close-btn" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">Cerrar</span>
+            <a href="#" class="close-agregar" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
             </a>
         </div>
     </div>
@@ -197,16 +197,12 @@
                                 <!-- Contenedor de detalles de la promoción en cuadros separados -->
                                 <div id="promotionDetails" class="mb-3 d-flex">
                                     <div class="promotion-box mb-2 p-3 border rounded">
-                                        <strong>Tipo de Promoción:</strong>
-                                        <span id="tipoPromocion">-</span>
-                                    </div>
-                                    <div class="promotion-box mb-2 p-3 border rounded">
                                         <strong>Descuento:</strong>
-                                        <span id="descuentoPromocion">-</span>
+                                        <span id="descuentoPromocion">Seleccione una Promoción</span>
                                     </div>
                                     <div class="promotion-box mb-2 p-3 border rounded">
                                         <strong>Descripción:</strong>
-                                        <span id="descripcionPromocion">-</span>
+                                        <span id="descripcionPromocion">Seleccione una Promoción</span>
                                     </div>
 
                                     <!-- Campo para ingresar la cantidad aplicable -->
@@ -331,7 +327,7 @@
 
 
                 <!-- Cerrar Modal -->
-                <a href="#" class="close-btn" data-dismiss="modal" aria-label="Close">
+                <a href="#" class="close-detalle" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">Cerrar</span>
                 </a>
             </div>
@@ -368,4 +364,4 @@
 
 
 </script>
-<!-- Actualizado a la fecha 18/11/2024 -->
+<!-- Actualizado a la fecha 21/11/2024 -->
