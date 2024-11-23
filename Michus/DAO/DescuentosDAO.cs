@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using Michus.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace Michus.DAO
@@ -8,6 +9,7 @@ namespace Michus.DAO
     public class DescuentosDAO
     {
         private readonly string _connectionString;
+
 
         public DescuentosDAO(string connectionString)
         {
@@ -135,12 +137,17 @@ namespace Michus.DAO
                     command.Parameters.AddWithValue("@APLICAR_CATEGORIA", descuento.AplicarCategoria);
                     command.Parameters.AddWithValue("@ID_CATEGORIA", descuento.AplicarCategoria ? descuento.IdCategoria : (object)DBNull.Value);
                     command.Parameters.AddWithValue("@ID_ARTICULOS", !descuento.AplicarCategoria ? descuento.IdArticulos : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@APLICAR_CATEGORIA", descuento.TI_SITU);
 
                     // Ejecutar el comando
                     await command.ExecuteNonQueryAsync();
                 }
             }
         }
+
+
+
+        
 
 
     }

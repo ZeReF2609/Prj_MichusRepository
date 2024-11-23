@@ -12,5 +12,6 @@
         public bool AplicarCategoria { get; set; }
         public string? IdCategoria { get; set; }
         public string? IdArticulos { get; set; }
+        public string? TI_SITU { get; set; }
     }
 }

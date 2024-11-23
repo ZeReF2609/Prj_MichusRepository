@@ -6,26 +6,28 @@
     background-color: #fff;
     position: relative;
     font-family: Arial, sans-serif;
+    border-radius: 10px; /* Agregado para bordes redondeados */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Agregado para sombra suave */
 }
 
 /* Encabezados */
 h1 {
-    font-size: 1.5em;
+    font-size: 1.8em; /* Ajuste tamaño de fuente */
     margin-bottom: 20px;
+    color: #333; /* Asegurar que el color sea consistente */
 }
 
 h2 {
-    font-size: 1em;
-    color: #333;
+    font-size: 1.2em; /* Ajuste tamaño de fuente */
+    color: #555; /* Ajuste para mejor contraste */
+    font-weight: 600; /* Aumento en el peso de la fuente */
 }
-
 
 /* Párrafos */
 p {
     font-size: 0.9em;
     color: #666;
 }
-
 
 /* Estilos de pestañas */
 .tabs {
@@ -36,19 +38,23 @@ p {
 
 .tab {
     padding: 10px 20px;
-    background-color: #eee;
-    border: none;
-    border-radius: 4px;
+    background-color: #f7f7f7; /* Mejor contraste con el fondo */
+    border: 1px solid #ddd;
+    border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
     .tab.active {
         background-color: #333;
         color: #fff;
+        border-color: #333; /* Para un borde más consistente */
     }
 
-
+    .tab:hover {
+        background-color: #ddd;
+    }
 
 /* Filtros */
 .filters {
@@ -62,18 +68,23 @@ p {
 .filter {
     border: 1px solid #ccc;
     border-radius: 4px;
+    padding: 5px 10px;
+    width: 150px;
 }
 
 .filter-button {
     padding: 8px 16px;
-    background-color: #333;
-    color: #fff;
+    background-color: #007bff;
+    color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-
+    .filter-button:hover {
+        background-color: #0056b3;
+    }
 
 /* Cards de descuentos */
 .discount-cards {
@@ -92,7 +103,7 @@ p {
 }
 
     .discount-card:hover {
-        transform: scale(1.02);
+        transform: scale(1.05);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
@@ -126,6 +137,7 @@ p {
     color: #666;
 }
 
+/* Toggle de activación */
 .toggle input[type="checkbox"] {
     display: none;
 }
@@ -161,21 +173,12 @@ p {
         transform: translateX(20px);
     }
 
-
-
-
-
-
-
-
-
-
-
 /* Botón flotante para agregar descuentos */
 .add-button-container {
-    position: absolute;
+    position: fixed;
     top: 25px;
     right: 40px;
+    z-index: 1000; /* Asegura que el botón esté sobre otros elementos */
 }
 
 .add-button {
@@ -183,41 +186,24 @@ p {
     color: white;
     border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
     font-weight: bold;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
     .add-button:hover {
         background-color: #45a049;
+        transform: scale(1.05);
     }
 
-/* Toggle de activación */
-label {
-    width: 20px;
-    height: 20px;
-    background: #ccc;
-    display: flex;
-    cursor: pointer;
-    margin-top: -2px;
-    border-radius: 50px;
-    transition: all 0.25s ease 0s;
-}
-
-input {
-    display: none;
-}
-
-
-
-
+/* Modal */
 .custom-modal {
     display: none; /* Inicialmente está oculto */
     position: fixed;
@@ -228,31 +214,35 @@ input {
     background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
     justify-content: center;
     align-items: center;
+    z-index: 999; /* Asegura que el modal esté sobre otros elementos */
 }
 
 .modal-content {
     background-color: white;
-    padding: 20px;
+    padding: 30px;
     border-radius: 10px;
     position: relative;
+    width: 400px;
+    max-width: 90%;
 }
 
 .close-modal, .close-details-modal {
     position: absolute;
     top: 10px;
     right: 10px;
-    font-size: 20px;
+    font-size: 25px;
     cursor: pointer;
     color: #333; /* Color visible para el texto */
 }
 
 .close-details-button {
-    margin-top: 10px;
-    padding: 10px;
+    margin-top: 20px;
+    padding: 12px 20px;
     background-color: #007bff;
     color: white;
     border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
     .close-details-button:hover {
