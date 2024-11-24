@@ -29,7 +29,7 @@
             {
                 <div class="nft position-relative">
 
-                    <!-- Descuento en la esquina superior izquierda -->
+                    <!-- Descuento-->
                     <div class="discount-badge">
                         @(promo.TipoPromocion == 1 ? "S/." : "%") @promo.Descuento
                     </div>
@@ -48,12 +48,11 @@
                             <strong>Hasta:</strong> @promo.FechaFin.ToString("dd/MM/yyyy")<br>
                         </p>
                         <div class="tokenInfo" style="display: flex; justify-content: space-between; align-items: center;">
-                            <!-- "Michus" enmarcado en un cuadro negro -->
                             <div style="background-color: black; color: white; padding: 5px 10px; border-radius: 5px;">
                                 Michus
                             </div>
 
-                            <!-- Tipo de descuento a la derecha -->
+                            <!-- Tipo de descuento -->
                             <div style="margin-left: auto;">
                                 <p style="margin: 0; padding-left: 5px;">
                                     @if (promo.TipoPromocion == 1)
@@ -354,9 +353,7 @@
 
 
     $(document).ready(function () {
-        // Desactivar cualquier acción relacionada con el checkbox cuando se haga clic en la imagen
         $('#agregar').click(function (event) {
-            // Prevenir que se activen otros modales, especialmente #exampleModalCenter
             $('#exampleModalCenter').modal('hide'); // Cierra el modal de ejemplo
             $('#addPromoModal').modal('show'); // Abre solo el modal de agregar promoción
         });
@@ -364,4 +361,4 @@
 
 
 </script>
-<!-- Actualizado a la fecha 21/11/2024 -->
+<!-- Actualizado a la fecha 24/11/2024 -->
