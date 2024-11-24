@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Michus.Models;
 using System.Diagnostics;
 using Michus.Models_Store;
+using Newtonsoft.Json;
 
 namespace Michus.Controllers
 {
@@ -25,13 +26,13 @@ namespace Michus.Controllers
 
         [HttpGet("Usuarios/lista-clientes")]
         [Authorize]
-        public IActionResult ListaClientes()
+        public async Task<IActionResult> ListaClientes()
         {
             try
             {
                 // Obtener todos los clientes
                 var clientes = _clientesDao.ObtenerTodosClientes();
-                LoadMenuDataAsync();
+                await LoadMenuDataAsync();
                 if (clientes == null || clientes.Count == 0)
                 {
                     return NotFound("No se encontraron clientes.");
@@ -74,7 +75,6 @@ namespace Michus.Controllers
         {
             try
             {
-                // Validar que los datos necesarios están presentes
                 if (clienteCompleto == null || clienteCompleto.Sistema == null || clienteCompleto.Contacto == null)
                 {
                     return BadRequest("Los datos del cliente, usuario y contacto son requeridos.");
@@ -122,71 +122,101 @@ namespace Michus.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult ActualizarCliente(ClienteCompleto clienteCompleto)
+        [HttpGet]
+        public IActionResult ObtenerCliente(string idCliente)
         {
-            // Validar que el objeto clienteCompleto y sus propiedades no sean nulos
-            if (clienteCompleto == null || clienteCompleto.Cliente == null || clienteCompleto.Contacto == null || clienteCompleto.Sistema == null)
+            // Obtenemos el cliente completo
+            var clienteCompleto = _clientesDao.ObtenerClientePorId(idCliente);
+
+            if (clienteCompleto == null)
             {
-                return BadRequest("Los datos del cliente son inválidos.");
+                return NotFound(new { message = "Cliente no encontrado" });
             }
 
-            // Asegurarse de que el ID del cliente es válido
-            if (string.IsNullOrEmpty(clienteCompleto.Cliente.IdCliente))
+            // Obtenemos los tipos de documento (esto depende de tu implementación)
+            var tiposDocumento = _clientesDao.ObtenerTiposDocumento();
+
+            // Retornamos el cliente completo junto con sistema, contacto y los tipos de documento
+            return Json(new
             {
-                return BadRequest("El ID del cliente no puede estar vacío.");
+                cliente = clienteCompleto?.Cliente,
+                sistema = clienteCompleto?.Sistema,
+                contacto = clienteCompleto?.Contacto,
+                tiposDocumento
+            });
+        }
+
+        [HttpPost]
+        public IActionResult ActualizarCliente([FromBody] ClienteCompleto clienteCompleto)
+        {
+            Debug.WriteLine($"Cliente ID: {clienteCompleto?.Cliente?.IdCliente}");
+            Debug.WriteLine($"Contacto: {clienteCompleto?.Contacto?.Telefono}");
+            Debug.WriteLine($"Sistema: {clienteCompleto?.Sistema?.Usuario}");
+
+            // Si clienteCompleto es null, se indica un error de deserialización
+            if (clienteCompleto == null)
+            {
+                return BadRequest("Datos del cliente no deserializados correctamente.");
             }
 
-            // Convertir DateOnly a DateTime, manejar valores nulos correctamente
-            DateTime? fechaNacimiento = clienteCompleto.Cliente.FechaNacimiento != default
+            // Verificar que IdCliente no sea nulo ni vacío
+            if (string.IsNullOrEmpty(clienteCompleto.Cliente?.IdCliente))
+            {
+                return BadRequest("El IdCliente es obligatorio.");
+            }
+
+            // Manejar la fecha de nacimiento de manera segura
+            DateTime? fechaNacimiento = clienteCompleto.Cliente?.FechaNacimiento != default
                 ? clienteCompleto.Cliente.FechaNacimiento.ToDateTime(new TimeOnly(0, 0))
                 : (DateTime?)null;
 
-            // Llamar al método del Dao para actualizar los datos del cliente
-            bool actualizado = _clientesDao.ActualizarCliente(
-                clienteCompleto.Cliente.IdCliente,         // idCliente
-                clienteCompleto.Cliente.Nombres,          // nombres
-                clienteCompleto.Cliente.Apellidos,        // apellidos
-                null,                                     // idDoc (ajustar si es necesario)
-                clienteCompleto.Cliente.DocIdent,         // docIdent
-                fechaNacimiento,                          // fechaNacimiento
-                clienteCompleto.Cliente.NivelFidelidad,   // nivelFidelidad
-                clienteCompleto.Cliente.PuntosFidelidad,  // puntosFidelidad
-                clienteCompleto.Contacto.Telefono,        // telefono
-                clienteCompleto.Contacto.Direccion,       // direccion
-                clienteCompleto.Sistema.IdUsuario,        // usuario
-                clienteCompleto.Sistema.Email,            // email
-                clienteCompleto.Sistema.Contrasenia       // contrasenia
+            // Realizar la actualización con manejo de posibles nulls y valores por defecto
+            bool resultado = _clientesDao.ActualizarCliente(
+                3,
+                clienteCompleto.Cliente.IdCliente,  // Este es obligatorio
+                clienteCompleto.Cliente?.Nombres ?? "",    // Si es null, asignamos una cadena vacía
+                clienteCompleto.Cliente?.Apellidos ?? "",  // Si es null, asignamos una cadena vacía
+                clienteCompleto.Cliente.IdDoc,  // Este valor está fijo como null
+                clienteCompleto.Cliente?.DocIdent ?? "",   // Si es null, asignamos una cadena vacía
+                fechaNacimiento,                     // Puede ser null
+                clienteCompleto.Cliente?.NivelFidelidad ?? 0,  // Si es null, asignamos un valor por defecto
+                clienteCompleto.Cliente?.PuntosFidelidad ?? 0,  // Si es null, asignamos un valor por defecto
+                clienteCompleto.Contacto?.Telefono ?? "",  // Si es null, asignamos una cadena vacía
+                clienteCompleto.Contacto?.Direccion ?? "", // Si es null, asignamos una cadena vacía
+                clienteCompleto.Sistema?.Usuario ?? "",  // Si es null, asignamos una cadena vacía
+                clienteCompleto.Sistema?.Email ?? ""      // Si es null, asignamos una cadena vacía
             );
 
-
             // Retornar el resultado de la operación
-            if (actualizado)
+            if (resultado)
             {
-                return Ok("Cliente actualizado correctamente.");
+                return Ok(new { success = true, mensaje = "Cliente guardado correctamente." });
             }
             else
             {
-                return StatusCode(500, "Hubo un problema al actualizar el cliente.");
+                return StatusCode(500, new { success = false, mensaje = "Error al guardar el cliente." });
             }
         }
+
+
+
 
         public IActionResult EliminarCliente(string idCliente)
         {
             if (string.IsNullOrEmpty(idCliente))
             {
-                return BadRequest("El ID del cliente no puede estar vacío.");
+                return BadRequest(new { success = false, message = "El ID del cliente no puede estar vacío." });
             }
 
             bool eliminado = _clientesDao.EliminarCliente(idCliente);
 
             if (eliminado)
             {
-                return Ok("Cliente eliminado correctamente.");
+                return Ok(new { success = true, message = "Cliente eliminado correctamente." });
             }
             else
             {
-                return StatusCode(500, "Hubo un problema al eliminar el cliente.");
+                return StatusCode(500, new { success = false, message = "Hubo un problema al eliminar el cliente." });
             }
         }
 
@@ -194,20 +224,21 @@ namespace Michus.Controllers
         {
             if (string.IsNullOrEmpty(idCliente))
             {
-                return BadRequest("El ID del cliente no puede estar vacío.");
+                return BadRequest(new { success = false, message = "El ID del cliente no puede estar vacío." });
             }
 
             bool activado = _clientesDao.ActivarCliente(idCliente);
 
             if (activado)
             {
-                return Ok("Cliente activado correctamente.");
+                return Ok(new { success = true, message = "Cliente activado correctamente." });
             }
             else
             {
-                return StatusCode(500, "Hubo un problema al activar el cliente.");
+                return StatusCode(500, new { success = false, message = "Hubo un problema al activar el cliente." });
             }
         }
+
 
         private async Task LoadMenuDataAsync()
         {
