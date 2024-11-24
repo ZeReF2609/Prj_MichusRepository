@@ -37,11 +37,11 @@
         var submitBtn = form.querySelector('.btn');
 
         form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+            event.preventDefault(); 
 
         // Aquí puedes manejar la validación de la contraseña
         var password = passwordInput.value;
-        if (password === "1234") { // Contraseña correcta
+        if (password === "1234") { 
             alert('Contraseña correcta');
         closeModal();
         } else {
@@ -78,7 +78,7 @@ function updatePromotionDetails() {
 
 function enviarCorreo() {
     // Obtener el correo del destinatario desde el formulario o el contexto
-    let destinatario = 'josejuliosanchezcruzado1@gmail.com';  // Asegúrate de que este valor se obtenga dinámicamente de la UI si es necesario
+    let destinatario = 'josejuliosanchezcruzado1@gmail.com';  
 
     fetch(`/Promociones/EnviarTokenPorPromocion?destinatario=${encodeURIComponent(destinatario)}`, {
         method: 'GET',
@@ -98,8 +98,8 @@ function enviarCorreo() {
 
 
 function validarToken() {
-    var promoId = $('#promoIdInput').val();  // Obtener el ID de la promoción
-    var token = $('#tokenInput').val();  // Obtener el valor del token
+    var promoId = $('#promoIdInput').val();  
+    var token = $('#tokenInput').val(); 
 
     // Validar que el token no esté vacío
     if (!token) {
@@ -109,17 +109,16 @@ function validarToken() {
 
     // Hacer la solicitud AJAX al backend
     $.ajax({
-        url: '/Promociones/ValidarToken',  // Cambia la URL según tu ruta
+        url: '/Promociones/ValidarToken',  
         type: 'POST',
         data: JSON.stringify({
             Token: token,
-            PromoId: promoId  // Incluir el ID de la promoción en la solicitud
+            PromoId: promoId 
         }),
         contentType: 'application/json',
         success: function (response) {
             if (response.success) {
                 $('#mensajeModal').text('Token válido. ¡Promoción activada!');
-                // Puedes cerrar el modal aquí
                 $('#exampleModalCenter').modal('hide');
             } else {
                 $('#mensajeModal').text('Token inválido o expirado.');
@@ -149,4 +148,4 @@ function updateSelectedProducts() {
 // Vinculamos el evento change al checkbox para que actualice el campo oculto
 $(".productoCheckbox").on("change", updateSelectedProducts);
 
-//Actualizado a la fecha 21/11/2024
+//Actualizado a la fecha 24/11/2024
