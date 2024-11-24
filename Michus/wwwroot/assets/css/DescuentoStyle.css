@@ -6,21 +6,21 @@
     background-color: #fff;
     position: relative;
     font-family: Arial, sans-serif;
-    border-radius: 10px; /* Agregado para bordes redondeados */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Agregado para sombra suave */
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Encabezados */
 h1 {
-    font-size: 1.8em; /* Ajuste tamaño de fuente */
+    font-size: 1.8em;
     margin-bottom: 20px;
-    color: #333; /* Asegurar que el color sea consistente */
+    color: #333;
 }
 
 h2 {
-    font-size: 1.2em; /* Ajuste tamaño de fuente */
-    color: #555; /* Ajuste para mejor contraste */
-    font-weight: 600; /* Aumento en el peso de la fuente */
+    font-size: 1.2em;
+    color: #555;
+    font-weight: 600;
 }
 
 /* Párrafos */
@@ -38,7 +38,7 @@ p {
 
 .tab {
     padding: 10px 20px;
-    background-color: #f7f7f7; /* Mejor contraste con el fondo */
+    background-color: #f7f7f7;
     border: 1px solid #ddd;
     border-radius: 5px;
     cursor: pointer;
@@ -49,7 +49,7 @@ p {
     .tab.active {
         background-color: #333;
         color: #fff;
-        border-color: #333; /* Para un borde más consistente */
+        border-color: #333;
     }
 
     .tab:hover {
@@ -176,9 +176,9 @@ p {
 /* Botón flotante para agregar descuentos */
 .add-button-container {
     position: fixed;
-    top: 25px;
+    top: 85px;
     right: 40px;
-    z-index: 1000; /* Asegura que el botón esté sobre otros elementos */
+    z-index: 1000;
 }
 
 .add-button {
@@ -205,25 +205,29 @@ p {
 
 /* Modal */
 .custom-modal {
-    display: none; /* Inicialmente está oculto */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
-    z-index: 999; /* Asegura que el modal esté sobre otros elementos */
+    z-index: 999;
 }
 
 .modal-content {
     background-color: white;
     padding: 30px;
+    top: 70px;
+    left: 150px;
     border-radius: 10px;
     position: relative;
-    width: 400px;
-    max-width: 90%;
+    width: 900px;
+    max-width: 80%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }
 
 .close-modal, .close-details-modal {
@@ -232,7 +236,7 @@ p {
     right: 10px;
     font-size: 25px;
     cursor: pointer;
-    color: #333; /* Color visible para el texto */
+    color: #333;
 }
 
 .close-details-button {
@@ -247,4 +251,144 @@ p {
 
     .close-details-button:hover {
         background-color: #0056b3;
+    }
+
+/* Estilos para las pestañas dentro de nav-tabs */
+.nav-tabs {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #ddd;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+    .nav-tabs .nav-link {
+        padding: 10px 20px;
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #007bff;
+        text-align: center;
+        border: 1px solid transparent;
+        border-radius: 5px 5px 0 0;
+        transition: all 0.3s ease;
+    }
+
+        .nav-tabs .nav-link:hover {
+            background-color: #f1f1f1;
+            border-color: #ddd;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+            box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tabs .nav-link:not(.active) {
+            background-color: #f8f9fa;
+        }
+
+
+
+/* Estilo para la pestaña activa */
+.nav-link.active {
+    font-weight: bold;
+    color: white;
+    border-color: transparent;
+}
+
+.status-icons {
+    margin-top: 10px;
+    text-align: center;
+}
+
+    .status-icons i {
+        margin: 0 5px;
+    }
+
+/* Estilo para la tabla */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    background-color: #343a40;
+    color: #ffffff;
+}
+
+    .custom-table thead {
+        background-color: #212529;
+
+    }
+
+    .custom-table th {
+        padding: 10px;
+        border: 1px solid #495057;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .custom-table td {
+        padding: 10px;
+        border: 1px solid #495057;
+    }
+
+    .custom-table tbody tr:nth-child(odd) {
+        background-color: #3e444a;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #495057;
+        cursor: pointer;
+    }
+
+.scrollable-container {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.scrollable-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+
+/* Botones de DESACTIVA o ACTIVAR */
+.btn-check {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+    .btn-check:hover {
+        background-color: #005f00; 
+        transform: scale(1.1);
+    }
+
+
+.btn-x {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+    .btn-x:hover {
+        background-color: #a00000; 
+        transform: scale(1.1);
     }

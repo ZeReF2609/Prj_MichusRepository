@@ -16,7 +16,7 @@ namespace Michus.DAO
             _connectionString = connectionString;
         }
 
-        public async Task<List<pa_lista_descuento_carta>> GetDescuentosCartilla(int? fechaInicio = null, int? fechaFin = null, byte? tipoDescuento = null)
+        public async Task<List<pa_lista_descuento_carta>> GetDescuentosCartilla(int? fechaInicio = null, int? fechaFin = null, string ti_situ = "")
         {
             var lista = new List<pa_lista_descuento_carta>();
 
@@ -31,7 +31,7 @@ namespace Michus.DAO
                     // Añadir parámetros con valores predeterminados nulos
                     command.Parameters.AddWithValue("@FECHA_INICIO", fechaInicio.HasValue ? (object)fechaInicio.Value : DBNull.Value);
                     command.Parameters.AddWithValue("@FECHA_FIN", fechaFin.HasValue ? (object)fechaFin.Value : DBNull.Value);
-                    command.Parameters.AddWithValue("@TIPO_DESCUENTO", tipoDescuento.HasValue ? (object)tipoDescuento.Value : DBNull.Value);
+                    command.Parameters.AddWithValue("@TI_SITU", ti_situ);
 
                     using (var dr = await command.ExecuteReaderAsync())
                     {
@@ -116,6 +116,9 @@ namespace Michus.DAO
             return anioinicioDesc;
         }
 
+
+
+        // SIN USAR
         public async Task RegistrarDescuentoAsync(Descuento descuento)
         {
             using (var connection = new SqlConnection(_connectionString))

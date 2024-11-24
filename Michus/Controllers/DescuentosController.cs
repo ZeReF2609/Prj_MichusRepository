@@ -22,16 +22,14 @@ namespace Michus.Controllers
 
         public DescuentosController(MenuService menuService, IConfiguration config)
         {
-            _connectionString = config.GetConnectionString("cn1"); // Se asigna la cadena de conexión al campo privado
+            _connectionString = config.GetConnectionString("cn1");
             _menuService = menuService;
             _descuentosDAO = new DescuentosDAO(_connectionString);
         }
 
 
 
-
-        // Acción para listar descuentos
-        public async Task<ActionResult> listadescuentos(int? FECHA_INICIO = null, int? FECHA_FIN = null)
+        public async Task<ActionResult> listadescuentos(int? FECHA_INICIO = null, int? FECHA_FIN = null, string? TI_SITU = "PAP")
         {
             await LoadMenuDataAsync();
 
@@ -41,73 +39,18 @@ namespace Michus.Controllers
             ViewBag.AniosInicioDesc = new SelectList(aniosInicioDesc, "anio", "anio");
             ViewBag.AniosFinDesc = new SelectList(aniosFinDesc, "anio", "anio");
 
-            var descuentos = await _descuentosDAO.GetDescuentosCartilla(FECHA_INICIO, FECHA_FIN);
+
+            ViewBag.TiSitu = TI_SITU;
+            ViewBag.FechaInicio = FECHA_INICIO;
+            ViewBag.FechaFin = FECHA_FIN;
+
+            var descuentos = await _descuentosDAO.GetDescuentosCartilla(FECHA_INICIO, FECHA_FIN, TI_SITU!);
+
+
+            ViewBag.TiSitu = TI_SITU; 
+
             return View(descuentos);
         }
-
-       
-
-        [HttpPost("VerDetallesDescuento")]
-        public async Task<IActionResult> VerDetallesDescuento([FromBody] string idDescuento)
-        {
-            if (string.IsNullOrEmpty(idDescuento))
-            {
-                return BadRequest(new { error = "El ID del descuento es obligatorio." });
-            }
-
-            try
-            {
-                // Crear conexión con la base de datos
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    // Crear el comando para ejecutar el procedimiento almacenado
-                    using (var command = new SqlCommand("SP_VER_DETALLES_DESCUENTO", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-
-                        // Añadir el parámetro para el procedimiento almacenado
-                        command.Parameters.AddWithValue("@ID_DESCUENTO", idDescuento);
-
-                        // Abrir la conexión
-                        await connection.OpenAsync();
-
-                        // Ejecutar el procedimiento almacenado y obtener los resultados
-                        using (var reader = await command.ExecuteReaderAsync())
-                        {
-                            var resultados = new List<dynamic>();
-
-                            // Leer los resultados
-                            while (await reader.ReadAsync())
-                            {
-                                var row = new ExpandoObject() as IDictionary<string, Object>;
-
-                                // Recorrer las columnas de la fila y almacenarlas en un diccionario
-                                for (int i = 0; i < reader.FieldCount; i++)
-                                {
-                                    row.Add(reader.GetName(i), reader.IsDBNull(i) ? null : reader.GetValue(i));
-                                }
-
-                                // Agregar la fila al resultado
-                                resultados.Add(row);
-                            }
-
-                            // Retornar los resultados
-                            return Ok(resultados);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Manejo de errores
-                return StatusCode(500, new { error = ex.Message });
-            }
-        }
-
-
-
-
-
 
 
         [HttpGet]
@@ -168,6 +111,46 @@ namespace Michus.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
+
+
+
+        [HttpPost]
+        public IActionResult ActualizarSitu()
+        {
+            string idDescuento = Request.Form["idDescuento"];
+            string situ = Request.Form["situ"];
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand("spActualizarSitu", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@IdDescuento", idDescuento);
+                    command.Parameters.AddWithValue("@TI_SITU", situ);
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        return Ok($"Estado actualizado a {situ} para el descuento {idDescuento}");
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest($"Error al actualizar el estado: {ex.Message}");
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
 
 
 
