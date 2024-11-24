@@ -1,9 +1,11 @@
+/*ESTILOS DEL CARD*/
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #1a1f2b; /* Fondo gris oscuro azulado */
+    background-color: #1a1f2b;
     color: #eee;
     user-select: none;
 }
@@ -17,14 +19,14 @@ code {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px; /* Espaciado entre las tarjetas */
-    padding: 20px; /* Espacio adicional alrededor del contenedor */
+    gap: 20px;
+    padding: 20px;
 }
 
 .nft {
     user-select: none;
-    width: 350px; /* Tamaño fijo para todos los cards */
-    height: 250px; /* Altura fija */
+    width: 350px; 
+    height: 250px;
     margin: 0;
     border: 1px solid #ffffff22;
     background: linear-gradient(45deg, rgba(40, 44, 52, 1) 0%, rgba(17, 0, 32, 0.7) 100%);
@@ -50,8 +52,8 @@ code {
 
     .nft .tokenImage {
         width: 100%;
-        height: 150px; /* Ajusta la imagen para ocupar una parte fija */
-        object-fit: cover; /* Recorta la imagen si es necesario */
+        height: 150px;
+        object-fit: cover;
         border-radius: 0.5rem;
     }
 
@@ -60,14 +62,14 @@ code {
         color: #a89ec9;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap; /* Evita que el texto se salga */
+        white-space: nowrap; 
     }
 
     .nft .tokenInfo {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: auto; /* Alinea hacia abajo */
+        margin-top: auto;
     }
 
 
@@ -138,13 +140,13 @@ code {
 /* Responsividad */
 @media (max-width: 768px) {
     .nft {
-        max-width: 48%; /* En pantallas más pequeñas, ajustamos el tamaño */
+        max-width: 48%; 
     }
 }
 
 @media (max-width: 480px) {
     .nft {
-        max-width: 100%; /* En pantallas muy pequeñas, las tarjetas ocupan el 100% */
+        max-width: 100%;
     }
 }
 
@@ -192,12 +194,10 @@ input[type="checkbox"] {
 /*ESTILOS DEL MODAL*/
 
 
-/* Fondo oscuro del modal */
 .modal-backdrop.show {
     background-color: rgba(0, 0, 0, 0.7) !important;
 }
 
-/* Estilos para el modal */
 .modal {
     display: none;
     position: fixed;
@@ -207,70 +207,68 @@ input[type="checkbox"] {
     width: 105%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
+    background-color: rgba(0, 0, 0, 0.5);
     padding-top: -2px;
 }
 
-/* Diálogo del modal */
 .modal-dialog {
-    max-width: 90%; /* Máximo ancho del modal */
-    max-height: 90vh; /* Máxima altura del modal */
+    max-width: 90%; 
+    max-height: 90vh;
     margin: 30px auto;
-    width: 100%; /* El modal se adapta al 100% del ancho, pero con un máximo */
-    height: auto; /* La altura se ajusta de acuerdo al contenido */
+    width: 100%; 
+    height: auto;
 }
 
-/* Contenido del modal */
 .modal-content {
     background-color: #fff;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    height: 85%; /* Asegura que el contenido ocupe todo el modal */
+    height: 85%;
 }
 
-/* Cuerpo del modal */
+
 .modal-body {
-    padding: 20px; /* Reduce el padding para que el modal no sea tan grande */
+    padding: 20px; 
     font-family: 'Arial', sans-serif;
-    overflow: hidden; /* Evita el desplazamiento en el modal */
-    height: 100%; /* Hace que el cuerpo del modal ocupe toda la altura del modal */
+    overflow: hidden; 
+    height: 100%; 
     display: flex;
     flex-direction: column;
 }
 
-/* Contenedor para la tabla con desplazamiento */
+/* Contenedor para la tabla */
 .table-container {
-    flex: 1; /* Permite que el contenedor ocupe el espacio disponible */
-    overflow-y: auto; /* Añade barra de desplazamiento vertical */
-    max-height: 300px; /* Limita la altura máxima de la tabla */
-    margin-top: 20px; /* Añade un espacio encima de la tabla */
+    flex: 1; 
+    overflow-y: auto; 
+    max-height: 300px;
+    margin-top: 20px; 
 }
 
-/* Estilos para la tabla */
+
 .table {
     background-color: #ffffff;
-    color: #000000; /* Texto negro */
-    width: 100%; /* Asegura que la tabla ocupe todo el ancho disponible */
+    color: #000000; 
+    width: 100%; 
 }
 
 .table-bordered {
-    border: 1px solid #333; /* Borde oscuro para resaltar la tabla */
+    border: 1px solid #333; 
 }
 
 .table th, .table td {
-    background-color: #f8f9fa; /* Fondo claro en las celdas */
-    color: #000; /* Texto negro */
-    padding: 10px; /* Espaciado adicional para mejorar la legibilidad */
+    background-color: #f8f9fa; 
+    color: #000; 
+    padding: 10px;
     text-align: left;
 }
 
 .table th {
-    background-color: #e9ecef; /* Fondo gris claro para el encabezado */
+    background-color: #e9ecef; 
     font-weight: bold;
 }
 
-/* Estilo del título dentro del modal */
+/* Estilo del título del modal */
 .modal-body h3 {
     font-size: 24px;
     font-weight: bold;
@@ -470,11 +468,11 @@ input[type="checkbox"] {
 
 /* Estilos específicos para el modal modal-promo */
 .modal-promo .modal-dialog {
-    max-width: 90%; /* Máximo ancho del modal */
-    max-height: 90vh; /* Máxima altura del modal */
+    max-width: 90%; 
+    max-height: 90vh;
     margin: 30px auto;
-    width: 100%; /* El modal se adapta al 100% del ancho, pero con un máximo */
-    height: auto; /* La altura se ajusta de acuerdo al contenido */
+    width: 100%; 
+    height: auto;
 }
 
 /* Fondo oscuro del modal */
@@ -563,32 +561,32 @@ input[type="checkbox"] {
 
 /* Estilos del cuadro */
 .promotion-box {
-    background-color: #f9f9f9; /* Fondo claro */
-    border: 1px solid #ddd; /* Borde sutil */
-    border-radius: 5px; /* Bordes redondeados */
-    padding: 10px 15px; /* Espaciado interno */
-    margin-bottom: 10px; /* Espacio entre los cuadros */
-    color: #000; /* Texto en negro */
+    background-color: #f9f9f9; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    padding: 10px 15px; 
+    margin-bottom: 10px; 
+    color: #000; 
 }
 
 /* Contenedor que envuelve los cuadros de detalles */
 #promotionDetails {
-    display: flex; /* Hace que los cuadros se alineen horizontalmente */
-    justify-content: space-between; /* Distribuye el espacio entre los cuadros */
-    gap: 10px; /* Espacio entre los cuadros */
-    flex-wrap: wrap; /* Permite que los cuadros se envuelvan si no hay suficiente espacio */
+    display: flex;
+    justify-content: space-between; 
+    gap: 10px; 
+    flex-wrap: wrap; 
 }
 
 /* Estilos de los cuadros de promoción */
 .promotion-box {
-    flex: 1 1 30%; /* Cada cuadro tomará un 30% del ancho del contenedor */
-    min-width: 250px; /* Tamaño mínimo para cada cuadro */
+    flex: 1 1 30%; 
+    min-width: 250px;
 }
 
     /* Alineación de los contenidos dentro de cada cuadro */
     .promotion-box div {
         display: flex;
-        align-items: center; /* Centra el contenido en el eje vertical */
+        align-items: center; 
     }
 
     .promotion-box strong {
@@ -601,33 +599,33 @@ input[type="checkbox"] {
 
 /* Estilo para el campo de selección */
 .custom-select-style {
-    background-color: #f8f9fa; /* Fondo gris claro */
-    border: 1px solid #ced4da; /* Borde sutil */
-    border-radius: 5px; /* Bordes redondeados */
-    padding: 10px 15px; /* Espaciado interno */
-    font-size: 16px; /* Tamaño de la fuente */
-    width: 22%; /* Ocupa todo el ancho disponible */
-    transition: all 0.3s ease; /* Transición suave para el borde */
+    background-color: #f8f9fa; 
+    border: 1px solid #ced4da; 
+    border-radius: 5px; 
+    padding: 10px 15px; 
+    font-size: 16px; 
+    width: 22%; 
+    transition: all 0.3s ease; 
 }
 
     /* Efecto de enfoque (cuando el campo está seleccionado) */
     .custom-select-style:focus {
-        border-color: #007bff; /* Color de borde azul cuando está enfocado */
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra azul suave */
-        outline: none; /* Eliminar el borde de enfoque predeterminado */
+        border-color: #007bff; 
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+        outline: none; 
     }
 
 /* Estilos para el label */
 .form-label {
-    font-weight: 600; /* Negrita */
-    font-size: 16px; /* Tamaño de la fuente */
-    margin-bottom: 8px; /* Espacio entre la etiqueta y el select */
-    color: #495057; /* Color gris oscuro */
+    font-weight: 600; 
+    font-size: 16px; 
+    margin-bottom: 8px;
+    color: #495057; 
 }
 
 /* Ajuste para el div contenedor del select */
 .mb-3 {
-    margin-bottom: 20px; /* Separación entre los campos */
+    margin-bottom: 20px; 
 }
 
 
@@ -646,7 +644,7 @@ input[type="checkbox"] {
     .custom-checkbox input {
         opacity: 0;
         position: absolute;
-        z-index: -1; /* Oculta el checkbox original */
+        z-index: -1; 
     }
 
     /* Crear el estilo del cuadro del checkbox */
@@ -688,4 +686,4 @@ input[type="checkbox"] {
     }
 
 
-    /*ACTUALIZADO A LA FECHA 21/11/2024*/
+/*Actualizado a la fecha 24/11/2024*/
