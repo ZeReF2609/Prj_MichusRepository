@@ -16,42 +16,6 @@
 <div class="container-fluid">
     <main class="py-2">
 
-        <div class="mb-4">
-            <div class="row g-3">
-                <!-- Filtro Código -->
-                <div class="col-md-3">
-                    <label for="filtroCodigo" class="form-label">Código</label>
-                    <input type="text" class="form-control form-control-sm" id="filtroCodigo" placeholder="Filtrar por código">
-                </div>
-
-                <!-- Filtro Nombre -->
-                <div class="col-md-3">
-                    <label for="filtroNombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control form-control-sm" id="filtroNombre" placeholder="Filtrar por nombre">
-                </div>
-
-                <!-- Filtro Estado -->
-                <div class="col-md-3">
-                    <label for="filtroEstado" class="form-label">Estado</label>
-                    <select class="form-select form-select-sm" id="filtroEstado">
-                        <option value="">Todos</option>
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-                </div>
-
-                <!-- Filtro Rol -->
-                <div class="col-md-3">
-                    <label for="filtroRol" class="form-label">Rol</label>
-                    <select class="form-select form-select-sm" id="filtroRol">
-                        <option value="">Todos</option>
-                        <option value="1">Administrador</option>
-                        <option value="2">Cliente</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <!-- Botón para abrir el modal de insertar cliente -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertarModal">
             Insertar Cliente
         </button>
@@ -71,7 +35,7 @@
                         <th>Teléfono</th>
                         <th>Dirección</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -89,20 +53,20 @@
                             <td>@clienteData.Contacto.Telefono</td>
                             <td>@clienteData.Contacto.Direccion</td>
                             <td>
-                                <button class="btn btn-link p-0" id="estadoBtn_@clienteData.Cliente.IdCliente" data-bs-toggle="modal" data-bs-target="#confirmModal" title="Cambiar estado">
+                                <button class="btn btn-link p-0" id="estadoBtn_@clienteData.Cliente.IdCliente" data-id="@clienteData.Cliente.IdCliente" data-bs-toggle="modal" data-bs-target="#confirmModal" title="Cambiar estado">
                                     @if (clienteData.Sistema.Estado == 1)
                                     {
-                                        <i class="bi bi-check-circle text-success" title="Activo"></i> <!-- Icono de activo -->
+                                        <i class="bi bi-check-circle text-success align-content-center" title="Activo"></i> 
                                     }
                                     else
                                     {
-                                        <i class="bi bi-x-circle text-danger" title="Inactivo"></i> <!-- Icono de inactivo -->
+                                        <i class="bi bi-x-circle text-danger align-content-center" title="Inactivo"></i>
                                     }
                                 </button>
                             </td>
                             <td>
                                 <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editarModal" data-id="@clienteData.Cliente.IdCliente">
-                                    <i class="bi bi-pencil"></i> Editar
+                                    <i class="bi bi-pencil"></i>
                                 </button>
                             </td>
                         </tr>
@@ -126,7 +90,6 @@
                             <div class="col-md-3 text-center mb-4">
                                 <img src="~/assets/img/mishus.png" alt="Imagen decorativa" class="img-fluid" style="max-height: 70px;">
                             </div>
-                            <!-- Inputs a la derecha de la imagen -->
                             <div class="col-md-9">
                                 <div class="row g-3">
                                     <div class="col-md-6">
@@ -142,23 +105,23 @@
                         </div>
                         <!-- Inputs debajo de la imagen -->
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="EMAIL" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="EMAIL" name="EMAIL" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="NOMBRES" class="form-label">Nombres</label>
                                 <input type="text" class="form-control" id="NOMBRES" name="NOMBRES" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="APELLIDOS" class="form-label">Apellidos</label>
                                 <input type="text" class="form-control" id="APELLIDOS" name="APELLIDOS" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-8 mb-2">
                                 <label for="DIRECCION" class="form-label">Dirección</label>
                                 <input type="text" class="form-control" id="DIRECCION" name="DIRECCION">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4 mb-2">
                                 <label for="TELEFONO" class="form-label">Teléfono</label>
                                 <input type="text" class="form-control" id="TELEFONO" name="TELEFONO">
                             </div>
@@ -168,14 +131,14 @@
                             <div class="col-md-6">
                                 <label for="DNI" class="form-label">Tipo de Documento</label>
                                 <select class="form-select" id="DNI" name="DNI" required>
-                                    <!-- Aquí se llenarán los tipos de documento -->
+
                                 </select>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <label for="DOCUMENTO_IDENTIDAD" class="form-label">Documento de Identidad</label>
                                 <input type="text" class="form-control" id="DOCUMENTO_IDENTIDAD" name="DOCUMENTO_IDENTIDAD" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <label for="FECHA_NACIMIENTO" class="form-label">Fecha de Nacimiento</label>
                                 <input type="date" class="form-control" id="FECHA_NACIMIENTO" name="FECHA_NACIMIENTO">
                             </div>
@@ -195,7 +158,6 @@
                 </div>
             </div>
         </div>
-        <!-- Modal para editar cliente -->
         <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -204,27 +166,78 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <!-- Formulario para editar cliente -->
-                        <div class="row">
-                            <!-- Aquí irán los campos a editar -->
-                            <div class="col-md-6">
-                                <label for="EDIT_NOMBRES" class="form-label">Nombres</label>
-                                <input type="text" class="form-control" id="EDIT_NOMBRES" name="EDIT_NOMBRES">
+                        <div class="row mb-2">
+                            <div class="col-md-3 text-center">
+                                <img src="~/assets/img/mishus.png" alt="Imagen decorativa" class="img-fluid" style="max-height: 70px;">
                             </div>
-                            <div class="col-md-6">
-                                <label for="EDIT_APELLIDOS" class="form-label">Apellidos</label>
-                                <input type="text" class="form-control" id="EDIT_APELLIDOS" name="EDIT_APELLIDOS">
+                            <div class="col-md-9">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="EDIT_ID" class="form-label">ID Cliente</label>
+                                        <input type="text" class="form-control" id="EDIT_ID" name="EDIT_ID" disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="EDIT_USUARIO" class="form-label">Usuario</label>
+                                        <input type="text" class="form-control" id="EDIT_USUARIO" name="EDIT_USUARIO">
+                                    </div>
+                                </div>
                             </div>
-                            <!-- Más campos de edición aquí... -->
                         </div>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="EDIT_EMAIL" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="EDIT_EMAIL" name="EDIT_EMAIL" >
+                            </div>
+                            <div class="col-md-4">
+                                <label for="EDIT_NOMBRES" class="form-label">Nombres</label>
+                                <input type="text" class="form-control" id="EDIT_NOMBRES" name="EDIT_NOMBRES" >
+                            </div>
+                            <div class="col-md-4">
+                                <label for="EDIT_APELLIDOS" class="form-label">Apellidos</label>
+                                <input type="text" class="form-control" id="EDIT_APELLIDOS" name="EDIT_APELLIDOS" >
+                            </div>
+                            <div class="col-md-8 mb-2">
+                                <label for="EDIT_DIRECCION" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="EDIT_DIRECCION" name="EDIT_DIRECCION" >
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label for="EDIT_TELEFONO" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="EDIT_TELEFONO" name="EDIT_TELEFONO" >
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="EDIT_DNI" class="form-label">Tipo de Documento</label>
+                                <select class="form-select" id="EDIT_DNI" name="EDIT_DNI" >
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="EDIT_DOCUMENTO_IDENTIDAD" class="form-label">Documento de Identidad</label>
+                                <input type="text" class="form-control" id="EDIT_DOCUMENTO_IDENTIDAD" name="EDIT_DOCUMENTO_IDENTIDAD" >
+                            </div>
+                            <div class="col-md-3">
+                                <label for="EDIT_FECHA_NACIMIENTO" class="form-label">Fecha de Nacimiento</label>
+                                <input type="date" class="form-control" id="EDIT_FECHA_NACIMIENTO" name="EDIT_FECHA_NACIMIENTO" >
+                            </div>
+                            <div class="col-md-6">
+                                <label for="EDIT_NIVEL_FIDELIDAD" class="form-label">Nivel de Fidelidad</label>
+                                <input type="number" class="form-control" id="EDIT_NIVEL_FIDELIDAD" name="EDIT_NIVEL_FIDELIDAD" >
+                            </div>
+                            <div class="col-md-6">
+                                <label for="EDIT_PUNTOS_FIDELIDAD" class="form-label">Puntos de Fidelidad</label>
+                                <input type="number" class="form-control" id="EDIT_PUNTOS_FIDELIDAD" name="EDIT_PUNTOS_FIDELIDAD" >
+                            </div>
+                        </div>
+
                         <div class="mt-4 text-center">
-                            <button type="submit" class="btn btn-primary" id="guardarEdicion">Guardar cambios</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-primary" id="guardarCambiosBtn">Guardar Cambios</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Modal de confirmación -->
+
         <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -242,26 +255,22 @@
                 </div>
             </div>
         </div>
-
-
-
     </main>
 </div>
-
 <script>
     $(document).ready(function () {
         $('#clientesTable').DataTable({
             "paging": true, // Paginación activada
             "searching": true, // Búsqueda activada
             "info": true, // Mostrar información de la tabla
-            "ordering": true, // Habilitar ordenación de columnas
+            "ordering": false, // Habilitar ordenación de columnas
             "lengthChange": true, // Permitir cambiar el número de elementos por página
-            "pageLength": 10, // Número de filas por página inicial
-            "lengthMenu": [5, 10, 20, 50], // Opciones de páginas por elemento
+            "pageLength": 3, // Número de filas por página inicial
+            "lengthMenu": [4, 8, 16, 24], // Opciones de páginas por elemento
             "dom": 'Bfrtip', // Colocar los botones de exportación en la parte superior
             "buttons": [
-                'copy', 'csv', 'excel', 'pdf', 'print' // Botones de exportación
-            ],  
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
             "language": {
                 "sProcessing": "Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",
@@ -285,26 +294,23 @@
         });
         // Llamar a la API para obtener los tipos de documentos
         $.ajax({
-            url: '@Url.Action("ObtenerTiposDocumento", "Clientes")', // Acción del controlador para obtener tipos de documento
+            url: '@Url.Action("ObtenerTiposDocumento", "Clientes")',
             type: 'GET',
             success: function (response) {
                 if (response && response.length > 0) {
-                    // Rellenar el select con los tipos de documento
                     var $select = $('#DNI');
                     $select.empty(); // Limpiar cualquier opción existente
                     $.each(response, function (index, item) {
                         $select.append('<option value="' + item.idDoc + '">' + item.descripcion + '</option>');
                     });
                 } else {
-                    alert("No se encontraron tipos de documento.");
+                    alertify("No se encontraron tipos de documento.");
                 }
             },
             error: function () {
-                alert("Error al obtener los tipos de documento.");
+                alertify("Error al obtener los tipos de documento.");
             }
         });
-
-        // Manejo del envío del formulario mediante Ajax
         $("#guardarCliente").on("click", function (e) {
             e.preventDefault();
 
@@ -334,7 +340,7 @@
             $.ajax({
                 url: '@Url.Action("GuardarCliente", "Clientes")',
                 type: 'POST',
-                contentType: 'application/json',  // Set content type to JSON
+                contentType: 'application/json',
                 data: JSON.stringify(clienteCompleto),  // Send data as JSON
                 success: function (response) {
                     // Verificar si la respuesta es válida
@@ -342,18 +348,165 @@
                         $('#insertarModal').modal('hide');
                         location.reload();  // Recargar la página si se inserta correctamente
                     } else {
-                        // Si la respuesta no tiene la propiedad success o es falsa
-                        alert("Error al insertar el cliente. Respuesta del servidor no válida.");
+                        alertify("Error al insertar el cliente. Respuesta del servidor no válida.");
                     }
                 },
                 error: function (xhr, status, error) {
-                    // Manejo del error de la solicitud
                     console.error("Error al enviar la solicitud:", error);
-                    alert("Error al enviar la solicitud al servidor.");
+                    alertify("Error al enviar la solicitud al servidor.");
                 }
             });
         });
+        $('#confirmModal').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget); // El botón que disparó el modal
+            var clienteId = button.data('id'); // ID del cliente
+            var estadoActual = button.find('i').hasClass('bi-check-circle') ? 1 : 0; // Determinamos el estado actual
+
+            // Determinamos la URL para la solicitud AJAX (Eliminar o Activar)
+            var url = estadoActual === 1 ? '/Clientes/EliminarCliente' : '/Clientes/ActivarCliente';
+            var nuevoEstado = estadoActual === 1 ? 0 : 1;
+
+            // Configuración del botón de acción para cuando se confirma el cambio
+            $('#confirmActionBtn').off('click').on('click', function () {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: { idCliente: clienteId },
+                    success: function (response) {
+                        // Verificamos si la propiedad 'success' de la respuesta es verdadera
+                        if (response.success) {
+                            // Actualizamos el icono de estado en la tabla según el nuevo estado
+                            var iconoEstado = $('#estadoBtn_' + clienteId).find('i');
+                            if (nuevoEstado === 1) {
+                                iconoEstado.removeClass('bi-x-circle text-danger').addClass('bi-check-circle text-success');
+                            } else {
+                                iconoEstado.removeClass('bi-check-circle text-success').addClass('bi-x-circle text-danger');
+                            }
+                            var mensaje = nuevoEstado === 1 ? 'Cliente activado correctamente.' : 'Cliente desactivado correctamente.';
+                            alertify.success(mensaje);
+
+                            // Cerramos el modal después de la actualización
+                            $('#confirmModal').modal('hide');
+                        } else {
+                            alertify.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        // Si hay un error en la comunicación con el servidor
+                        alertify.error('Error en la comunicación con el servidor.');
+                    }
+                });
+            });
+        });
+        $('#editarModal').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget); // El botón que disparó el modal
+            var clienteId = button.data('id'); // ID del cliente
+
+            // Llamada AJAX para obtener los detalles del cliente
+            $.ajax({
+                url: '@Url.Action("ObtenerCliente", "Clientes")', // Acción que devuelve los datos del cliente
+                type: 'GET',
+                data: { idCliente: clienteId },
+                success: function (response) {
+
+                    if (response) {
+                        // Aquí seguimos llenando los campos como antes
+                        $('#EDIT_ID').val(response.cliente.idCliente); // Correcto
+                        $('#EDIT_USUARIO').val(response.sistema.usuario || '');
+                        $('#EDIT_EMAIL').val(response.sistema.email || '');
+                        $('#EDIT_NOMBRES').val(response.cliente.nombres);
+                        $('#EDIT_APELLIDOS').val(response.cliente.apellidos);
+                        $('#EDIT_DIRECCION').val(response.contacto.direccion || '');
+                        $('#EDIT_TELEFONO').val(response.contacto.telefono || '');
+                        $('#EDIT_DOCUMENTO_IDENTIDAD').val(response.cliente.docIdent);
+                        $('#EDIT_FECHA_NACIMIENTO').val(response.cliente.fechaNacimiento || '');
+                        $('#EDIT_NIVEL_FIDELIDAD').val(response.cliente.nivelFidelidad || '');
+                        $('#EDIT_PUNTOS_FIDELIDAD').val(response.cliente.puntosFidelidad || '');
+
+                        // Rellenar los tipos de documento
+                        if (response.tiposDocumento) {
+                            var select = $('#EDIT_DNI');
+                            select.empty();  // Limpiar el select
+
+                            // Crear un mapa para asociar idDoc con su descripción
+                            var tipoDocMap = {};
+                            $.each(response.tiposDocumento, function (index, tipo) {
+                                tipoDocMap[tipo.idDoc] = tipo.descripcion;  // Mapea el idDoc con la descripción
+                                select.append($('<option>', {
+                                    value: tipo.idDoc,
+                                    text: tipo.descripcion
+                                }));
+                            });
+
+                            var clienteTipoDoc = response.cliente.idDoc;
+
+                            if (tipoDocMap[clienteTipoDoc]) {
+                                select.val(clienteTipoDoc);
+                            } else {
+                                select.val('');
+                            }
+                        }
+                    } else {
+                        alertify("No se pudo cargar la información del cliente.");
+                    }
+                },
+                error: function () {
+                    alertify("Error al obtener los detalles del cliente.");
+                }
+            });
+        });
+
+
+        $('#guardarCambiosBtn').on('click', function () {
+            var clienteData = {
+                cliente: {
+                    idCliente: $('#EDIT_ID').val(),
+                    nombres: $('#EDIT_NOMBRES').val(),
+                    apellidos: $('#EDIT_APELLIDOS').val(),
+                    idDoc: $('#EDIT_DNI').val(),
+                    docIdent: $('#EDIT_DOCUMENTO_IDENTIDAD').val(),
+                    fechaNacimiento: $('#EDIT_FECHA_NACIMIENTO').val(),
+                    nivelFidelidad: $('#EDIT_NIVEL_FIDELIDAD').val(),
+                    puntosFidelidad: $('#EDIT_PUNTOS_FIDELIDAD').val()
+                },
+                contacto: {
+                    telefono: $('#EDIT_TELEFONO').val(),
+                    direccion: $('#EDIT_DIRECCION').val()
+                },
+                sistema: {
+                    usuario: $('#EDIT_USUARIO').val(),
+                    email: $('#EDIT_EMAIL').val()
+                }
+            };
+            $.ajax({
+                url: '@Url.Action("ActualizarCliente", "Clientes")',
+                type: 'POST',
+                data: JSON.stringify(clienteData),
+                contentType: 'application/json',
+                success: function (response) {
+                    // Verificar si la respuesta es válida y exitosa
+                    if (response && response.success) {
+                        // Mostrar un mensaje de éxito usando AlertifyJS
+                        alertify.success("Los cambios se han realizado con éxito.");
+
+                        // Cerrar el modal
+                        $('#editarModal').modal('hide');
+
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        // Mostrar mensaje de error si la respuesta no es válida
+                        alertify.error("Error al actualizar el cliente. Respuesta del servidor no válida.");
+                    }
+                },
+                error: function () {
+                    // Mostrar mensaje de error si ocurre un error en la solicitud AJAX
+                    alertify.error("Error al actualizar los detalles del cliente.");
+                }
+            });
+
+
+        });
     });
 </script>
-
-
