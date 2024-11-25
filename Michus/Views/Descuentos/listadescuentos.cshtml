@@ -51,7 +51,7 @@
             <div class="discount-card" data-modal-id="modal_@item.index" data-discount-id="@item.value.IdDescuento">
                 <div class="discount-header">
                     <span class="discount-badge">
-                        @if (item.value.TipoDescuento == 0)
+                        @if (item.value.TipoDescuento == 1)
                         {
                             @($"s/. {item.value.PrecioDescuento}")
                         }
