@@ -37,6 +37,13 @@ builder.Services.AddScoped<ClientesDAO>(provider =>
     return new ClientesDAO(connectionString);
 });
 
+builder.Services.AddScoped<EmpleadoDAO>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new EmpleadoDAO(connectionString);
+});
+
 //servicio para el envio del correo
 builder.Services.AddTransient<CorreoHelper>();
 
