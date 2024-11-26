@@ -1,64 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using Michus.Models;
-using System.Diagnostics;
-using System.Collections.Generic;
 
 namespace Michus.DAO
 {
-    public class ProductoDAO
+    public class ProductoDao
     {
         private readonly string _connectionString;
 
-        public ProductoDAO(IConfiguration configuration)
+        public ProductoDao(string connectionString)
         {
-            // Cadena de conexión
-            _connectionString = configuration.GetConnectionString("cn1")
-                ?? throw new ArgumentNullException("La cadena de conexión 'cn1' no está configurada.");
+            _connectionString = connectionString;
         }
 
-        // Insertar Producto
-        public async Task<int> InsertarProducto(Producto producto)
-        {
-            int filasAfectadas;
-
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand("sp_InsertarProducto", connection) { CommandType = CommandType.StoredProcedure })
-            {
-                command.Parameters.AddWithValue("@IdProducto", producto.IdProducto);
-                command.Parameters.AddWithValue("@ProdNom", producto.ProdNom);
-                command.Parameters.AddWithValue("@ProdNomWeb", producto.ProdNomweb);
-                command.Parameters.AddWithValue("@Descripcion", (object)producto.Descripcion ?? DBNull.Value);
-                command.Parameters.AddWithValue("@IdCategoria", producto.IdCategoria);
-                command.Parameters.AddWithValue("@ProdFchCmrl", producto.ProdFchcmrl ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@Precio", producto.Precio);
-                command.Parameters.AddWithValue("@Estado", producto.Estado);
-
-                await connection.OpenAsync();
-
-                // Verificar si el producto ya existe
-                using (var checkCommand = new SqlCommand("SELECT COUNT(1) FROM PRODUCTO WHERE ID_PRODUCTO = @IdProducto", connection))
-                {
-                    checkCommand.Parameters.AddWithValue("@IdProducto", producto.IdProducto);
-                    var existe = (int)await checkCommand.ExecuteScalarAsync();
-
-                    if (existe > 0)
-                    {
-                        // El producto ya existe, no lo insertamos
-                        return 0;
-                    }
-                }
-
-                // Si no existe, se inserta el nuevo producto
-                filasAfectadas = await command.ExecuteNonQueryAsync();
-            }
-            return filasAfectadas;
-        }
-
-        // Obtener productos
         public async Task<List<Producto>> ObtenerProductos()
         {
             var productos = new List<Producto>();
@@ -70,12 +27,6 @@ namespace Michus.DAO
                 {
                     while (await reader.ReadAsync())
                     {
-                        DateTime? fechaComercialDateTime = reader["PROD_FCHCMRL"] as DateTime?;
-
-                        DateOnly? fechaComercial = fechaComercialDateTime.HasValue
-                            ? DateOnly.FromDateTime(fechaComercialDateTime.Value)
-                            : (DateOnly?)null;
-
                         productos.Add(new Producto
                         {
                             IdProducto = reader["ID_PRODUCTO"].ToString(),
@@ -83,7 +34,9 @@ namespace Michus.DAO
                             ProdNomweb = reader["PROD_NOMWEB"].ToString(),
                             Descripcion = reader["DESCRIPCION"] as string,
                             IdCategoria = reader["ID_CATEGORIA"].ToString(),
-                            ProdFchcmrl = fechaComercial, // Asignar el valor DateOnly?
+                            ProdFchcmrl = reader["PROD_FCHCMRL"] != DBNull.Value
+                        ? DateOnly.FromDateTime((DateTime)reader["PROD_FCHCMRL"])
+                        : (DateOnly?)null,
                             Precio = (decimal)reader["PRECIO"],
                             Estado = (int)reader["ESTADO"]
                         });
@@ -93,7 +46,6 @@ namespace Michus.DAO
             return productos;
         }
 
-        // Obtener producto por ID
         public async Task<Producto> ObtenerProductoPorId(string idProducto)
         {
             Producto producto = null;
@@ -101,7 +53,6 @@ namespace Michus.DAO
             using (var command = new SqlCommand("sp_ObtenerProductoPorId", connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.AddWithValue("@IdProducto", idProducto);
-
                 await connection.OpenAsync();
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -114,7 +65,9 @@ namespace Michus.DAO
                             ProdNomweb = reader["PROD_NOMWEB"].ToString(),
                             Descripcion = reader["DESCRIPCION"] as string,
                             IdCategoria = reader["ID_CATEGORIA"].ToString(),
-                            ProdFchcmrl = reader["PROD_FCHCMRL"] as DateOnly?,
+                            ProdFchcmrl = reader["PROD_FCHCMRL"] != DBNull.Value
+                        ? DateOnly.FromDateTime((DateTime)reader["PROD_FCHCMRL"])
+                        : (DateOnly?)null,
                             Precio = (decimal)reader["PRECIO"],
                             Estado = (int)reader["ESTADO"]
                         };
@@ -124,41 +77,105 @@ namespace Michus.DAO
             return producto;
         }
 
-        // Actualizar Producto
-        public async Task<int> ActualizarProducto(Producto producto)
+        public async Task<int> InsertarProductos(Producto producto)
         {
-            int filasAfectadas;
+            string IdProducto = GenerarIdProducto();
+            producto.IdProducto = IdProducto;
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand("sp_InsertarProducto", connection) { CommandType = CommandType.StoredProcedure })
+            {
+                command.Parameters.AddWithValue("@IdProducto", producto.IdProducto);
+                command.Parameters.AddWithValue("@ProdNom", producto.ProdNom);
+                command.Parameters.AddWithValue("@ProdNomWeb", producto.ProdNomweb);
+                command.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
+                command.Parameters.AddWithValue("@IdCategoria", producto.IdCategoria);
+                command.Parameters.AddWithValue("@ProdFchCmrl",
+            producto.ProdFchcmrl.HasValue
+            ? (object)producto.ProdFchcmrl.Value.ToDateTime(TimeOnly.MinValue)
+            : DBNull.Value);
+                command.Parameters.AddWithValue("@Precio", producto.Precio);
+                command.Parameters.AddWithValue("@Estado", producto.Estado);
+
+                await connection.OpenAsync();
+                var result = await command.ExecuteScalarAsync();
+
+                return Convert.ToInt32(result);
+            }
+        }
+        private string GenerarIdProducto()
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            using var command = new SqlCommand("SELECT TOP 1 ID_PRODUCTO FROM PRODUCTO ORDER BY ID_PRODUCTO DESC", connection);
+            var ultimoId = command.ExecuteScalar() as string;
+
+            if (string.IsNullOrEmpty(ultimoId))
+            {
+                return "P001";
+            }
+
+            var numeroStr = ultimoId.Substring(1);
+            if (int.TryParse(numeroStr, out int numero))
+            {
+                return $"P{(numero + 1):D3}";
+            }
+
+            throw new Exception("Formato inválido en el ID del producto.");
+        }
+
+        public async Task ActualizarProducto(Producto producto)
+        {
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand("sp_ActualizarProducto", connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.AddWithValue("@IdProducto", producto.IdProducto);
                 command.Parameters.AddWithValue("@ProdNom", producto.ProdNom);
                 command.Parameters.AddWithValue("@ProdNomWeb", producto.ProdNomweb);
-                command.Parameters.AddWithValue("@Descripcion", (object)producto.Descripcion ?? DBNull.Value);
+                command.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
                 command.Parameters.AddWithValue("@IdCategoria", producto.IdCategoria);
-                command.Parameters.AddWithValue("@ProdFchCmrl", producto.ProdFchcmrl ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@ProdFchCmrl", producto.ProdFchcmrl.HasValue ? (object)producto.ProdFchcmrl.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@Precio", producto.Precio);
                 command.Parameters.AddWithValue("@Estado", producto.Estado);
 
                 await connection.OpenAsync();
-                filasAfectadas = await command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
             }
-            return filasAfectadas;
         }
 
-        // Desactivar Producto
-        public async Task<int> DesactivarProducto(string idProducto)
+        public async Task ActivarProducto(string id)
         {
-            int filasAfectadas;
             using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand("sp_DesactivarProducto", connection) { CommandType = CommandType.StoredProcedure })
             {
-                command.Parameters.AddWithValue("@IdProducto", idProducto);
-
                 await connection.OpenAsync();
-                filasAfectadas = await command.ExecuteNonQueryAsync();
+
+                using (var command = new SqlCommand("sp_ActivarProductos", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@IdProducto", id);
+
+                    await command.ExecuteNonQueryAsync();
+                }
             }
-            return filasAfectadas;
+        }
+
+ 
+        public async Task DesactivarProducto(string id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new SqlCommand("sp_DesactivarProducto", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@IdProducto", id);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
         }
     }
 }
+

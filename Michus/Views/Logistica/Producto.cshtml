@@ -1,0 +1,219 @@
+﻿@model IEnumerable<Michus.Models.Producto>
+
+@{
+    ViewData["Title"] = "Gestión de Productos";
+    int currentPage = ViewData["CurrentPage"] != null ? Convert.ToInt32(ViewData["CurrentPage"]) : 1;
+    int totalPages = ViewData["TotalPages"] != null ? Convert.ToInt32(ViewData["TotalPages"]) : 1;
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<link rel="stylesheet" href="~/assets/css/vistasBootstrap.css">
+<link rel="stylesheet" href="~/assets/css/Producto.css">
+<div class="container-fluid">
+    <main class="py-2">
+
+<button type="button" class="btn btn-primary" onclick="clearForm()">
+    Agregar Producto
+</button>
+
+<table id="productosTable" class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>ID Producto</th>
+            <th>Nombre</th>
+            <th>Nombre Web</th>
+            <th>Descripción</th>
+            <th>Categoría</th>
+            <th>Fecha Comercial</th>
+            <th>Precio</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var producto in Model)
+        {
+            <tr>
+                <td>@producto.IdProducto</td>
+                <td>@producto.ProdNom</td>
+                <td>@producto.ProdNomweb</td>
+                <td>@producto.Descripcion</td>
+                <td>@producto.IdCategoria</td>
+                <td>@(producto.ProdFchcmrl.HasValue ? producto.ProdFchcmrl.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                <td>@producto.Precio.ToString("C")</td>
+                <td>@(producto.Estado == 1 ? "Activo" : "Inactivo")</td>
+                <td>
+                    <button class="btn btn-sm btn-info" onclick="editarProducto('@producto.IdProducto')">Editar</button>
+                    <button class="btn btn-sm btn-danger" onclick="toggleProduct('@producto.IdProducto', @producto.Estado)">
+                        @(producto.Estado == 1 ? "Desactivar" : "Activar")
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Paginación">
+    <ul class="pagination justify-content-center">
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Producto", new { page = i })">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+<div class="modal fade" id="productoModal" tabindex="-1" role="dialog" aria-labelledby="productoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productoModalLabel">Nuevo Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="productoForm">
+                    <input type="hidden" id="IdProducto" name="IdProducto">
+                    <div class="form-group">
+                        <label for="ProdNom">Nombre</label>
+                        <input type="text" class="form-control" id="ProdNom" name="ProdNom" required minlength="3" maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="ProdNomweb">Nombre Web</label>
+                        <input type="text" class="form-control" id="ProdNomweb" name="ProdNomweb" required minlength="3" maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="Descripcion">Descripción</label>
+                        <textarea class="form-control" id="Descripcion" name="Descripcion" required minlength="10" maxlength="500"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="IdCategoria">Categoría</label>
+                        <select class="form-control" id="IdCategoria" name="IdCategoria" required>
+                            <option value="">Seleccionar</option>
+                            <option value="C001">Bebidas Refrescantes</option>
+                            <option value="C002">Bakery</option>
+                            <option value="C003">Nuestro Café</option>
+                            <option value="C004">Sandwiches</option>
+                            <option value="C005">Jugos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ProdFchcmrl">Fecha Comercialización</label>
+                        <input type="date" class="form-control" id="ProdFchcmrl" name="ProdFchcmrl">
+                    </div>
+                    <div class="form-group">
+                        <label for="Precio">Precio</label>
+                        <input type="number" class="form-control" id="Precio" name="Precio" step="0.01" required min="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="Estado">Estado</label>
+                        <select class="form-control" id="Estado" name="Estado" required>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="submitProduct()">Guardar</button>
+            </div>
+        </div>
+    </div>
+    
+    </div>
+</main>
+
+<script>
+$(document).ready(function() {
+    $('#productosTable').DataTable({
+        "pageLength": 5,
+        "lengthMenu": [5, 10, 25, 50],
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+        }
+    });
+});
+
+function clearForm() {
+    $('#productoForm')[0].reset();
+    $('#IdProducto').val('');
+    $('#productoModalLabel').text('Nuevo Producto');
+    $('#productoModal').modal('show');
+}
+
+function editarProducto(id) {
+    $.get(`/Logistica/ObtenerProductoPorId?id=${id}`, function(producto) {
+        $('#IdProducto').val(producto.idProducto);
+        $('#ProdNom').val(producto.prodNom);
+        $('#ProdNomweb').val(producto.prodNomweb);
+        $('#Descripcion').val(producto.descripcion);
+        $('#IdCategoria').val(producto.idCategoria);
+        $('#ProdFchcmrl').val(producto.prodFchcmrl ? producto.prodFchcmrl.split('T')[0] : '');
+        $('#Precio').val(producto.precio);
+        $('#Estado').val(producto.estado);
+        
+        $('#productoModalLabel').text('Editar Producto');
+        $('#productoModal').modal('show');
+    });
+}
+
+function submitProduct() {
+    const id = $('#IdProducto').val();
+    const producto = {
+        IdProducto: id || null,
+        ProdNom: $('#ProdNom').val().trim(),
+        ProdNomweb: $('#ProdNomweb').val().trim(),
+        Descripcion: $('#Descripcion').val().trim(),
+        IdCategoria: $('#IdCategoria').val(),
+        ProdFchcmrl: $('#ProdFchcmrl').val() || null,
+        Precio: parseFloat($('#Precio').val()) || 0,
+        Estado: parseInt($('#Estado').val())
+    };
+
+    const url = id ? `/Logistica/ActualizarProducto` : `/Logistica/InsertarProductos`;
+    console.log('Sending data:', JSON.stringify(producto));
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(producto), 
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+                $('#productoModal').modal('hide');
+                location.reload();
+            } else {
+                alert(`Error: ${response.message}`);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error details:', xhr.responseText);
+            alert(`Error al guardar el producto: ${xhr.responseText || error}`);
+        }
+    });
+}
+
+function toggleProduct(id, estado) {
+    const url = estado === 1 ? `/Logistica/DesactivarProducto` : `/Logistica/ActivarProducto`;
+
+    $.post(url, { id: id }, function (response) {
+        if (response.success) {
+            alert(response.message);
+            location.reload();
+        } else {
+            alert(`Error: ${response.message}`);
+        }
+    }).fail(function (xhr) {
+        alert(`Error al cambiar el estado del producto: ${xhr.responseText || 'Error desconocido'}`);
+    });
+}
+</script>
+

@@ -19,9 +19,7 @@ namespace Michus.Controllers
 {
     public class PromocionesController : Controller
     {
-
         private readonly MenuService _menuService;
-
         private readonly string _cnx;
 
         private readonly CorreoHelper _correoHelper;
@@ -126,7 +124,7 @@ namespace Michus.Controllers
             {
                 await connection.OpenAsync();
 
-                using(SqlCommand cmm = new SqlCommand("SP_LISTAR_PROMOCIONES", connection))
+                using (SqlCommand cmm = new SqlCommand("SP_LISTAR_PROMOCIONES", connection))
                 {
                     cmm.CommandType = CommandType.StoredProcedure;
 
@@ -144,7 +142,6 @@ namespace Michus.Controllers
                                 FechaInicio = rd["FECHA_INICIO"],
                                 FechaFin = rd["FECHA_FIN"],
                                 Estado = rd["ESTADO"]
-
                             });
                         }
                     }

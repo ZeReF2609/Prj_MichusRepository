@@ -1,0 +1,226 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Qwitcher+Grypen:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #D9C7F2;
+}
+
+.conteiner {
+    width: 800px;
+    height: 500px;
+    display: flex;
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: transparent !important;
+    box-shadow: 0 0 10px rgb(0,0,0,0.3);
+}
+
+.conteiner-form {
+    width: 100%;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.774);
+}
+
+    .conteiner-form form {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .conteiner-form h2 {
+        font-size: 30px;
+        margin: 20px;
+        color: #aa78dd;
+    }
+
+.social-networks {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+    .social-networks ion-icon {
+        color: #6F29B5;
+        border: 1px solid #C9CCCB;
+        border-radius: 6px;
+        padding: 8px;
+        cursor: pointer;
+    }
+
+.conteiner-form span {
+    font-size: 15px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.conteiner-input {
+    width: 300px;
+    height: 40px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 0 15px;
+    background-color: #EEEEEE;
+}
+
+    .conteiner-input input {
+        border: none;
+        outline: noned;
+        width: 100%;
+        height: 100%;
+        background-color: inherit;
+    }
+
+.conteiner-form a {
+    color: black;
+    font-size: 14px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+.button {
+    width: 170px;
+    height: 45px;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    background-color: transparent;
+    color: white;
+}
+/*  aqui comienza el sufrimiento para hcer la animacion :''v */
+/* fue xd el resultado xd */
+
+.sign-up {
+    transform: translateX(-100%);
+}
+
+.conteiner.toggle .sign-in {
+    transform: translateX(100%);
+}
+
+.conteiner.toggle .sign-up {
+    transform: translateX(0);
+}
+
+/* Bienvenidos Welcome */
+.conteiner-welcome {
+    background-color: #ffcfad;
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    align-items: center;
+    transform: translateX(100%);
+    display: flex;
+    transition: transform 0.5s ease-in-out, border-radius 0.5s ease-in-out;
+    overflow: hidden;
+    border-radius: 40% 0 0 40%;
+}
+
+.conteiner.toggle .conteiner-welcome {
+    transform: translateX(0);
+    border-radius: 0 50% 50% 0;
+    background-color: #c6a78f;
+}
+
+.conteiner.toggle .sign-up .button {
+    background-color: #aa78dd;
+}
+
+.conteiner-form .sign-in .button {
+    background-color: #aa78dd;
+}
+
+    .conteiner-form .sign-in .button a {
+        text-decoration: none;
+        color: white;
+    }
+
+
+.conteiner-welcome .welcome {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 50px;
+    color: white;
+    transition: transform 0.5s ease-in-out;
+}
+
+.welcome-sign-in {
+    transform: translateX(100%);
+}
+
+.conteiner-welcome .welcome-sign-in h3 {
+    font-size: 60px;
+    font-family: "Dancing Script", cursive;
+    color: white;
+}
+
+.conteiner-welcome .welcome-sign-up h3 {
+    font-size: 60px;
+    font-family: "Dancing Script", cursive;
+    color: black;
+}
+
+.conteiner-welcome img {
+    width: 200px;
+    height: 90px;
+    object-fit: cover;
+}
+
+.conteiner-welcome .welcome-sign-up p {
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+}
+
+.conteiner-welcome .welcome-sign-in p {
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.conteiner-welcome .welcome-sign-in .button {
+    border: 2px solid white;
+    color: white;
+    background-color: transparent;
+    font-weight: bold;
+}
+
+.conteiner-welcome .welcome-sign-up .button {
+    border: 2px solid black;
+    color: black;
+    background-color: transparent;
+    font-weight: bold;
+}
+
+.conteiner.toggle .welcome-sign-in {
+    transform: translateX(0);
+}
+
+.conteiner.toggle .welcome-sign-up {
+    transform: translateX(-100%);
+}

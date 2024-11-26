@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Michus.Models.pa_lista_descuento_carta>
+@model IEnumerable<Michus.Models.pa_lista_descuento_carta>
 
 @{
     ViewData["Title"] = "Lista de Descuentos";
@@ -169,6 +169,7 @@
                                 <td>${prod.DESCRIPCION}</td>
                                 <td>${prod.PRECIO}</td>
                                 <td>${prod.ESTADO === "1" ? "Activo" : "Inactivo"}</td>
+                                <td>${prod.PRECIO_FINAL}</td>
                             </tr>
                         `).join('');
 
@@ -216,6 +217,7 @@
                                                     <th>Descripción</th>
                                                     <th>Precio</th>
                                                     <th>Estado</th>
+                                                    <th>Precio Final</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

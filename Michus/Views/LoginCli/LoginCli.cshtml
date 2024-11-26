@@ -1,0 +1,140 @@
+﻿@using Michus.Models
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/favicon.ico">
+    <link rel="stylesheet" href="~/assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/plugins/boxicons-2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="~/assets/css/estilo.css">
+    <title>Mishus</title>
+</head>
+<body>
+    <div class="conteiner">
+        <!-- Inicio de sesión -->
+        <div class="conteiner-form" id="sign-in-form">
+            <form class="sign-in" asp-action="LoginCli" asp-controller="LoginCli" method="post">
+                <h2>Inicio Sesión</h2>
+                <div class="social-networks">
+                    <a href="https://www.instagram.com/michus.cyb?igsh=MWsydTlxM2oyeWxyZQ%3D%3D">
+                        <ion-icon name="logo-instagram"></ion-icon>
+                    </a>
+                    <ion-icon name="logo-tiktok"></ion-icon>
+                </div>
+                <span>Use su correo y contraseña</span>
+                <div class="conteiner-input">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <input type="text" name="email" placeholder="Email" required>
+                </div>
+                <div class="conteiner-input">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                </div>
+                <a href="#">¿Olvidaste tu contraseña?</a>
+                <button class="button" type="submit">Iniciar Sesión</button>
+            </form>
+        </div>
+
+        <!-- Registrar -->
+        <div class="conteiner-form" id="sign-up-form">
+            <form class="sign-up" asp-action="RegistrarCliente" asp-controller="LoginCli" method="post">
+                <h2>Registrarse</h2>
+                <div class="social-networks">
+                    <a href="https://www.instagram.com/michus.cyb?igsh=MWsydTlxM2oyeWxyZQ%3D%3D">
+                        <ion-icon name="logo-instagram"></ion-icon>
+                    </a>
+                    <ion-icon name="logo-tiktok"></ion-icon>
+                </div>
+                <span>Use su correo electrónico para registrarse</span>
+
+                <!-- Campo Nombres -->
+                <div class="conteiner-input">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <input type="text" name="nombres" placeholder="Nombres" required>
+                </div>
+
+                <!-- Campo Apellidos -->
+                <div class="conteiner-input">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <input type="text" name="apellidos" placeholder="Apellidos" required>
+                </div>
+
+                <!-- Campo Email -->
+                <div class="conteiner-input">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <input type="text" name="email" placeholder="Email" required>
+                </div>
+
+                <!-- Campo Contraseña -->
+                <div class="conteiner-input">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                </div>
+
+              
+
+                <!-- Combo Box Tipo de Documento -->
+                <div class="conteiner-input">
+                    <ion-icon name="document-outline"></ion-icon>
+                    <select name="idDoc" required>
+                        <option value="">Seleccione Tipo de Documento</option>
+                        @if (ViewBag.TipoDocumento != null)
+                        {
+                            @foreach (var tipo in ViewBag.TipoDocumento)
+                            {
+                                <option value="@tipo.IdDoc">@tipo.Descripcion</option>
+                            }
+                        }
+                    </select>
+                    @if (!string.IsNullOrEmpty(ViewBag.Error))
+                    {
+                        <div class="alert alert-danger">
+                            @ViewBag.Error
+                        </div>
+                    }
+                </div>
+
+                <!-- Campo Documento de Identidad -->
+                <div class="conteiner-input">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                    <input type="text" name="docIdent" placeholder="Documento de Identidad" required>
+                </div>
+
+                <!-- Campo Fecha de Nacimiento -->
+                <div class="conteiner-input">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <input type="date" name="fechaNacimiento" placeholder="Fecha de Nacimiento" required>
+                </div>
+
+                <button class="button" type="submit">Registrarse</button>
+            </form>
+        </div>
+
+        <!-- Bienvenida -->
+        <div class="conteiner-welcome">
+            <div class="welcome-sign-up welcome">
+                <h3>Bienvenido</h3>
+                <img src="~/assets/img/mishus.png" alt="Logo Michus">
+                <p>Ingrese sus datos personales para usar todas las funciones del sitio</p>
+                <button class="button" id="btn-sign-up">Registrarse</button>
+            </div>
+            <div class="welcome-sign-in welcome">
+                <h3>¡Hola!</h3>
+                <img src="~/assets/img/MICHIBLANCO.png" alt="">
+                <p>Regístrese con sus datos personales para usar todas las funciones del sitio</p>
+                <button class="button" id="btn-sign-in">Iniciar Sesión</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/assets/js/funcion.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
