@@ -1,11 +1,15 @@
 using Michus.Models;
 using Michus.Service;
 using Michus.DAO;
+using Michus.DAO;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configurar DbContext
+builder.Services.AddDbContext<MichusContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("cn1")));
 
 // Configurar los servicios y el DbContext
 builder.Services.AddScoped<LoginService>(provider =>
@@ -23,10 +27,12 @@ builder.Services.AddScoped<MenuService>(provider =>
     return new MenuService(connectionString);
 });
 
-builder.Services.AddScoped<ProductoDAO>(provider =>
+// Agregar ProductoDAO al contenedor de servicios
+builder.Services.AddScoped<ProductoDao>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
-    return new ProductoDAO(configuration);
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new ProductoDao(connectionString);
 });
 
 builder.Services.AddScoped<LoginCliService>(provider =>
@@ -39,26 +45,29 @@ builder.Services.AddScoped<LoginCliService>(provider =>
 
 builder.Services.AddDbContext<MichusContext>(options =>
 {
-    var configuration = builder.Configuration;
+    var configuration = provider.GetRequiredService<IConfiguration>();
     var connectionString = configuration.GetConnectionString("cn1");
-    options.UseSqlServer(connectionString);
+    return new ClientesDAO(connectionString);
 });
+
+//servicio para el envio del correo
+builder.Services.AddTransient<CorreoHelper>();
 
 // Agregar controladores y vistas
 builder.Services.AddControllersWithViews();
 
-// Configuración de autenticación y cookies
+// Configuraciï¿½n de autenticaciï¿½n y cookies
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/LoginCli/LoginCli"; // Ruta de inicio de sesión
-        options.LogoutPath = "/LoginCli/Salir"; // Ruta de cierre de sesión
+        options.LoginPath = "/LoginCli/LoginCli"; // Ruta de inicio de sesiï¿½n
+        options.LogoutPath = "/LoginCli/Salir"; // Ruta de cierre de sesiï¿½n
         options.AccessDeniedPath = "/LoginCli/LoginCli"; // Ruta de acceso denegado
         options.Cookie.Name = "Michus_Session";
         options.ExpireTimeSpan = TimeSpan.FromHours(24);
     });
 
-// Configuración de sesión
+// Configuraciï¿½n de sesiï¿½n
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -68,22 +77,23 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Configuración del entorno
+// ConfiguraciÃ³n del entorno
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Usar autenticación, autorización y sesión
+// Usar autenticaciï¿½n, autorizaciï¿½n y sesiï¿½n
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
-// Configuración de rutas
+// ConfiguraciÃ³n de rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ecommerce}/{action=ListarProductos}/{id?}");

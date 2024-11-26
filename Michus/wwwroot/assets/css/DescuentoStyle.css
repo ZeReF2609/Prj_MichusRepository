@@ -1,0 +1,394 @@
+﻿/* Estilos del contenedor principal */
+.discount-manager {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    position: relative;
+    font-family: Arial, sans-serif;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Encabezados */
+h1 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+h2 {
+    font-size: 1.2em;
+    color: #555;
+    font-weight: 600;
+}
+
+/* Párrafos */
+p {
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Estilos de pestañas */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px 20px;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+    .tab.active {
+        background-color: #333;
+        color: #fff;
+        border-color: #333;
+    }
+
+    .tab:hover {
+        background-color: #ddd;
+    }
+
+/* Filtros */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    height: 35px;
+}
+
+.filter {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px 10px;
+    width: 150px;
+}
+
+.filter-button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .filter-button:hover {
+        background-color: #0056b3;
+    }
+
+/* Cards de descuentos */
+.discount-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.discount-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .discount-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+.discount-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.discount-badge {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+    .discount-badge.fijo {
+        background-color: #17a2b8;
+    }
+
+    .discount-badge.porcentual {
+        background-color: #ffc107;
+    }
+
+.label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+/* Toggle de activación */
+.toggle input[type="checkbox"] {
+    display: none;
+}
+
+.toggle label {
+    width: 40px;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 20px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .toggle label:before {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background-color: white;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s ease;
+    }
+
+.toggle input[type="checkbox"]:checked + label {
+    background-color: #28a745;
+}
+
+    .toggle input[type="checkbox"]:checked + label:before {
+        transform: translateX(20px);
+    }
+
+/* Botón flotante para agregar descuentos */
+.add-button-container {
+    position: fixed;
+    top: 85px;
+    right: 40px;
+    z-index: 1000;
+}
+
+.add-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+    .add-button:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+    }
+
+/* Modal */
+.custom-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    top: 70px;
+    left: 150px;
+    border-radius: 10px;
+    position: relative;
+    width: 900px;
+    max-width: 80%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.close-modal, .close-details-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 25px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-details-button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .close-details-button:hover {
+        background-color: #0056b3;
+    }
+
+/* Estilos para las pestañas dentro de nav-tabs */
+.nav-tabs {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #ddd;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+    .nav-tabs .nav-link {
+        padding: 10px 20px;
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #007bff;
+        text-align: center;
+        border: 1px solid transparent;
+        border-radius: 5px 5px 0 0;
+        transition: all 0.3s ease;
+    }
+
+        .nav-tabs .nav-link:hover {
+            background-color: #f1f1f1;
+            border-color: #ddd;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+            box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tabs .nav-link:not(.active) {
+            background-color: #f8f9fa;
+        }
+
+
+
+/* Estilo para la pestaña activa */
+.nav-link.active {
+    font-weight: bold;
+    color: white;
+    border-color: transparent;
+}
+
+.status-icons {
+    margin-top: 10px;
+    text-align: center;
+}
+
+    .status-icons i {
+        margin: 0 5px;
+    }
+
+/* Estilo para la tabla */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    background-color: #343a40;
+    color: #ffffff;
+}
+
+    .custom-table thead {
+        background-color: #212529;
+
+    }
+
+    .custom-table th {
+        padding: 10px;
+        border: 1px solid #495057;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .custom-table td {
+        padding: 10px;
+        border: 1px solid #495057;
+    }
+
+    .custom-table tbody tr:nth-child(odd) {
+        background-color: #3e444a;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #495057;
+        cursor: pointer;
+    }
+
+.scrollable-container {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.scrollable-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+
+/* Botones de DESACTIVA o ACTIVAR */
+.btn-check {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+    .btn-check:hover {
+        background-color: #005f00; 
+        transform: scale(1.1);
+    }
+
+
+.btn-x {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+    .btn-x:hover {
+        background-color: #a00000; 
+        transform: scale(1.1);
+    }

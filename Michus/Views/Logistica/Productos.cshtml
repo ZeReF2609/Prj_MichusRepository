@@ -1,151 +1,114 @@
-﻿@model IEnumerable<Michus.Models.Producto>
-
+﻿@using Michus.Models
+@model IEnumerable<Producto>
 @{
-    ViewData["Title"] = "Productos";
+    ViewData["Title"] = "Gestión de Productos";
 }
 
-<div class="container-fluid">
-    <main class="py-2">
+<head>
+    <link rel="stylesheet" href="~/assets/css/producto-gestion.css" />
+</head>
 
-            <h1>Lista de Productos</h1>
+<h2>Gestión de Productos</h2>
 
-            <button class="btn btn-success mb-3" data-toggle="modal" data-target="#agregarProductoModal">Agregar Producto</button>
+<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productoModal">
+    Nuevo Producto
+</button>
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Id Producto</th>
-                        <th>Nombre Producto</th>
-                        <th>Nombre Web</th>
-                        <th>Descripción</th>
-                        <th>Fecha Comercial</th>
-                        <th>Precio</th>
-                        <th>Estado</th>
-                        <th>Id Categoria</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.Any())
-                    {
-                        foreach (var producto in Model)
-                        {
-                            <tr>
-                                <td>@producto.IdProducto</td>
-                                <td>@producto.ProdNom</td>
-                                <td>@producto.ProdNomweb</td>
-                                <td>@producto.Descripcion</td>
-                                <td>@producto.ProdFchcmrl?.ToString("dd/MM/yyyy")</td>
-                                <td>@producto.Precio</td>
-                                <td>@producto.Estado</td>
-                                <td>@producto.IdCategoria</td>
-                                <td>
-                                    <button class="btn btn-primary" data-toggle="modal" data-target="#editarProductoModal" data-id="@producto.IdProducto">Editar</button>
-                                    <button class="btn btn-danger" data-toggle="modal" data-target="#desactivarProductoModal" data-id="@producto.IdProducto">Desactivar</button>
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="9" class="text-center">No se encontraron productos.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+<table class="table table-striped" id="productosTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Nombre Web</th>
+            <th>Descripción</th>
+            <th>Categoría</th>
+            <th>Fecha Comercial</th>
+            <th>Precio</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var producto in Model)
+        {
+            <tr>
+                <td>@producto.IdProducto</td>
+                <td>@producto.ProdNom</td>
+                <td>@producto.ProdNomweb</td>
+                <td>@producto.Descripcion</td>
+                <td>@producto.IdCategoria</td>
+                <td>@(producto.ProdFchcmrl.HasValue ? producto.ProdFchcmrl.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                <td>@producto.Precio.ToString("C")</td>
+                <td>@(producto.Estado == 1 ? "Activo" : "Inactivo")</td>
+                <td>
+                    <button class="btn btn-sm btn-info" onclick="editarProducto('@producto.IdProducto')">Editar</button>
+                    <button class="btn btn-sm btn-danger" onclick="desactivarProducto('@producto.IdProducto')">Desactivar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-            <!-- Modal: Agregar Producto -->
-            <div class="modal fade" id="agregarProductoModal" tabindex="-1" role="dialog" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="agregarProductoModalLabel">Agregar Producto</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div id="modalAgregarContenido"></div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
+<!-- Modal para Nuevo Producto -->
+<div class="modal fade" id="productoModal" tabindex="-1" role="dialog" aria-labelledby="productoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productoModalLabel">Nuevo Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
-            <!-- Modal: Editar Producto -->
-            <div class="modal fade" id="editarProductoModal" tabindex="-1" role="dialog" aria-labelledby="editarProductoModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editarProductoModalLabel">Editar Producto</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div id="modalEditarContenido"></div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
+            <div class="modal-body">
+                <form id="productoForm">
+                    <div class="form-group">
+                        <label for="ID_PRODUCTO">ID Producto</label>
+                        <input type="text" class="form-control" id="ID_PRODUCTO" name="ID_PRODUCTO" required>
                     </div>
-                </div>
-            </div>
-
-            <!-- Modal: Desactivar Producto -->
-            <div class="modal fade" id="desactivarProductoModal" tabindex="-1" role="dialog" aria-labelledby="desactivarProductoModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="desactivarProductoModalLabel">Desactivar Producto</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div id="modalDesactivarContenido"></div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
+                    <div class="form-group">
+                        <label for="PROD_NOM">Nombre</label>
+                        <input type="text" class="form-control" id="PROD_NOM" name="PROD_NOM" required>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="PROD_NOMWEB">Nombre Web</label>
+                        <input type="text" class="form-control" id="PROD_NOMWEB" name="PROD_NOMWEB" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="DESCRIPCION">Descripción</label>
+                        <textarea class="form-control" id="DESCRIPCION" name="DESCRIPCION" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ID_CATEGORIA">Categoría</label>
+                        <select class="form-control" id="ID_CATEGORIA" name="ID_CATEGORIA" required>
+                            <option value="C000">Seleccionar</option>
+                            <option value="C001">Bebidas Refrescantes</option>
+                            <option value="C002">Bakery</option>
+                            <option value="C003">Nuestro Café</option>
+                            <option value="C004">Sandwiches</option>
+                            <option value="C005">Jugos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ProdFchcmrl">Fecha Comercialización</label>
+                        <input type="date" class="form-control" id="ProdFchcmrl" name="ProdFchcmrl">
+                    </div>
+                    <div class="form-group">
+                        <label for="PRECIO">Precio</label>
+                        <input type="number" class="form-control" id="PRECIO" name="PRECIO" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ESTADO">Estado</label>
+                        <select class="form-control" id="ESTADO" name="ESTADO" required>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                </form>
             </div>
-
-            <script>
-                $(document).ready(function () {
-                    // modal agregar
-                    $('#agregarProductoModal').on('show.bs.modal', function () {
-                        $.get('/Logistica/AgregarProducto', function (contenido) {
-                            $('#modalAgregarContenido').html(contenido);
-                        });
-                    });
-
-                    // modal editar
-                    $('#editarProductoModal').on('show.bs.modal', function (event) {
-                        var button = $(event.relatedTarget);
-                        var productId = button.data('id');
-
-                        $.get('/Logistica/EditarProducto', { id: productId }, function (contenido) {
-                            $('#modalEditarContenido').html(contenido);
-                        });
-                    });
-
-                    // modal desactivar
-                    $('#desactivarProductoModal').on('show.bs.modal', function (event) {
-                        var button = $(event.relatedTarget);
-                        var productId = button.data('id');
-
-                        $.get('/Logistica/DesactivarProducto', { id: productId }, function (contenido) {
-                            $('#modalDesactivarContenido').html(contenido);
-                        });
-                    });
-                });
-            </script>
-
-    </main>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarProducto()">Guardar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script src="~/assets/js/producto-gestion.js"></script>

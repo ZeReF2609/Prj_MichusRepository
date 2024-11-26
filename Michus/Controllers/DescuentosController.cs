@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Michus.Service;
+using Michus.DAO;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Michus.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data.SqlClient;
-using Microsoft.Data.SqlClient;
+using System;
 using System.Data;
+using System.Dynamic;
 
 namespace Michus.Controllers
 {
@@ -14,129 +17,147 @@ namespace Michus.Controllers
     public class DescuentosController : Controller
     {
         private readonly MenuService _menuService;
-        private string cad_cn = "";
+        private readonly DescuentosDAO _descuentosDAO;
+        private readonly string _connectionString;
 
         public DescuentosController(MenuService menuService, IConfiguration config)
         {
-            cad_cn = config.GetConnectionString("cn1");
+            _connectionString = config.GetConnectionString("cn1");
             _menuService = menuService;
-        }
-
-
-        #region DESCUENTOS DAO
-        public async Task<List<DescuentoCab>> GetDescuentosAsync()
-        {
-            var lista = new List<DescuentoCab>();
-
-            using (var connection = new System.Data.SqlClient.SqlConnection(cad_cn))
-            {
-                await connection.OpenAsync();  // Abrimos la conexión asincrónicamente
-
-                using (var command = new System.Data.SqlClient.SqlCommand("SP_LISTAR_DESCUENTOS", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    using (var dr = await command.ExecuteReaderAsync())
-                    {
-                        while (await dr.ReadAsync())
-                        {
-                            lista.Add(
-                                new DescuentoCab()
-                                {
-                                    IdDescuento = dr.IsDBNull(0) ? null : dr.GetString(0), // Verificar si el valor es NULL
-                                    IdPromocion = dr.IsDBNull(1) ? 0 : dr.GetInt32(1), // Verificar si el valor es NULL
-                                    IdEvento = dr.IsDBNull(2) ? null : dr.GetString(2), // Verificar si el valor es NULL
-                                    FechaInicio = dr.IsDBNull(3) ? DateTime.MinValue : dr.GetDateTime(3), // Verificar si el valor es NULL
-                                    FechaFin = dr.IsDBNull(4) ? DateTime.MinValue : dr.GetDateTime(4), // Verificar si el valor es NULL
-                                    PrecioDescuento = dr.IsDBNull(5) ? 0 : dr.GetDecimal(5), // Verificar si el valor es NULL
-                                    TipoDescuento = dr.IsDBNull(6) ? (byte)0 : dr.GetByte(6), // Verificar si el valor es NULL
-                                    Estado = dr.IsDBNull(7) ? 0 : dr.GetInt32(7), // Verificar si el valor es NULL
-                                    TiSitu = dr.IsDBNull(8) ? null : dr.GetString(8) // Verificar si el valor es NULL
-                                });
-                        }
-                    }
-                }
-            }
-
-            return lista;
+            _descuentosDAO = new DescuentosDAO(_connectionString);
         }
 
 
 
-        /*
-        public string GrabarCliente(Clientes obj)
+        public async Task<ActionResult> listadescuentos(int? FECHA_INICIO = null, int? FECHA_FIN = null, string? TI_SITU = "PAP")
         {
-            try
-            {
-                SqlHelper.ExecuteNonQuery(
-                    cad_cn, "PA_GRABAR_CLIENTE",
-                    obj.cod_cli, obj.nom_cli, obj.tel_cli,
-                    obj.cor_cli, obj.dir_clie, obj.cred_cli,
-                    obj.fec_nac, obj.cod_dist);
+            await LoadMenuDataAsync();
 
-                return "Se Registró/Actuaizó los datos " + $"del CLiente: {obj.nom_cli}";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
+            var aniosInicioDesc = await _descuentosDAO.GetAnioInicioDesc();
+            var aniosFinDesc = await _descuentosDAO.GetAnioFinDesc();
+
+            ViewBag.AniosInicioDesc = new SelectList(aniosInicioDesc, "anio", "anio");
+            ViewBag.AniosFinDesc = new SelectList(aniosFinDesc, "anio", "anio");
 
 
-        }
-        */
+            ViewBag.TiSitu = TI_SITU;
+            ViewBag.FechaInicio = FECHA_INICIO;
+            ViewBag.FechaFin = FECHA_FIN;
 
-        /*
-        public string EliminarCliente(string codigo)
-        {
-            {
-                try
-                {
-                    SqlHelper.ExecuteNonQuery(
-                        cad_cn, "PA_ELIMINAR_CLIENTE",
-                        codigo);
-
-                    return "Se Eliminó de forma lógico " + $"al Cliente: {codigo}";
-                }
-                catch (Exception ex)
-                {
-                    return ex.Message;
-                }
+            var descuentos = await _descuentosDAO.GetDescuentosCartilla(FECHA_INICIO, FECHA_FIN, TI_SITU!);
 
 
-            }
-        }
-        */
+            ViewBag.TiSitu = TI_SITU; 
 
-        #endregion
-
-
-        // GET: DescuentosController/Descuentos
-        public static async Task<System.Data.SqlClient.SqlDataReader> ExecuteReaderAsync(string connectionString, string commandText)
-        {
-            var connection = new System.Data.SqlClient.SqlConnection(connectionString);
-            await connection.OpenAsync();
-
-            var command = new System.Data.SqlClient.SqlCommand(commandText, connection)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
-
-            return await command.ExecuteReaderAsync();
-        }
-
-
-        public async Task<ActionResult> listadescuentos()
-        {
-            await LoadMenuDataAsync();  
-
-            
-            var descuentos = await GetDescuentosAsync();
-
-            
             return View(descuentos);
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> GetDetallesDescuento(string id)
+        {
+            if (id == null)
+            {
+                return BadRequest(new { error = "ID de descuento inválido." });
+            }
+
+            try
+            {
+                // Crear conexión con la base de datos
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    // Crear el comando para ejecutar el procedimiento almacenado
+                    using (var command = new SqlCommand("SP_VER_DETALLES_DESCUENTO", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Añadir el parámetro para el procedimiento almacenado
+                        command.Parameters.AddWithValue("@ID_DESCUENTO", id);
+
+                        // Abrir la conexión
+                        await connection.OpenAsync();
+
+                        // Ejecutar el procedimiento almacenado y obtener los resultados
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                var descuento = new
+                                {
+                                    IdDescuento = reader["ID_DESCUENTO"],
+                                    IdPromocion = reader["ID_PROMOCION"],
+                                    IdEvento = reader["ID_EVENTO"],
+                                    FechaInicio = reader["FECHA_INICIO"],
+                                    FechaFin = reader["FECHA_FIN"],
+                                    PrecioDescuento = reader["PRECIO_DESCUENTO"],
+                                    TipoDescuento = reader["TIPO_DESCUENTO"],
+                                    Categorias = reader["CATEGORIAS"],
+                                    Productos = reader["PRODUCTOS"],
+                                    TI_SITU = reader["TI_SITU"]
+                                };
+
+                                // Retornar los resultados como JSON
+                                return Json(descuento);
+                            }
+
+                            return NotFound(new { error = "Descuento no encontrado." });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+
+
+        [HttpPost]
+        public IActionResult ActualizarSitu()
+        {
+            string idDescuento = Request.Form["idDescuento"];
+            string situ = Request.Form["situ"];
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand("spActualizarSitu", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@IdDescuento", idDescuento);
+                    command.Parameters.AddWithValue("@TI_SITU", situ);
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        return Ok($"Estado actualizado a {situ} para el descuento {idDescuento}");
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest($"Error al actualizar el estado: {ex.Message}");
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Cargar datos de menú
         private async Task LoadMenuDataAsync()
         {
             string roleId = GetCurrentRoleId();
@@ -144,79 +165,11 @@ namespace Michus.Controllers
             ViewData["MenuItems"] = string.IsNullOrEmpty(menuJson) ? "[]" : menuJson;
         }
 
+        // Obtener el ID del rol actual
         private string GetCurrentRoleId()
         {
             var roleIdClaim = User.FindFirst(ClaimTypes.Role);
             return roleIdClaim?.Value ?? string.Empty;
-        }
-
-        // GET: DescuentosController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: DescuentosController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: DescuentosController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: DescuentosController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: DescuentosController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: DescuentosController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: DescuentosController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }
