@@ -23,3 +23,4 @@ namespace Michus.Models
         public decimal TotalValue { get; set; }
     }
 }
+//ACTUALIZADO A LA FECHA 26/11/2024
