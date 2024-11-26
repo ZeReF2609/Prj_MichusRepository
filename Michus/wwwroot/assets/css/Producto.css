@@ -1,0 +1,80 @@
+﻿
+    body
+
+{
+    background-color: #E8DFF1; /* Fondo lila claro */
+    color: #4A4A4A; /* Texto principal gris oscuro */
+}
+
+/* Tabla */
+.table {
+    background-color: #FFFFFF; /* Fondo blanco */
+    border-color: #C7A991; /* Bordes beige */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #F5F1EA; /* Alternancia suave */
+}
+
+th, td {
+    color: #4A4A4A; /* Texto gris oscuro */
+}
+
+/* Botones */
+.btn-primary {
+    background-color: #A674BF; /* Botón púrpura */
+    border-color: #A674BF;
+}
+
+    .btn-primary:hover {
+        background-color: #B894CE; /* Hover más claro */
+        border-color: #B894CE;
+    }
+
+.btn-info {
+    background-color: #C7A991; /* Botón beige */
+    border-color: #C7A991;
+}
+
+.btn-danger {
+    background-color: #A674BF; /* Botón púrpura oscuro */
+    border-color: #A674BF;
+}
+
+    .btn-danger:hover {
+        background-color: #B894CE; /* Hover más claro */
+    }
+
+/* Modal */
+.modal-content {
+    background-color: #FFFFFF; /* Fondo modal blanco */
+    border: 2px solid #C7A991; /* Borde beige */
+}
+
+.modal-header {
+    background-color: #C7A991; /* Cabecera beige */
+    color: #FFFFFF; /* Texto blanco */
+}
+
+.modal-footer {
+    background-color: #F5F1EA; /* Fondo beige claro */
+}
+
+/* Inputs y Selects */
+.form-control {
+    border: 1px solid #C7A991; /* Borde beige */
+    background-color: #F5F1EA; /* Fondo claro */
+    color: #4A4A4A; /* Texto gris oscuro */
+}
+
+    .form-control:focus {
+        border-color: #A674BF; /* Púrpura al enfocar */
+        box-shadow: 0 0 5px rgba(166, 116, 191, 0.5);
+    }
+
+/* Encabezados */
+h1 {
+    color: #A674BF; /* Encabezados púrpura */
+}
+
+}

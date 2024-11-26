@@ -28,7 +28,12 @@ builder.Services.AddScoped<MenuService>(provider =>
 });
 
 // Agregar ProductoDAO al contenedor de servicios
-builder.Services.AddScoped<ProductoDAO>();
+builder.Services.AddScoped<ProductoDao>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new ProductoDao(connectionString);
+});
 
 // Agregar controladores y vistas
 builder.Services.AddControllersWithViews();
