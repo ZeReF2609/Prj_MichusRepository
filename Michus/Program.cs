@@ -43,12 +43,6 @@ builder.Services.AddScoped<LoginCliService>(provider =>
     return new LoginCliService(connectionString, logger);
 });
 
-builder.Services.AddDbContext<MichusContext>(options =>
-{
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("cn1");
-    return new ClientesDAO(connectionString);
-});
 
 builder.Services.AddScoped<EmpleadoDAO>(provider =>
 {
