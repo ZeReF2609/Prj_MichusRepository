@@ -37,10 +37,6 @@ public class LogisticaController : Controller
     [HttpPost("/Logistica/InsertarProductos")]
     public async Task<IActionResult> InsertarProductos([FromBody] Producto producto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
 
         try
         {
@@ -79,10 +75,6 @@ public class LogisticaController : Controller
     [HttpPost("/Logistica/ActualizarProducto")]
     public async Task<IActionResult> ActualizarProducto([FromBody] Producto producto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
 
         try
         {

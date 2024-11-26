@@ -15,8 +15,8 @@
 
 <link rel="stylesheet" href="~/assets/css/vistasBootstrap.css">
 <link rel="stylesheet" href="~/assets/css/Producto.css">
-
-<h1>@ViewData["Title"]</h1>
+<div class="container-fluid">
+    <main class="py-2">
 
 <button type="button" class="btn btn-primary" onclick="clearForm()">
     Agregar Producto
@@ -127,7 +127,9 @@
             </div>
         </div>
     </div>
-</div>
+    
+    </div>
+</main>
 
 <script>
 $(document).ready(function() {
@@ -177,12 +179,12 @@ function submitProduct() {
     };
 
     const url = id ? `/Logistica/ActualizarProducto` : `/Logistica/InsertarProductos`;
-
+    console.log('Sending data:', JSON.stringify(producto));
     $.ajax({
         url: url,
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(producto),
+        data: JSON.stringify(producto), 
         success: function (response) {
             if (response.success) {
                 alert(response.message);

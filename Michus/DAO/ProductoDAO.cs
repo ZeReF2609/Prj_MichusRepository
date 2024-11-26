@@ -79,6 +79,9 @@ namespace Michus.DAO
 
         public async Task<int> InsertarProductos(Producto producto)
         {
+            string IdProducto = GenerarIdProducto();
+            producto.IdProducto = IdProducto;
+
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand("sp_InsertarProducto", connection) { CommandType = CommandType.StoredProcedure })
             {
@@ -87,7 +90,10 @@ namespace Michus.DAO
                 command.Parameters.AddWithValue("@ProdNomWeb", producto.ProdNomweb);
                 command.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
                 command.Parameters.AddWithValue("@IdCategoria", producto.IdCategoria);
-                command.Parameters.AddWithValue("@ProdFchCmrl", producto.ProdFchcmrl.HasValue ? (object)producto.ProdFchcmrl.Value : DBNull.Value);
+                command.Parameters.AddWithValue("@ProdFchCmrl",
+            producto.ProdFchcmrl.HasValue
+            ? (object)producto.ProdFchcmrl.Value.ToDateTime(TimeOnly.MinValue)
+            : DBNull.Value);
                 command.Parameters.AddWithValue("@Precio", producto.Precio);
                 command.Parameters.AddWithValue("@Estado", producto.Estado);
 
@@ -96,6 +102,27 @@ namespace Michus.DAO
 
                 return Convert.ToInt32(result);
             }
+        }
+        private string GenerarIdProducto()
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            using var command = new SqlCommand("SELECT TOP 1 ID_PRODUCTO FROM PRODUCTO ORDER BY ID_PRODUCTO DESC", connection);
+            var ultimoId = command.ExecuteScalar() as string;
+
+            if (string.IsNullOrEmpty(ultimoId))
+            {
+                return "P001";
+            }
+
+            var numeroStr = ultimoId.Substring(1);
+            if (int.TryParse(numeroStr, out int numero))
+            {
+                return $"P{(numero + 1):D3}";
+            }
+
+            throw new Exception("Formato inválido en el ID del producto.");
         }
 
         public async Task ActualizarProducto(Producto producto)
