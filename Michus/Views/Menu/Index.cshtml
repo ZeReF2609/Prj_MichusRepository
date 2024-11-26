@@ -3,118 +3,155 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<h1>Michus Dashboard</h1>
+<style>
+    /* Contenedor para las tarjetas */
+    .totals-container {
+        display: flex;
+        justify-content: space-between; /* Espacia las tarjetas uniformemente */
+        gap: 20px; /* Espacio entre tarjetas */
+        margin-bottom: 20px;
+    }
 
-<link rel="stylesheet" href="~/assets/css/StyleDashboard.css">
+    /* Estilo de cada tarjeta */
+    .totals-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        width: 30%; /* Ajusta el ancho de cada tarjeta */
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-<div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Total Ventas</h5>
-                <p class="card-text">@Model.TotalSales.ToString("N0")</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Total Productos</h5>
-                <p class="card-text">@Model.TotalProducts.ToString("N0")</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Total Clientes</h5>
-                <p class="card-text">@Model.TotalClients.ToString("N0")</p>
-            </div>
-        </div>
-    </div>
-</div>
+    /* Títulos dentro de las tarjetas */
+    .title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #4a4a4a;
+        margin-bottom: 10px;
+    }
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Productos por Categoria</h5>
-                <canvas id="productCountChart"></canvas>
+    /* Valores dentro de las tarjetas */
+    .total {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #3490dc;
+    }
+
+</style>
+<div class="min-h-screen bg-gray-100 py-6">
+    <div class="container mx-auto px-4">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-8 px-6 rounded-lg shadow-lg mb-8">
+            <h1 class="text-4xl font-bold text-center uppercase tracking-wide">Dashboard Michus</h1>
+        </header>
+
+        <div class="totals-container">
+            <div class="totals-card">
+                <h5 class="title">Total Ventas</h5>
+                <p class="total">@Model.TotalSales.ToString("N0")</p>
+            </div>
+            <div class="totals-card">
+                <h5 class="title">Total Productos</h5>
+                <p class="total">@Model.TotalProducts.ToString("N0")</p>
+            </div>
+            <div class="totals-card">
+                <h5 class="title">Total Clientes</h5>
+                <p class="total">@Model.TotalClients.ToString("N0")</p>
             </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Productos valor por Categoria</h5>
-                <canvas id="productValueChart"></canvas>
+
+
+        <!-- Charts Section -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Product Count Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-300">
+                <h5 class="text-xl font-semibold mb-4 text-center text-gray-700">Productos por Categoría</h5>
+                <div class="h-64">
+                    <canvas id="productCountChart"></canvas>
+                </div>
             </div>
-        </div>
+
+            <!-- Product Value Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-300">
+                <h5 class="text-xl font-semibold mb-4 text-center text-gray-700">Valor por Categoría</h5>
+                <div class="h-64">
+                    <canvas id="productValueChart"></canvas>
+                </div>
+            </div>
+        </section>
     </div>
 </div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Bar Chart
-        var ctxBar = document.getElementById('productCountChart').getContext('2d');
-        var barChart = new Chart(ctxBar, {
+        // Chart Data Preparation
+        const productCountData = {
+            labels: [@Html.Raw(string.Join(",", Model.ProductCountByCategory.Select(x => $"'{x.Category}'")))],
+            datasets: [{
+                label: 'Cantidad de Productos',
+                data: [@string.Join(",", Model.ProductCountByCategory.Select(x => x.ProductCount))],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const productValueData = {
+            labels: [@Html.Raw(string.Join(",", Model.ProductValueByCategory.Select(x => $"'{x.Category}'")))],
+            datasets: [{
+                data: [@string.Join(",", Model.ProductValueByCategory.Select(x => x.TotalValue))],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Render Charts
+        new Chart(document.getElementById('productCountChart').getContext('2d'), {
             type: 'bar',
-            data: {
-                labels: [@Html.Raw(string.Join(",", Model.ProductCountByCategory.Select(x => $"'{x.Category}'")))],
-                datasets: [{
-                    label: 'Product Count',
-                    data: [@string.Join(",", Model.ProductCountByCategory.Select(x => x.ProductCount))],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(54, 162, 235, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(153, 102, 255, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
+            data: productCountData,
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                    y: { beginAtZero: true }
                 }
             }
         });
 
-        // Pie Chart
-        var ctxPie = document.getElementById('productValueChart').getContext('2d');
-        var pieChart = new Chart(ctxPie, {
+        new Chart(document.getElementById('productValueChart').getContext('2d'), {
             type: 'pie',
-            data: {
-                labels: [@Html.Raw(string.Join(",", Model.ProductValueByCategory.Select(x => $"'{x.Category}'")))],
-                datasets: [{
-                    data: [@string.Join(",", Model.ProductValueByCategory.Select(x => x.TotalValue))],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(54, 162, 235, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(153, 102, 255, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+            data: productValueData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
             }
         });
     </script>
