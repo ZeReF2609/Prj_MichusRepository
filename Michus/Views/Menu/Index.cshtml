@@ -14,29 +14,49 @@
 
     /* Estilo de cada tarjeta */
     .totals-card {
-        background-color: white;
+        background-color: #f4f7fa; /* Color pastel suave */
         border-radius: 10px;
-        padding: 20px;
-        border: 1px solid #ddd;
-        width: 30%; /* Ajusta el ancho de cada tarjeta */
+        padding: 10px 15px; /* Reducido el padding (más compacto verticalmente) */
+        border: 1px solid #e1e6f0; /* Borde suave */
+        width: 30%; /* Manteniendo el mismo ancho */
         text-align: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
+        .totals-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
 
     /* Títulos dentro de las tarjetas */
     .title {
-        font-size: 1.25rem;
+        font-size: 1.15rem; /* Ajustado para ser un poco más pequeño */
         font-weight: 600;
         color: #4a4a4a;
-        margin-bottom: 10px;
+        margin-bottom: 6px; /* Reducido el margen */
     }
 
     /* Valores dentro de las tarjetas */
     .total {
-        font-size: 2rem;
+        font-size: 1.6rem; /* Ajustado para ser un poco más pequeño */
         font-weight: 700;
-        color: #3490dc;
+        color: #4e97fd; /* Color pastel suave para el valor */
     }
+
+    /* Colores pastel para cada tarjeta */
+    .totals-card:nth-child(1) {
+        background-color: #ffcccb; /* Rosa pastel */
+    }
+
+    .totals-card:nth-child(2) {
+        background-color: #cce7ff; /* Azul pastel */
+    }
+
+    .totals-card:nth-child(3) {
+        background-color: #d1ffd1; /* Verde pastel */
+    }
+
 
 </style>
 <div class="min-h-screen bg-gray-100 py-6">
@@ -156,3 +176,5 @@
         });
     </script>
 }
+
+//ACTUALIZADO A LA FECHA 26/11/2024
