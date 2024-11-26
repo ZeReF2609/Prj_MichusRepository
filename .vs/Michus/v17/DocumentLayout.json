@@ -3,36 +3,36 @@
   "WorkspaceRootPath": "C:\\michus_integrador\\Prj_MichusRepository\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\service\\logincliservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\service\\logincliservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\views\\ecommerce\\listarproductos.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\views\\ecommerce\\listarproductos.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\controllers\\loginclicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\controllers\\loginclicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\controllers\\ecommercecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\controllers\\ecommercecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\views\\logincli\\logincli.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\views\\logincli\\logincli.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\models\\clienteregistromodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\models\\clienteregistromodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\views\\ecommerce\\cart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\views\\ecommerce\\cart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\models\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\models\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\controllers\\menucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\controllers\\menucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\models\\tipodocumento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\models\\tipodocumento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\controllers\\ecommercecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\controllers\\ecommercecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\views\\shared\\layoutventaecommerce.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\views\\shared\\layoutventaecommerce.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|c:\\michus_integrador\\prj_michusrepository\\michus\\views\\ecommerce\\checkout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\views\\ecommerce\\checkout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 202,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 12,
           "Children": [
             {
               "$type": "Bookmark",
@@ -53,42 +53,58 @@
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Cliente.cs",
-              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Models\\Cliente.cs",
-              "RelativeDocumentMoniker": "Michus\\Models\\Cliente.cs",
-              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Models\\Cliente.cs",
-              "RelativeToolTip": "Michus\\Models\\Cliente.cs",
-              "ViewState": "AQIAABMAAAAAAAAAAAA3wCIAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-13T20:04:37.299Z",
+              "DocumentIndex": 2,
+              "Title": "LoginCli.cshtml",
+              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\LoginCli\\LoginCli.cshtml",
+              "RelativeDocumentMoniker": "Michus\\Views\\LoginCli\\LoginCli.cshtml",
+              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\LoginCli\\LoginCli.cshtml",
+              "RelativeToolTip": "Michus\\Views\\LoginCli\\LoginCli.cshtml",
+              "ViewState": "AQIAADYAAAAAAAAAAAAAAAcAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-26T04:34:42.288Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "TipoDocumento.cs",
-              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Models\\TipoDocumento.cs",
-              "RelativeDocumentMoniker": "Michus\\Models\\TipoDocumento.cs",
-              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Models\\TipoDocumento.cs",
-              "RelativeToolTip": "Michus\\Models\\TipoDocumento.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-13T19:51:27.339Z",
+              "DocumentIndex": 3,
+              "Title": "Cart.cshtml",
+              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\Ecommerce\\Cart.cshtml",
+              "RelativeDocumentMoniker": "Michus\\Views\\Ecommerce\\Cart.cshtml",
+              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\Ecommerce\\Cart.cshtml",
+              "RelativeToolTip": "Michus\\Views\\Ecommerce\\Cart.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-26T04:34:20.838Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Program.cs",
-              "RelativeDocumentMoniker": "Michus\\Program.cs",
-              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Program.cs",
-              "RelativeToolTip": "Michus\\Program.cs",
-              "ViewState": "AQIAADoAAAAAAAAAAAAAADkAAAA4AAAA",
+              "DocumentIndex": 4,
+              "Title": "MenuController.cs",
+              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Controllers\\MenuController.cs",
+              "RelativeDocumentMoniker": "Michus\\Controllers\\MenuController.cs",
+              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Controllers\\MenuController.cs",
+              "RelativeToolTip": "Michus\\Controllers\\MenuController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-13T19:41:31.53Z",
+              "WhenOpened": "2024-11-26T04:34:15.753Z",
               "EditorCaption": ""
             },
             {
@@ -99,62 +115,61 @@
               "RelativeDocumentMoniker": "Michus\\Controllers\\LoginCliController.cs",
               "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Controllers\\LoginCliController.cs",
               "RelativeToolTip": "Michus\\Controllers\\LoginCliController.cs",
-              "ViewState": "AQIAAB8AAAAAAAAAAAAEwDAAAABAAAAA",
+              "ViewState": "AQIAAGsAAAAAAAAAAAAwwAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-13T19:30:31.103Z",
+              "WhenOpened": "2024-11-26T04:34:09.723Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "EcommerceController.cs",
               "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Controllers\\EcommerceController.cs",
               "RelativeDocumentMoniker": "Michus\\Controllers\\EcommerceController.cs",
               "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Controllers\\EcommerceController.cs",
               "RelativeToolTip": "Michus\\Controllers\\EcommerceController.cs",
-              "ViewState": "AQIAACQAAAAAAAAAAAAowD4AAAAVAAAA",
+              "ViewState": "AQIAAEEAAAAAAAAAAAAuwEcAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-13T19:40:39.284Z",
+              "WhenOpened": "2024-11-26T03:23:34.245Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "layoutVentaEcommerce.cshtml",
+              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\Shared\\layoutVentaEcommerce.cshtml",
+              "RelativeDocumentMoniker": "Michus\\Views\\Shared\\layoutVentaEcommerce.cshtml",
+              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\Shared\\layoutVentaEcommerce.cshtml",
+              "RelativeToolTip": "Michus\\Views\\Shared\\layoutVentaEcommerce.cshtml",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAAA4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-24T23:08:00.911Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "LoginCliService.cs",
-              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Service\\LoginCliService.cs",
-              "RelativeDocumentMoniker": "Michus\\Service\\LoginCliService.cs",
-              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Service\\LoginCliService.cs*",
-              "RelativeToolTip": "Michus\\Service\\LoginCliService.cs*",
-              "ViewState": "AQIAADMAAAAAAAAAAAAqwFIAAAA5AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-13T19:30:22.965Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ClienteRegistroModel.cs",
-              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Models\\ClienteRegistroModel.cs",
-              "RelativeDocumentMoniker": "Michus\\Models\\ClienteRegistroModel.cs",
-              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Models\\ClienteRegistroModel.cs",
-              "RelativeToolTip": "Michus\\Models\\ClienteRegistroModel.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAmAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-13T20:58:30.553Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "LoginCli.cshtml",
-              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\LoginCli\\LoginCli.cshtml",
-              "RelativeDocumentMoniker": "Michus\\Views\\LoginCli\\LoginCli.cshtml",
-              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\LoginCli\\LoginCli.cshtml",
-              "RelativeToolTip": "Michus\\Views\\LoginCli\\LoginCli.cshtml",
-              "ViewState": "AQIAACEAAAAAAAAAAAAUwCwAAAA+AAAA",
+              "Title": "ListarProductos.cshtml",
+              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\Ecommerce\\ListarProductos.cshtml",
+              "RelativeDocumentMoniker": "Michus\\Views\\Ecommerce\\ListarProductos.cshtml",
+              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\Ecommerce\\ListarProductos.cshtml",
+              "RelativeToolTip": "Michus\\Views\\Ecommerce\\ListarProductos.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAkAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-13T19:30:26.835Z",
+              "WhenOpened": "2024-11-24T23:07:30.036Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Checkout.cshtml",
+              "DocumentMoniker": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\Ecommerce\\Checkout.cshtml",
+              "RelativeDocumentMoniker": "Michus\\Views\\Ecommerce\\Checkout.cshtml",
+              "ToolTip": "C:\\michus_integrador\\Prj_MichusRepository\\Michus\\Views\\Ecommerce\\Checkout.cshtml",
+              "RelativeToolTip": "Michus\\Views\\Ecommerce\\Checkout.cshtml",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAAFYAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-18T17:32:26.774Z"
             }
           ]
         }
