@@ -35,6 +35,14 @@ builder.Services.AddScoped<ProductoDao>(provider =>
     return new ProductoDao(connectionString);
 });
 
+
+builder.Services.AddScoped<ClientesDAO>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new ClientesDAO(connectionString);
+});
+
 builder.Services.AddScoped<LoginCliService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
