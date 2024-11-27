@@ -1,4 +1,4 @@
-﻿
+
 using Michus.DAO;
 using Michus.Service;
 using Microsoft.AspNetCore.Http;
@@ -19,9 +19,7 @@ namespace Michus.Controllers
 {
     public class PromocionesController : Controller
     {
-
         private readonly MenuService _menuService;
-
         private readonly string _cnx;
 
         private readonly CorreoHelper _correoHelper;
@@ -126,7 +124,7 @@ namespace Michus.Controllers
             {
                 await connection.OpenAsync();
 
-                using(SqlCommand cmm = new SqlCommand("SP_LISTAR_PROMOCIONES", connection))
+                using (SqlCommand cmm = new SqlCommand("SP_LISTAR_PROMOCIONES", connection))
                 {
                     cmm.CommandType = CommandType.StoredProcedure;
 
@@ -144,7 +142,6 @@ namespace Michus.Controllers
                                 FechaInicio = rd["FECHA_INICIO"],
                                 FechaFin = rd["FECHA_FIN"],
                                 Estado = rd["ESTADO"]
-
                             });
                         }
                     }
@@ -187,7 +184,7 @@ namespace Michus.Controllers
                         {
                             detallePromociones.Add(new
                             {
-                                IdDetalle = rd["ID_REF"],
+                                IdDetalle = rd["ID_REF"].ToString(),
                                 Promocion = rd["NOMBRE_PROMOCION"],
                                 Producto = rd["PROD_NOM"],
                                 CantAplicable = rd["CANTIDAD_APLICABLE"],
@@ -260,10 +257,16 @@ namespace Michus.Controllers
         [HttpPost]
         public async Task<ActionResult> CrearPromocion(string nombrePromocion, byte tipoPromocion, decimal descuento, string descripcion, DateTime fechaInicio, DateTime fechaFin, byte estado = 0)
         {
-            if (string.IsNullOrEmpty(nombrePromocion) || tipoPromocion == 0 || descuento <= 0 || string.IsNullOrEmpty(descripcion) || fechaInicio == default || fechaFin == default)
+            if (string.IsNullOrEmpty(nombrePromocion) || descuento <= 0 || string.IsNullOrEmpty(descripcion) || fechaInicio == default || fechaFin == default)
             {
                 ViewBag.ErrorMessage = "Todos los campos son requeridos.";
-                return View();
+                return RedirectToAction("ListarPromociones");
+            }
+
+            if (tipoPromocion != 0 && tipoPromocion != 1)
+            {
+                ViewBag.ErrorMessage = "Tipo de promoción inválido.";
+                return RedirectToAction("ListarPromociones");
             }
 
             using (SqlConnection connection = new SqlConnection(_cnx))
@@ -297,7 +300,7 @@ namespace Michus.Controllers
                 {
                     // Manejo de errores
                     ViewBag.ErrorMessage = $"Error al crear la promoción: {ex.Message}";
-                    return View("ListarPromociones");
+                    return RedirectToAction("ListarPromociones");
                 }
             }
         }
