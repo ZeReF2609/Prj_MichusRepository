@@ -1,4 +1,4 @@
-﻿
+
 using Michus.DAO;
 using Michus.Service;
 using Microsoft.AspNetCore.Http;
@@ -257,10 +257,16 @@ namespace Michus.Controllers
         [HttpPost]
         public async Task<ActionResult> CrearPromocion(string nombrePromocion, byte tipoPromocion, decimal descuento, string descripcion, DateTime fechaInicio, DateTime fechaFin, byte estado = 0)
         {
-            if (string.IsNullOrEmpty(nombrePromocion) || tipoPromocion == 0 || descuento <= 0 || string.IsNullOrEmpty(descripcion) || fechaInicio == default || fechaFin == default)
+            if (string.IsNullOrEmpty(nombrePromocion) || descuento <= 0 || string.IsNullOrEmpty(descripcion) || fechaInicio == default || fechaFin == default)
             {
                 ViewBag.ErrorMessage = "Todos los campos son requeridos.";
-                return View();
+                return RedirectToAction("ListarPromociones");
+            }
+
+            if (tipoPromocion != 0 && tipoPromocion != 1)
+            {
+                ViewBag.ErrorMessage = "Tipo de promoción inválido.";
+                return RedirectToAction("ListarPromociones");
             }
 
             using (SqlConnection connection = new SqlConnection(_cnx))
@@ -294,7 +300,7 @@ namespace Michus.Controllers
                 {
                     // Manejo de errores
                     ViewBag.ErrorMessage = $"Error al crear la promoción: {ex.Message}";
-                    return View("ListarPromociones");
+                    return RedirectToAction("ListarPromociones");
                 }
             }
         }
