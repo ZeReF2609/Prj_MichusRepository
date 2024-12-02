@@ -1,5 +1,6 @@
 @{
     ViewBag.Title = "Listado de Promociones";
+    var errorMensaje = TempData["ErrorMensaje"];
 }
 
 <link rel="stylesheet" href="~/assets/css/PromocionesStyle.css">
@@ -7,6 +8,15 @@
 
 
 <div class="container mt-4">
+    <!--MANEJO DE ERRORES-->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+
         <div class="d-flex align-items-center justify-content-between p-3"
          style="background-color: #393153; border: 1px solid #444; border-radius: 10px; color: white; display: inline-flex; margin-left: 60px;">
             <h3 class="m-0" style="margin-left: 10px;">Promociones Disponibles</h3>
@@ -31,7 +41,7 @@
 
                     <!-- Descuento-->
                     <div class="discount-badge">
-                        @(promo.TipoPromocion == 1 ? "S/." : "%") @promo.Descuento
+                        @(promo.TipoPromocion == 1 ? "%" : "S/.") @promo.Descuento
                     </div>
 
                     <!-- Interruptor -->
@@ -57,11 +67,11 @@
                                 <p style="margin: 0; padding-left: 5px;">
                                     @if (promo.TipoPromocion == 1)
                                     {
-                                        @:Fijo
+                                        @:Porcentual
                                     }
                                     else
                                     {
-                                        @:Porcentual
+                                        @:Fijo
                                     }
                                 </p>
                             </div>
@@ -135,7 +145,7 @@
 
                                 <!-- Descuento de la Promoción -->
                                 <div class="form-group mb-3">
-                                    <input type="number" class="form-control" id="descuento" name="descuento" placeholder="Descuento de la promoción" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                    <input type="number" class="form-control" id="descuento" name="descuento" placeholder="Descuento de la promoción" required min="1" style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
                                 </div>
 
                                 <!-- Descripcion de la Promoción -->
@@ -189,7 +199,7 @@
                                 <!-- Campo para seleccionar la promoción -->
                                 <div class="mb-3">
                                     @Html.DropDownList("idPromocion",
-                                             new SelectList(ViewBag.Promociones as List<dynamic>, "IdPromociones", "NomPromo", ViewBag.PromocionesList?.SelectedValue),
+                                             new SelectList(ViewBag.PromocionesFiltradas as List<dynamic>, "IdPromociones", "NomPromo", ViewBag.PromocionesList?.SelectedValue),
                                              "Seleccione una promoción",
                                              new { @class = "form-select custom-select-style", required = "required", onchange = "updatePromotionDetails()" })
                                 </div>
@@ -206,21 +216,15 @@
                                     </div>
 
                                     <!-- Campo para ingresar la cantidad aplicable -->
-                                <div class="mb-3 d-flex align-items-center" style="justify-content: flex-start;">
-                                    <!-- Campo de cantidad aplicable -->
+                                    <div class="mb-3 d-flex align-items-center" style="justify-content: flex-start;">
                                         <input type="number" class="form-control" id="cantidadAplicable" name="cantidadAplicable" required
                                                style="width: 150px; padding: 10px; border-radius: 0.375rem; display: inline-block;" placeholder="Ingrese la cantidad">
-
-
-
-                                    <!-- Botón al lado izquierdo -->
-                                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Registrar Detalle</button>
+                                        <input type="text" id="selectedProducts" name="selectedProducts" class="form-control" readonly required style="display: none">
+                                        <button type="submit" id="submitButton" class="btn btn-primary" style="margin-left: 10px;">Registrar Detalle</button>
+                                    </div>
                                 </div>
-                                </div>
-
-
-                                <input type="hidden" id="productosSeleccionados" name="productosSeleccionados" />
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -252,7 +256,7 @@
                                                 <tr>
                                                     <td>
                                                         <label class="custom-checkbox">
-                                                            <input type="checkbox" class="productoCheckbox" data-producto-id="@productos.IdProductos" name="productosSeleccionados" value="@productos.IdProductos">
+                                                            <input type="checkbox" class="productoCheckbox" data-producto-id="@productos.IdProductos" name="productosSeleccionados[]" value="@productos.IdProductos">
                                                             <span class="checkmark"></span>
                                                         </label>
                                                     </td>
@@ -359,6 +363,8 @@
             $('#addPromoModal').modal('show'); // Abre solo el modal de agregar promoción
         });
     });
+
+
 
 
 </script>

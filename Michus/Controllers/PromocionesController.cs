@@ -117,6 +117,7 @@ namespace Michus.Controllers
             SetNoCacheHeaders();
 
             var promociones = new List<dynamic>();
+            var promocionesFiltro = new List<dynamic>();
             var productos = new List<dynamic>();
             var detallePromociones = new List<dynamic>();
 
@@ -147,7 +148,36 @@ namespace Michus.Controllers
                     }
                 }
 
-                ViewBag.PromocionesList = new SelectList(promociones, "IdPromociones", "NomPromo", idPromocion);
+                using (SqlCommand cmm = new SqlCommand("SP_LISTAR_PROMOCIONES", connection))
+                {
+                    cmm.CommandType = CommandType.StoredProcedure;
+
+                    cmm.Parameters.Add(new SqlParameter("@FiltrarActivas", SqlDbType.Bit)
+                    {
+                        Value = 1 
+                    });
+
+                    using (SqlDataReader rd = await cmm.ExecuteReaderAsync())
+                    {
+                        while (await rd.ReadAsync())
+                        {
+                            promocionesFiltro.Add(new
+                            {
+                                IdPromociones = rd["ID_PROMOCION"].ToString(),
+                                NomPromo = rd["NOMBRE_PROMOCION"],
+                                TipoPromocion = rd["TIPO_PROMOCION"],
+                                Descuento = rd["DESCUENTO"],
+                                Descripcion = rd["DESCRIPCION"],
+                                FechaInicio = rd["FECHA_INICIO"],
+                                FechaFin = rd["FECHA_FIN"],
+                                Estado = rd["ESTADO"]
+                            });
+                        }
+                    }
+                }
+
+
+                ViewBag.PromocionesList = new SelectList(promocionesFiltro, "IdPromociones", "NomPromo", idPromocion);
 
 
                 using (SqlCommand cmm = new SqlCommand("SP_LISTAR_PRODUCTOS_PROMOS", connection))
@@ -176,7 +206,6 @@ namespace Michus.Controllers
                 using (SqlCommand cmmD = new SqlCommand("SP_LISTAR_DETALLE_PROMOCIONES", connection))
                 {
                     cmmD.CommandType = CommandType.StoredProcedure;
-                    cmmD.Parameters.Add(new SqlParameter("@ID_PROMOCION", idPromocion));
 
                     using (SqlDataReader rd = await cmmD.ExecuteReaderAsync())
                     {
@@ -198,6 +227,7 @@ namespace Michus.Controllers
 
             ViewBag.Productos = productos;
             ViewBag.Promociones = promociones;
+            ViewBag.PromocionesFiltradas = promocionesFiltro;
             ViewBag.DetallePromocion = detallePromociones;
 
             await LoadMenuDataAsync();
@@ -206,51 +236,60 @@ namespace Michus.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> RegistrarDetallePromo(int idPromocion, string productosJson, int cantidadAplicable)
+        public async Task<IActionResult> RegistrarDetallePromo(int idPromocion, string selectedProducts, int cantidadAplicable)
         {
             try
             {
-                // Deserializamos el JSON de productos seleccionados
-                var productosSeleccionados = JsonConvert.DeserializeObject<List<int>>(productosJson);
 
                 using (var connection = new SqlConnection(_cnx))
                 {
                     // Abrimos la conexión
                     await connection.OpenAsync();
 
-                    // Iteramos sobre los productos seleccionados y ejecutamos el procedimiento para cada uno
-                    foreach (var productoId in productosSeleccionados)
+                    // Iniciar la transacción
+                    using (var transaction = await connection.BeginTransactionAsync())
                     {
-                        // Creamos el comando para ejecutar el procedimiento almacenado
-                        using (var command = new SqlCommand("SP_CREAR_DETALLE_PROMOCION", connection))
+                        try
                         {
-                            command.CommandType = System.Data.CommandType.StoredProcedure;
-
-                            // Añadimos los parámetros necesarios para el procedimiento almacenado
-                            command.Parameters.Add(new SqlParameter("@ID_PROMOCION", idPromocion));
-                            command.Parameters.Add(new SqlParameter("@ID_PRODUCTO", productoId));
-                            command.Parameters.Add(new SqlParameter("@CANTIDAD_APLICABLE", cantidadAplicable));
-
-                            // Ejecutamos el procedimiento y esperamos su resultado
-                            var result = await command.ExecuteNonQueryAsync();
-
-                            // Verificamos si la ejecución fue exitosa
-                            if (result <= 0)
+                            // Creamos el comando para ejecutar el procedimiento almacenado
+                            using (var command = new SqlCommand("SP_CREAR_DETALLE_PROMOCION", connection, (SqlTransaction)transaction))
                             {
-                                return BadRequest("Hubo un problema aplicando el descuento.");
+                                command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                                // Añadimos los parámetros necesarios para el procedimiento almacenado
+                                command.Parameters.Add(new SqlParameter("@ID_PROMOCION", idPromocion));
+                                command.Parameters.Add(new SqlParameter("@ID_PRODUCTO", selectedProducts)); 
+                                command.Parameters.Add(new SqlParameter("@CANTIDAD_APLICABLE", cantidadAplicable));
+
+                                // Ejecutamos el procedimiento y esperamos su resultado
+                                var result = await command.ExecuteNonQueryAsync();
+
+                                // Verificamos si la ejecución fue exitosa
+                                
                             }
+
+                            // Si todo fue exitoso, confirmamos la transacción
+                            await transaction.CommitAsync();
+                            return RedirectToAction("ListarPromociones");
+                        }
+                        catch (Exception)
+                        {
+                            TempData["ErrorMensaje"] = "Error al aplicar el descuento. El descuento no debe superar el precio del producto.";
+                            return View("ListarPromociones");
                         }
                     }
-
-                    return Ok("Descuento aplicado correctamente.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Capturamos cualquier error y lo devolvemos
-                return StatusCode(500, ex.Message);
+                // Capturamos cualquier error inesperado
+                return View("Error inesperado, intentalo más tarde");
             }
         }
+
+
+
+
 
 
 
@@ -292,22 +331,18 @@ namespace Michus.Controllers
                         // Ejecutar el procedimiento almacenado de forma asíncrona
                         await command.ExecuteNonQueryAsync();
 
-                        // Si la promoción fue creada exitosamente, redirige a otro lugar o muestra un mensaje de éxito
-                        return RedirectToAction("ListarPromociones");  // Redirigir a la lista de promociones (por ejemplo)
+                        return RedirectToAction("ListarPromociones"); 
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Manejo de errores
-                    ViewBag.ErrorMessage = $"Error al crear la promoción: {ex.Message}";
+                    TempData["ErrorMessage"] = "Ocurrió un error, por favor intenta de nuevo más tarde.";
                     return RedirectToAction("ListarPromociones");
                 }
             }
         }
     
-
-
-
 
 
         private string GetCurrentRoleId()
