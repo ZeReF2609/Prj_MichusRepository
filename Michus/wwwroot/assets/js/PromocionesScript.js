@@ -62,8 +62,8 @@ function updatePromotionDetails() {
     if (promocion) {
         // Actualizar los datos en la vista
         document.getElementById("descuentoPromocion").innerText = promocion.TipoPromocion == 1
-            ? `S/. ${promocion.Descuento} - Promoción Fija`
-            : `% ${promocion.Descuento} - Promoción Porcentual`;
+            ?`% ${promocion.Descuento} - Promoción Porcentual`
+            :`S/. ${promocion.Descuento} - Promoción Fija`;
 
         document.getElementById("descripcionPromocion").innerText = promocion.Descripcion;
     } else {
@@ -131,21 +131,58 @@ function validarToken() {
 }
 
 
-
-// SECCION DE  SELECCION 
-// Evento que captura los productos seleccionados
+//AGREGAR PROMOCIONES A PRODUCTOS SELECCUONADOS
 function updateSelectedProducts() {
-    // Obtenemos los checkboxes seleccionados
-    var selectedProducts = [];
-    $(".productoCheckbox:checked").each(function () {
-        selectedProducts.push($(this).data("producto-id"));
+    // Obtener todos los checkboxes seleccionados
+    var selectedCheckboxes = document.querySelectorAll('.productoCheckbox:checked');
+
+    // Crear un array con los valores de los productos seleccionados (IDs)
+    var selectedProductIds = [];
+    selectedCheckboxes.forEach(function (checkbox) {
+        selectedProductIds.push(checkbox.value);
     });
 
-    // Convertimos los IDs seleccionados a formato JSON
-    $("#productosSeleccionados").val(JSON.stringify(selectedProducts));
+    // Actualizar el campo de productos seleccionados con el array en formato JSON
+    document.getElementById('selectedProducts').value = JSON.stringify(selectedProductIds);
 }
 
-// Vinculamos el evento change al checkbox para que actualice el campo oculto
-$(".productoCheckbox").on("change", updateSelectedProducts);
+// Añadir un listener de evento a todos los checkboxes para que se ejecute cuando el estado cambie
+document.querySelectorAll('.productoCheckbox').forEach(function (checkbox) {
+    checkbox.addEventListener('change', updateSelectedProducts);
+});
 
-//Actualizado a la fecha 24/11/2024
+
+
+
+// FUNCION PARA EXTRAER EL ID DE LA PROMOCION
+function checkPromocionValue() {
+    const idPromocion = document.getElementById('idPromocionInput').value; // Asegúrate de tener este input
+    if (!idPromocion) {
+        alert("Por favor, seleccione una promoción.");
+        return false;  // Evitar el envío si no se seleccionó una promoción
+    }
+    console.log("ID de promoción:", idPromocion); // Verificar que se está enviando
+    return true;  // Permitir el envío si todo está correcto
+}
+
+
+
+
+//VALIDACION PARA EL ENVIO DEL FORMULARIO AL APLICAR LA PROMOCION
+document.getElementById('formRegistrarDetalle').addEventListener('submit', function (event) {
+    // Verificar si al menos un checkbox está seleccionado
+    var checkboxes = document.querySelectorAll('.productoCheckbox');
+    var isChecked = false;
+
+    checkboxes.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            isChecked = true;
+        }
+    });
+
+    // Si no se seleccionó ningún checkbox, evitar el envío del formulario
+    if (!isChecked) {
+        event.preventDefault(); // Evitar el envío del formulario
+        alert('Por favor, seleccione al menos un producto.');
+    }
+});
