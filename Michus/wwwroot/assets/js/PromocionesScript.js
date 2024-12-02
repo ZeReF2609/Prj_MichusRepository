@@ -186,3 +186,5 @@ document.getElementById('formRegistrarDetalle').addEventListener('submit', funct
         alert('Por favor, seleccione al menos un producto.');
     }
 });
+
+//ACTUALIZADO A LA FECHA 02-12-2024
