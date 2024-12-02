@@ -13,16 +13,19 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <link rel="stylesheet" href="~/assets/css/vistasBootstrap.css">
+<link rel="stylesheet" href="~/assets/css/ClientesStyle.css">
+
 <div class="container-fluid">
-    <main class="py-2">
+    <main class="py-4">
+        <div class="mb-3 text-end">
+            <button class="btn btn-lila" data-bs-toggle="modal" data-bs-target="#insertModal">
+                <i class="bi bi-plus-circle"></i>Insertar Cliente
+            </button>
+        </div>
 
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertarModal">
-            Insertar Cliente
-        </button>
-
-        <div class="table-responsive" style="margin-top: 20px;">
-            <table id="clientesTable" class="table table-striped table-bordered display table-sm">
-                <thead>
+        <div class="table-responsive">
+            <table id="clientesTable" class="table table-hover table-bordered table-striped">
+                <thead class="table-light">
                     <tr>
                         <th>Código</th>
                         <th>Nombre</th>
@@ -35,7 +38,7 @@
                         <th>Teléfono</th>
                         <th>Dirección</th>
                         <th>Estado</th>
-                        <th></th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -56,7 +59,7 @@
                                 <button class="btn btn-link p-0" id="estadoBtn_@clienteData.Cliente.IdCliente" data-id="@clienteData.Cliente.IdCliente" data-bs-toggle="modal" data-bs-target="#confirmModal" title="Cambiar estado">
                                     @if (clienteData.Sistema.Estado == 1)
                                     {
-                                        <i class="bi bi-check-circle text-success align-content-center" title="Activo"></i> 
+                                        <i class="bi bi-check-circle text-success align-content-center" title="Activo"></i>
                                     }
                                     else
                                     {
@@ -74,203 +77,213 @@
                 </tbody>
             </table>
         </div>
-        
-
-        <!-- Modal para registrar-->
-        <div class="modal fade" id="insertarModal" tabindex="-1" aria-labelledby="insertarModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="insertarModalLabel">Insertar Cliente</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <!-- Imagen decorativa -->
-                            <div class="col-md-3 text-center mb-4">
-                                <img src="~/assets/img/mishus.png" alt="Imagen decorativa" class="img-fluid" style="max-height: 70px;">
-                            </div>
-                            <div class="col-md-9">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="USUARIO" class="form-label">Usuario</label>
-                                        <input type="text" class="form-control" id="USUARIO" name="USUARIO" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="CONTRASENIA" class="form-label">Contraseña</label>
-                                        <input type="password" class="form-control" id="CONTRASENIA" name="CONTRASENIA" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Inputs debajo de la imagen -->
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label for="EMAIL" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="EMAIL" name="EMAIL" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="NOMBRES" class="form-label">Nombres</label>
-                                <input type="text" class="form-control" id="NOMBRES" name="NOMBRES" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="APELLIDOS" class="form-label">Apellidos</label>
-                                <input type="text" class="form-control" id="APELLIDOS" name="APELLIDOS" required>
-                            </div>
-                            <div class="col-md-8 mb-2">
-                                <label for="DIRECCION" class="form-label">Dirección</label>
-                                <input type="text" class="form-control" id="DIRECCION" name="DIRECCION">
-                            </div>
-                            <div class="col-md-4 mb-2">
-                                <label for="TELEFONO" class="form-label">Teléfono</label>
-                                <input type="text" class="form-control" id="TELEFONO" name="TELEFONO">
-                            </div>
-                        </div>
-                        <!-- Selección de tipo de documento y DNI -->
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="DNI" class="form-label">Tipo de Documento</label>
-                                <select class="form-select" id="DNI" name="DNI" required>
-
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="DOCUMENTO_IDENTIDAD" class="form-label">Documento de Identidad</label>
-                                <input type="text" class="form-control" id="DOCUMENTO_IDENTIDAD" name="DOCUMENTO_IDENTIDAD" required>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="FECHA_NACIMIENTO" class="form-label">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" id="FECHA_NACIMIENTO" name="FECHA_NACIMIENTO">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="NIVEL_FIDELIDAD" class="form-label">Nivel de Fidelidad</label>
-                                <input type="number" class="form-control" id="NIVEL_FIDELIDAD" name="NIVEL_FIDELIDAD">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="PUNTOS_FIDELIDAD" class="form-label">Puntos de Fidelidad</label>
-                                <input type="number" class="form-control" id="PUNTOS_FIDELIDAD" name="PUNTOS_FIDELIDAD">
-                            </div>
-                        </div>
-                        <div class="mt-4 text-center">
-                            <button type="submit" class="btn btn-primary" id="guardarCliente">Guardar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editarModalLabel">Editar Cliente</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row mb-2">
-                            <div class="col-md-3 text-center">
-                                <img src="~/assets/img/mishus.png" alt="Imagen decorativa" class="img-fluid" style="max-height: 70px;">
-                            </div>
-                            <div class="col-md-9">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="EDIT_ID" class="form-label">ID Cliente</label>
-                                        <input type="text" class="form-control" id="EDIT_ID" name="EDIT_ID" disabled>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="EDIT_USUARIO" class="form-label">Usuario</label>
-                                        <input type="text" class="form-control" id="EDIT_USUARIO" name="EDIT_USUARIO">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label for="EDIT_EMAIL" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="EDIT_EMAIL" name="EDIT_EMAIL" >
-                            </div>
-                            <div class="col-md-4">
-                                <label for="EDIT_NOMBRES" class="form-label">Nombres</label>
-                                <input type="text" class="form-control" id="EDIT_NOMBRES" name="EDIT_NOMBRES" >
-                            </div>
-                            <div class="col-md-4">
-                                <label for="EDIT_APELLIDOS" class="form-label">Apellidos</label>
-                                <input type="text" class="form-control" id="EDIT_APELLIDOS" name="EDIT_APELLIDOS" >
-                            </div>
-                            <div class="col-md-8 mb-2">
-                                <label for="EDIT_DIRECCION" class="form-label">Dirección</label>
-                                <input type="text" class="form-control" id="EDIT_DIRECCION" name="EDIT_DIRECCION" >
-                            </div>
-                            <div class="col-md-4 mb-2">
-                                <label for="EDIT_TELEFONO" class="form-label">Teléfono</label>
-                                <input type="text" class="form-control" id="EDIT_TELEFONO" name="EDIT_TELEFONO" >
-                            </div>
-                        </div>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="EDIT_DNI" class="form-label">Tipo de Documento</label>
-                                <select class="form-select" id="EDIT_DNI" name="EDIT_DNI" >
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="EDIT_DOCUMENTO_IDENTIDAD" class="form-label">Documento de Identidad</label>
-                                <input type="text" class="form-control" id="EDIT_DOCUMENTO_IDENTIDAD" name="EDIT_DOCUMENTO_IDENTIDAD" >
-                            </div>
-                            <div class="col-md-3">
-                                <label for="EDIT_FECHA_NACIMIENTO" class="form-label">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" id="EDIT_FECHA_NACIMIENTO" name="EDIT_FECHA_NACIMIENTO" >
-                            </div>
-                            <div class="col-md-6">
-                                <label for="EDIT_NIVEL_FIDELIDAD" class="form-label">Nivel de Fidelidad</label>
-                                <input type="number" class="form-control" id="EDIT_NIVEL_FIDELIDAD" name="EDIT_NIVEL_FIDELIDAD" >
-                            </div>
-                            <div class="col-md-6">
-                                <label for="EDIT_PUNTOS_FIDELIDAD" class="form-label">Puntos de Fidelidad</label>
-                                <input type="number" class="form-control" id="EDIT_PUNTOS_FIDELIDAD" name="EDIT_PUNTOS_FIDELIDAD" >
-                            </div>
-                        </div>
-
-                        <div class="mt-4 text-center">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-primary" id="guardarCambiosBtn">Guardar Cambios</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmModalLabel">Confirmar Acción</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Estás seguro de que deseas cambiar el estado de este cliente?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="confirmActionBtn">Confirmar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </main>
 </div>
+<!-- Modal para registrar-->
+<div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="insertarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="insertarModalLabel">Insertar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Imagen decorativa -->
+                    <div class="col-md-3 text-center mb-4">
+                        <img src="~/assets/img/mishus.png" alt="Imagen decorativa" class="img-fluid" style="max-height: 70px;">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="USUARIO" class="form-label">Usuario</label>
+                                <input type="text" class="form-control" id="USUARIO" name="USUARIO" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="CONTRASENIA" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="CONTRASENIA" name="CONTRASENIA" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Inputs debajo de la imagen -->
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="EMAIL" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="EMAIL" name="EMAIL" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="NOMBRES" class="form-label">Nombres</label>
+                        <input type="text" class="form-control" id="NOMBRES" name="NOMBRES" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="APELLIDOS" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="APELLIDOS" name="APELLIDOS" required>
+                    </div>
+                    <div class="col-md-8 mb-2">
+                        <label for="DIRECCION" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="DIRECCION" name="DIRECCION">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label for="TELEFONO" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="TELEFONO" name="TELEFONO">
+                    </div>
+                </div>
+                <!-- Selección de tipo de documento y DNI -->
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="DNI" class="form-label">Tipo de Documento</label>
+                        <select class="form-select" id="DNI" name="DNI" required>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="DOCUMENTO_IDENTIDAD" class="form-label">Documento de Identidad</label>
+                        <input type="text" class="form-control" id="DOCUMENTO_IDENTIDAD" name="DOCUMENTO_IDENTIDAD" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="FECHA_NACIMIENTO" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="FECHA_NACIMIENTO" name="FECHA_NACIMIENTO">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="NIVEL_FIDELIDAD" class="form-label">Nivel de Fidelidad</label>
+                        <input type="number" class="form-control" id="NIVEL_FIDELIDAD" name="NIVEL_FIDELIDAD">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="PUNTOS_FIDELIDAD" class="form-label">Puntos de Fidelidad</label>
+                        <input type="number" class="form-control" id="PUNTOS_FIDELIDAD" name="PUNTOS_FIDELIDAD">
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary" id="guardarCliente">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarModalLabel">Editar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-md-3 text-center">
+                        <img src="~/assets/img/mishus.png" alt="Imagen decorativa" class="img-fluid" style="max-height: 70px;">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="EDIT_ID" class="form-label">ID Cliente</label>
+                                <input type="text" class="form-control" id="EDIT_ID" name="EDIT_ID" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="EDIT_USUARIO" class="form-label">Usuario</label>
+                                <input type="text" class="form-control" id="EDIT_USUARIO" name="EDIT_USUARIO">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="EDIT_EMAIL" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="EDIT_EMAIL" name="EDIT_EMAIL">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="EDIT_NOMBRES" class="form-label">Nombres</label>
+                        <input type="text" class="form-control" id="EDIT_NOMBRES" name="EDIT_NOMBRES">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="EDIT_APELLIDOS" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="EDIT_APELLIDOS" name="EDIT_APELLIDOS">
+                    </div>
+                    <div class="col-md-8 mb-2">
+                        <label for="EDIT_DIRECCION" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="EDIT_DIRECCION" name="EDIT_DIRECCION">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label for="EDIT_TELEFONO" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="EDIT_TELEFONO" name="EDIT_TELEFONO">
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="EDIT_DNI" class="form-label">Tipo de Documento</label>
+                        <select class="form-select" id="EDIT_DNI" name="EDIT_DNI">
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="EDIT_DOCUMENTO_IDENTIDAD" class="form-label">Documento de Identidad</label>
+                        <input type="text" class="form-control" id="EDIT_DOCUMENTO_IDENTIDAD" name="EDIT_DOCUMENTO_IDENTIDAD">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="EDIT_FECHA_NACIMIENTO" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="EDIT_FECHA_NACIMIENTO" name="EDIT_FECHA_NACIMIENTO">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="EDIT_NIVEL_FIDELIDAD" class="form-label">Nivel de Fidelidad</label>
+                        <input type="number" class="form-control" id="EDIT_NIVEL_FIDELIDAD" name="EDIT_NIVEL_FIDELIDAD">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="EDIT_PUNTOS_FIDELIDAD" class="form-label">Puntos de Fidelidad</label>
+                        <input type="number" class="form-control" id="EDIT_PUNTOS_FIDELIDAD" name="EDIT_PUNTOS_FIDELIDAD">
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardarCambiosBtn">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación de Cambio de Estado de cliente -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header con fondo pastel lila -->
+            <div class="modal-header bg-lilac text-white">
+                <h5 class="modal-title" id="confirmModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Confirmar Cambio de Estado
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Icono en el centro con tamaño mayor -->
+                <div class="d-flex justify-content-center mb-3">
+                    <i class="bi bi-question-circle-fill" style="font-size: 2.5rem;"></i>
+                </div>
+                <p class="text-center" style="font-size: 1.1rem;">¿Está seguro de que desea cambiar el estado de este cliente?</p>
+            </div>
+            <div class="modal-footer">
+                <!-- Botón de cancelar con color pastel morado -->
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </button>
+                <!-- Botón de confirmar con color pastel morado y texto blanco -->
+                <button type="button" class="btn btn-outline-primary" id="confirmActionBtn">
+                    <i class="bi bi-check-circle"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function () {
         $('#clientesTable').DataTable({
-            "paging": true, // Paginación activada
-            "searching": true, // Búsqueda activada
-            "info": true, // Mostrar información de la tabla
-            "ordering": false, // Habilitar ordenación de columnas
-            "lengthChange": true, // Permitir cambiar el número de elementos por página
-            "pageLength": 3, // Número de filas por página inicial
-            "lengthMenu": [4, 8, 16, 24], // Opciones de páginas por elemento
-            "dom": 'Bfrtip', // Colocar los botones de exportación en la parte superior
-            "buttons": [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ],
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "ordering": true,
+            "lengthChange": true,
+            "pageLength": 5,
+            "lengthMenu": [5, 10, 15, 20],
+            "dom": 'Bfrtip',
+            "buttons": ['copy', 'csv', 'excel', 'pdf', 'print'],
             "language": {
                 "sProcessing": "Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",

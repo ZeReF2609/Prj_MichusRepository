@@ -1,0 +1,198 @@
+﻿/* Colores pastel */
+.bg-lilac {
+    background-color: #d5a6f0; /* Un tono suave de morado lila */
+}
+
+/* Botón de confirmación (pastel morado) */
+.btn-outline-primary {
+    border-color: #a5a5f7;
+    color: #a5a5f7;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #a5a5f7;
+        color: #fff;
+    }
+
+/* Botón de cancelar (rojo suave) */
+.btn-outline-danger {
+    border-color: #ff6f61;
+    color: #ff6f61;
+}
+
+    .btn-outline-danger:hover {
+        background-color: #ff6f61;
+        color: #fff;
+    }
+
+/* Modal footer con espaciado */
+.modal-footer {
+    justify-content: space-between;
+}
+
+/* Estilos para la tabla */
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+    font-size: 1rem;
+    color: #495057;
+}
+
+.table-light {
+    background-color: #f5f5f5;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Fila alternada */
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.table tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+/* Encabezado de la tabla */
+th {
+    background-color: #d5a6f0;
+    color: #4c1d95;
+    text-align: center;
+    padding: 12px;
+    font-weight: bold;
+}
+
+/* Estilo para el encabezado */
+th, td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+}
+
+/* Modal Header */
+.modal-header.bg-lila {
+    background-color: #b084d1;
+    color: #fff;
+    font-weight: 600;
+    border-bottom: 2px solid #fff;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Diseño general del modal */
+.modal-body {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Espaciado y diseño en los formularios */
+.form-label {
+    font-weight: 600;
+    color: #4c1d95; /* Color morado oscuro */
+}
+
+/* Inputs y selects */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 12px;
+    font-size: 1rem;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #b084d1; /* Lila al hacer focus */
+        box-shadow: 0 0 5px rgba(176, 132, 209, 0.5);
+    }
+
+/* Botones */
+.btn-primary {
+    background-color: #b084d1;
+    border-color: #b084d1;
+}
+
+    .btn-primary:hover {
+        background-color: #9a6bbf;
+        border-color: #9a6bbf;
+    }
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+/* Estilos para los botones dentro de los modales */
+.modal-footer .btn-outline-primary,
+.modal-footer .btn-outline-danger {
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+
+    .modal-footer .btn-outline-primary:hover,
+    .modal-footer .btn-outline-danger:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+/* Espaciado en las filas del formulario */
+.row.g-3 .col-md-6,
+.row.g-3 .col-md-4,
+.row.g-3 .col-md-2 {
+    margin-bottom: 1rem;
+}
+
+/* Imagen decorativa */
+img.img-fluid {
+    max-height: 70px;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+    /* Ajustar modal en pantallas pequeñas */
+    .modal-dialog {
+        max-width: 90%;
+    }
+
+    /* Ajustar columnas */
+    .col-md-6, .col-md-4, .col-md-2 {
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+
+    .modal-header, .modal-body {
+        padding: 15px;
+    }
+
+    .modal-title {
+        font-size: 1.25rem;
+    }
+
+    /* Ajustar tamaño de las tablas */
+    .table {
+        font-size: 0.9rem;
+    }
+
+    /* Botones más grandes en pantallas pequeñas */
+    .btn-primary, .btn-secondary {
+        width: 100%;
+    }
+}
+
+/* Estilo para los campos deshabilitados */
+input[disabled], select[disabled] {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
