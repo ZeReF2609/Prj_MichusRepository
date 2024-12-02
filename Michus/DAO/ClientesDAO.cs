@@ -106,35 +106,6 @@ namespace Michus.DAO
             return clientes;
         }
 
-
-        public List<TipoDocumento> ObtenerTiposDocumento()
-        {
-            var tipoDocumentos = new List<TipoDocumento>();
-
-            using var connection = new SqlConnection(_connectionString);
-            connection.Open(); // Abrir la conexión de forma síncrona
-
-            using var command = new SqlCommand("SP_LISTAR_TIPO_DOCUMENTO", connection)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
-
-            using var reader = command.ExecuteReader();
-            while (reader.Read()) 
-            {
-                var tipoDocumento = new TipoDocumento
-                {
-                    IdDoc = reader.GetInt32(reader.GetOrdinal("ID_DOC")),
-                    Descripcion = reader.IsDBNull(reader.GetOrdinal("DESCRIPCION")) ? string.Empty : reader.GetString(reader.GetOrdinal("DESCRIPCION"))
-                };
-
-                tipoDocumentos.Add(tipoDocumento);
-            }
-
-            return tipoDocumentos;
-        }
-
-
         public bool InsertarCliente(string usuario, string email, string contrasenia, string nombres, string apellidos, int idDoc, string docIdent, DateTime fechaNacimiento, int nivelFidelidad, int puntosFidelidad, string telefono, string direccion, int accion)
         {
             string idCliente = GenerarIdCliente();
@@ -339,7 +310,7 @@ namespace Michus.DAO
         }
 
 
-                public bool EliminarCliente(string idCliente)
+        public bool EliminarCliente(string idCliente)
         {
             try
             {

@@ -16,12 +16,14 @@ namespace Michus.Controllers
     {
         private readonly ClientesDAO _clientesDao;
         private readonly MenuService _menuService;
+        private readonly TipoDocumentoDAO _tipoDocumentoDAO;
 
         // Inyección de dependencias
-        public ClientesController(ClientesDAO clientesDao, MenuService menuService)
+        public ClientesController(ClientesDAO clientesDao, MenuService menuService, TipoDocumentoDAO tipoDocumentoDAO)
         {
             _clientesDao = clientesDao;
             _menuService = menuService;
+            _tipoDocumentoDAO = tipoDocumentoDAO;
         }
 
         [HttpGet("Usuarios/lista-clientes")]
@@ -53,7 +55,7 @@ namespace Michus.Controllers
             try
             {
                 // Llamar al DAO para obtener los tipos de documentos de forma síncrona
-                var tiposDocumento = _clientesDao.ObtenerTiposDocumento();
+                var tiposDocumento = _tipoDocumentoDAO.ObtenerTiposDocumento();
 
                 // Verificar si la lista tiene elementos
                 if (tiposDocumento == null || !tiposDocumento.Any())
@@ -134,7 +136,7 @@ namespace Michus.Controllers
             }
 
             // Obtenemos los tipos de documento (esto depende de tu implementación)
-            var tiposDocumento = _clientesDao.ObtenerTiposDocumento();
+            var tiposDocumento = _tipoDocumentoDAO.ObtenerTiposDocumento();
 
             // Retornamos el cliente completo junto con sistema, contacto y los tipos de documento
             return Json(new
@@ -149,9 +151,6 @@ namespace Michus.Controllers
         [HttpPost]
         public IActionResult ActualizarCliente([FromBody] ClienteCompleto clienteCompleto)
         {
-            Debug.WriteLine($"Cliente ID: {clienteCompleto?.Cliente?.IdCliente}");
-            Debug.WriteLine($"Contacto: {clienteCompleto?.Contacto?.Telefono}");
-            Debug.WriteLine($"Sistema: {clienteCompleto?.Sistema?.Usuario}");
 
             // Si clienteCompleto es null, se indica un error de deserialización
             if (clienteCompleto == null)
