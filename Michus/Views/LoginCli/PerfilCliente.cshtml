@@ -1,0 +1,65 @@
+﻿@model Michus.Models.Cliente
+
+@{
+    Layout = "~/Views/Shared/layoutVentaEcommerce.cshtml";
+
+    ViewData["Title"] = "Perfil del Cliente";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Perfil del Cliente</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Datos Personales</h4>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-4">ID Cliente:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.IdCliente)</dd>
+
+                        <dt class="col-sm-4">Nombres:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Nombres)</dd>
+
+                        <dt class="col-sm-4">Apellidos:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Apellidos)</dd>
+
+                        <dt class="col-sm-4">Tipo Documento:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.IdDoc)</dd>
+
+                        <dt class="col-sm-4">Número Documento:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.DocIdent)</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <h4>Información Adicional</h4>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-5">Fecha de Registro:</dt>
+                        <dd class="col-sm-7">@Html.DisplayFor(model => model.FechaRegistro)</dd>
+
+                        <dt class="col-sm-5">Última Compra:</dt>
+                        <dd class="col-sm-7">@Html.DisplayFor(model => model.FechaUltimaCompra)</dd>
+
+                        <dt class="col-sm-5">Nivel de Fidelidad:</dt>
+                        <dd class="col-sm-7">@Html.DisplayFor(model => model.NivelFidelidad)</dd>
+
+                        <dt class="col-sm-5">Puntos Acumulados:</dt>
+                        <dd class="col-sm-7">@Html.DisplayFor(model => model.PuntosFidelidad)</dd>
+                    </dl>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="card-footer text-center">
+            <a asp-action="Edit" class="btn btn-warning me-2">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver a la Lista
+            </a>
+        </div>
+    </div>
+</div>
