@@ -83,6 +83,13 @@
                         </button>
                     }
 
+                    @if (item.value.TiSitu != "APR" && item.value.TiSitu != "PAP")
+                    {
+                        <button class="btn-check" type="button" data-id="@item.value.IdDescuento" data-situ="PAP" title="Activar">
+                            ✔️
+                        </button>
+                    }
+
                     @if (item.value.TiSitu != "ANU")
                     {
                         <button class="btn-x" type="button" data-id="@item.value.IdDescuento" data-situ="ANU" title="Desactivar">
@@ -103,15 +110,57 @@
 
 </div>
 
-<!-- Modal de agregar descuento / POR HACER -->
+<!-- Modal de agregar descuento -->
 <div id="addDiscountModal" class="custom-modal">
     <div class="modal-content">
         <span class="close-modal">&times;</span>
         <h2>Agregar Descuento</h2>
-            <!-- Aquí van los campos para agregar el descuento -->
-        <button class="close-modal">Cerrar</button>
+        <form id="addDiscountForm" method="post">
+            <div class="form-grid">
+            <div class="form-group">
+                <label for="FECHA_INICIO">Fecha Inicio:</label>
+                <input type="date" id="FECHA_INICIO" name="FECHA_INICIO" required />
+            </div>
+
+            <div class="form-group">
+                <label for="FECHA_FIN">Fecha Fin:</label>
+                <input type="date" id="FECHA_FIN" name="FECHA_FIN" required />
+            </div>
+
+            <div class="form-group">
+                <label for="discountType">Tipo de Descuento:</label>
+                <select id="discountType" class="select-custom" name="TIPO_DESCUENTO" required>
+                    <option value="" disabled selected>Seleccione un Tipo de Descuento</option>
+                    <option value="1">Fijo</option>
+                    <option value="0">Porcentual</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="discountValue">Precio de Descuento:</label>
+                <input type="number" id="discountValue" name="PRECIO_DESCUENTO" required />
+            </div>
+
+            <div class="form-group">
+                <label for="applyCategory">Aplicar Categoría:</label>
+                <select id="applyCategory" class="select-custom"  name="APLICAR_CATEGORIA" required>
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="1">Categorías</option>
+                    <option value="0">Productos</option>
+                </select>
+            </div>
+
+            @Html.AntiForgeryToken()
+                <div id="categoryTableContainer" class="scrollable-table"></div>
+
+                <button type="submit" class="styled-button">Guardar</button>
+            </div>
+        </form>
+
     </div>
+
 </div>
+
 
 <!-- Modal de detalles del descuento -->
 <div id="detailsDiscountModal" class="custom-modal">
@@ -119,24 +168,27 @@
         <span class="close-details-modal">&times;</span>
         <h2>Detalles del Descuento</h2>
         <div id="discount-details-content">
-            <!-- Aquí se mostrarán los detalles del descuento -->
+            <!-- DETALLES -->
         </div>
     </div>
 </div>
 
+
+<!-- FUNCIONES -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.discount-card').forEach(card => {
             card.addEventListener('click', function (event) {
-                if (event.target.closest('input[type="checkbox"]') || event.target.closest('button')) {
+                if (event.target.closest('input') || event.target.closest('button') || event.target.closest('label')) {
                     return;
                 }
 
                 const discountId = card.getAttribute('data-discount-id');
 
-                fetch(`/Descuentos/GetDetallesDescuento/${discountId}`)
+                fetch(`/Descuentos/DetallesDescuento/${discountId}`)
                     .then(response => response.json())
                     .then(data => {
+                        // Formatear los datos recibidos
                         const promocion = (data.idPromocion && Object.keys(data.idPromocion).length > 0)
                             ? JSON.stringify(data.idPromocion)
                             : 'NO APLICA';
@@ -145,113 +197,106 @@
                             ? JSON.stringify(data.idEvento)
                             : 'NO APLICA';
 
-                        /* CATEGORIAS */
-                        const categorias = Array.isArray(data.categorias)
-                            ? data.categorias
-                            : JSON.parse(data.categorias || '[]');
+                        const categorias = Array.isArray(data.Categorias)
+                            ? data.Categorias
+                            : JSON.parse(data.Categorias || '[]');
 
-                        const categoriasHTML = categorias.map(cat => `
-                            <tr>
-                                <td>${cat.ID_CATEGORIA}</td>
-                                <td>${cat.CATEGORIA}</td>
-                            </tr>
-                        `).join('');
+                        const categoriasHTML = categorias.map(cat =>
+                            `<tr>
+                            <td>${cat.ID_CATEGORIA}</td>
+                            <td>${cat.CATEGORIA}</td>
+                        </tr>`
+                        ).join('');
 
-                        /* PRODUCTOS */
-                        const productos = Array.isArray(data.productos)
-                            ? data.productos
-                            : JSON.parse(data.productos || '[]');
+                        const productos = Array.isArray(data.Productos)
+                            ? data.Productos
+                            : JSON.parse(data.Productos || '[]');
 
-                        const productosHTML = productos.map(prod => `
-                            <tr>
-                                <td>${prod.ID_PRODUCTO}</td>
-                                <td>${prod.PROD_NOM}</td>
-                                <td>${prod.DESCRIPCION}</td>
-                                <td>${prod.PRECIO}</td>
-                                <td>${prod.ESTADO === "1" ? "Activo" : "Inactivo"}</td>
-                                <td>${prod.PRECIO_FINAL}</td>
-                            </tr>
-                        `).join('');
+                        const productosHTML = productos.map(prod =>
+                            `<tr>
+                            <td>${prod.ID_PRODUCTO}</td>
+                            <td>${prod.PROD_NOM}</td>
+                            <td>${prod.DESCRIPCION}</td>
+                            <td>${prod.PRECIO}</td>
+                            <td>${prod.ESTADO === "1" ? "Activo" : "Inactivo"}</td>
+                            <td>${prod.PRECIO_FINAL}</td>
+                        </tr>`
+                        ).join('');
 
-                        // Renderizar el contenido
+                        // Insertar los detalles en el modal
                         document.getElementById('discount-details-content').innerHTML = `
-                            <div>
-                                <h3>Descuento: ${data.idDescuento}</h3>
-                                <p>Promoción: ${promocion}</p>
-                                <p>Evento: ${evento}</p>
-                                <p>Desde: ${data.fechaInicio ? new Date(data.fechaInicio).toLocaleDateString() : 'NO APLICA'}</p>
-                                <p>Hasta: ${data.fechaFin ? new Date(data.fechaFin).toLocaleDateString() : 'NO APLICA'}</p>
-                                <p>
-                                    ${data.tipoDescuento == 1
-                                ? `Descuento Fijo: S/. ${data.precioDescuento}`
-                                : `Descuento Porcentual: ${data.precioDescuento}%`
-                            }
-                                </p>
-                                <p>TI_SITU: ${data.tI_SITU}</p>
-                            </div>
-                            <div style="display: flex; gap: 20px; margin-top: 20px;">
-                                <div style="flex: 1;">
-                                    <h4>Categorías</h4>
-                                    <div class="scrollable-container">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>ID Categoria</th>
-                                                    <th>Categoria</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                ${categoriasHTML || `<tr><td colspan="2">No se encontraron categorías</td></tr>`}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div style="flex: 1;">
-                                    <h4>Productos</h4>
-                                    <div class="scrollable-container">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>ID Producto</th>
-                                                    <th>Producto</th>
-                                                    <th>Descripción</th>
-                                                    <th>Precio</th>
-                                                    <th>Estado</th>
-                                                    <th>Precio Final</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                ${productosHTML || `<tr><td colspan="5">No se encontraron productos</td></tr>`}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                        <div>
+                            <h3>Descuento: ${data.IdDescuento}</h3>
+                            <p>Promoción: ${promocion}</p>
+                            <p>Evento: ${evento}</p>
+                            <p>Desde: ${data.FechaInicio ? new Date(data.FechaInicio).toLocaleDateString() : 'NO APLICA'}</p>
+                            <p>Hasta: ${data.FechaFin ? new Date(data.FechaFin).toLocaleDateString() : 'NO APLICA'}</p>
+                            <p>
+                                ${data.TipoDescuento == 1
+                                ? `Descuento Fijo: S/. ${data.PrecioDescuento}`
+                                : `Descuento Porcentual: ${data.PrecioDescuento}%`}
+                            </p>
+                            <p>TI_SITU: ${data.TI_SITU}</p>
+                        </div>
+                        <div style="display: flex; gap: 20px; margin-top: 20px;">
+                            <div style="flex: 1;">
+                                <h4>Categorías</h4>
+                                <div class="scrollable-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ID Categoria</th>
+                                                <th>Categoria</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${categoriasHTML || `<tr><td colspan="2">No se encontraron categorías</td></tr>`}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                        `;
+                            <div style="flex: 1;">
+                                <h4>Productos</h4>
+                                <div class="scrollable-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ID Producto</th>
+                                                <th>Producto</th>
+                                                <th>Descripción</th>
+                                                <th>Precio</th>
+                                                <th>Estado</th>
+                                                <th>Precio Final</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${productosHTML || `<tr><td colspan="5">No se encontraron productos</td></tr>`}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
 
-                        
+                        // Mostrar el modal con los detalles
                         document.getElementById('detailsDiscountModal').style.display = 'block';
                     });
             });
         });
 
-        // CERRAR EL MODAL CON EL X
+
         document.querySelector('.close-details-modal').addEventListener('click', function () {
             document.getElementById('detailsDiscountModal').style.display = 'none';
         });
 
-        // SEGUNDA OPCION DE CERRAR EL MODEL AL CLICKEAR AFUERA
         window.addEventListener('click', function (event) {
             if (event.target == document.getElementById('detailsDiscountModal')) {
                 document.getElementById('detailsDiscountModal').style.display = 'none';
             }
         });
 
-
-        // BOTON PARA CAMBIAR EL TI_SITU (temporal)
         document.querySelectorAll('.status-buttons button').forEach(button => {
             button.addEventListener('click', function () {
-                
                 const card = this.closest('.discount-card');
                 const idDescuento = card.getAttribute('data-discount-id');
                 const situ = this.getAttribute('data-situ');
@@ -260,7 +305,7 @@
                 formData.append('idDescuento', idDescuento);
                 formData.append('situ', situ);
 
-                fetch(`/Descuentos/ActualizarSitu`, {
+                fetch('/Descuentos/ActualizarSitu', {
                     method: 'POST',
                     body: formData
                 })
@@ -281,7 +326,215 @@
             });
         });
 
+        document.querySelector('.add-button').addEventListener('click', function () {
+            document.getElementById('addDiscountModal').style.display = 'block';
+        });
+
+        document.querySelectorAll('.close-modal').forEach(closeButton => {
+            closeButton.addEventListener('click', function () {
+                document.getElementById('addDiscountModal').style.display = 'none';
+            });
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target == document.getElementById('addDiscountModal')) {
+                document.getElementById('addDiscountModal').style.display = 'none';
+            }
+        });
+
+        document.getElementById('discountType').addEventListener('change', function () {
+            var discountType = this.value;
+            var discountLabel = document.getElementById('discountLabel');
+
+            if (discountType === "1") {
+                discountLabel.textContent = "Precio Descuento";
+            } else {
+                discountLabel.textContent = "Porcentaje de Descuento";
+            }
+        });
+
+
+
+
+        document.getElementById('applyCategory').addEventListener('change', function () {
+            var applyCategory = this.value;
+            var tableContainer = document.getElementById('categoryTableContainer');
+            tableContainer.innerHTML = ''; 
+
+            if (applyCategory === "1") {
+                fetchCategories();  
+            } else {
+                fetchProducts(); 
+            }
+        });
+
+        function fetchCategories() {
+            fetch('/Descuentos/ListarCategorias')
+                .then(response => response.json())
+                .then(data => {
+                    var table = `
+                            <table class="table table-bordered" style="background-color: #f8f9fa; border: 1px solid #333;">
+                                <thead>
+                                    <tr style="background-color: #e9ecef;">
+                                        <th style="width: 10%;">Seleccionar</th>
+                                        <th>Codigo</th>
+                                        <th>Descripción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                    data.forEach(category => {
+                        table += `
+                                <tr>
+                                    <td>
+                                        <label class="custom-checkbox">
+                                                <input type="checkbox" class="productoCheckbox" data-producto-id="${category.ID_CATEGORIA}" name="ID_CATEGORIA" value="${category.ID_CATEGORIA}">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>${category.ID_CATEGORIA}</td>
+                                    <td>${category.DESCRIPCION}</td>
+                                </tr>
+                            `;
+                    });
+
+                    table += `</tbody></table>`;
+                    document.getElementById('categoryTableContainer').innerHTML = table;
+                })
+                .catch(error => console.error('Error fetching categories:', error));
+        }
+
+
+
+        function fetchProducts() {
+            fetch('/Descuentos/ListarProductos')
+                .then(response => response.json())
+                .then(data => {
+                    var table = `
+                            <table class="table table-bordered" style="background-color: #f8f9fa; border: 1px solid #333;">
+                                <thead>
+                                    <tr style="background-color: #e9ecef;">
+                                        <th style="width: 10%;">Seleccionar</th>
+                                        <th>Codigo</th>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                    data.forEach(product => {
+                        table += `
+                                <tr>
+                                    <td>
+                                        <label class="custom-checkbox">
+                                                <input type="checkbox" class="productoCheckbox" data-producto-id="${product.ID_PRODUCTO}" name="ID_ARTICULOS" value="${product.ID_PRODUCTO}">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>${product.ID_PRODUCTO}</td>
+                                    <td>${product.PROD_NOM}</td>
+                                    <td>${product.PRECIO}</td>
+                                </tr>
+                            `;
+                    });
+
+                    table += `</tbody></table>`;
+                    document.getElementById('categoryTableContainer').innerHTML = table;
+                })
+                .catch(error => console.error('Error fetching products:', error));
+        }
+
+        const form = document.getElementById('addDiscountForm');
+
+        form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+
+        const formData = new FormData(form);
+
+        const data = {};
+        formData.forEach((value, key) => {
+            
+            if (data[key]) {
+                data[key] += `,${value}`;
+            } else {
+                data[key] = value;
+            }
+        });
+
+        const defaultValues = {
+            "ID_ARTICULOS": "",  
+            "ID_CATEGORIA": ""   
+        };
+
+        for (let key in defaultValues) {
+            if (!data.hasOwnProperty(key)) {
+                data[key] = defaultValues[key];
+            }
+        }
+
+        delete data['__RequestVerificationToken'];  
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+
+        fetch('RegistrarDescuento', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+                'RequestVerificationToken': token 
+            },
+            credentials: 'include', 
+            body: JSON.stringify(data)  
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al registrar el descuento.');
+            }
+            return response.text();
+        })
+        .then(message => {
+            location.reload();
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Hubo un error al procesar la solicitud.');
+        });
     });
 
-</script>
+        document.querySelectorAll('.toggle input[type="checkbox"], .toggle label').forEach(toggle => {
+            toggle.addEventListener('change', function () {
+                const isChecked = this.checked;
+                const idDescuento = this.closest('.discount-card').getAttribute('data-discount-id');
 
+                console.log(`ID Descuento: ${idDescuento}`);
+
+                fetch(`/Descuentos/activar-descuento/${idDescuento}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="__RequestVerificationToken"]').value // Token CSRF
+                    },
+                    body: JSON.stringify({
+                        idDescuento: idDescuento
+                    })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al actualizar el estado del descuento');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert(data.message || 'Estado actualizado correctamente');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Hubo un error al actualizar el estado.');
+                    });
+            });
+        });
+
+    });
+</script>
