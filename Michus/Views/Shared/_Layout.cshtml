@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css">
+
     <link rel="stylesheet" href="~/assets/css/MenuStyle.css">
     <!-- Referencias JS -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
@@ -26,7 +29,6 @@
     <!-- Script para pasar el menú JSON al cliente -->
     <script>
         window.menuItemsJson = @Html.Raw(menuItemsJson);
-        console.log(window.menuItemsJson);
     </script>
 </head>
 <body>
@@ -80,6 +82,7 @@
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/fixedcolumns/4.0.2/js/dataTables.fixedColumns.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
     <!-- Script para renderizar el menú en el sidebar -->
     <script>
@@ -89,7 +92,7 @@
 
             // Función para renderizar el menú
             function renderMenu(items) {
-                let html = '<ul class="nav flex-column" style=" list-style: none; margin-top: 25%; margin-left: -50px;">';
+                let html = '<ul class="nav flex-column menu-container"  style=" list-style: none; margin-top: 25%; margin-left: -50px;">';
                 items.forEach(item => {
                     if (item.ESTADO_MENU) {
                         html += `<li class="nav-item">

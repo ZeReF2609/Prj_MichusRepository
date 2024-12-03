@@ -1,20 +1,24 @@
 using Michus.Models;
 using Michus.Service;
+using Michus.DAO;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Agregar LoginService al contenedor de servicios
+// Configurar DbContext
+builder.Services.AddDbContext<MichusContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("cn1")));
+
+// Configurar los servicios y el DbContext
 builder.Services.AddScoped<LoginService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
     var connectionString = configuration.GetConnectionString("cn1");
-    var logger = provider.GetRequiredService<ILogger<LoginService>>(); 
+    var logger = provider.GetRequiredService<ILogger<LoginService>>();
     return new LoginService(connectionString, logger);
 });
 
-// Agregar MenuService al contenedor de servicios
 builder.Services.AddScoped<MenuService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
@@ -22,45 +26,111 @@ builder.Services.AddScoped<MenuService>(provider =>
     return new MenuService(connectionString);
 });
 
-// Configurar DbContext
-builder.Services.AddDbContext<MichusContext>(options =>
+// Agregar ProductoDAO al contenedor de servicios
+builder.Services.AddScoped<ProductoDao>(provider =>
 {
-    var configuration = builder.Configuration;
+    var configuration = provider.GetRequiredService<IConfiguration>();
     var connectionString = configuration.GetConnectionString("cn1");
-    options.UseSqlServer(connectionString);
+    return new ProductoDao(connectionString);
 });
+
+builder.Services.AddScoped<CuentaDAO>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new CuentaDAO(connectionString);
+});
+
+builder.Services.AddScoped<ClientesDAO>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new ClientesDAO(connectionString);
+});
+
+builder.Services.AddScoped<TipoDocumentoDAO>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new TipoDocumentoDAO(connectionString);
+});
+
+builder.Services.AddScoped<RolesDAO>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new RolesDAO(connectionString);
+});
+
+builder.Services.AddScoped<CuentaDAO>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new CuentaDAO(connectionString);
+});
+
+builder.Services.AddScoped<LoginCliService>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("cn1");
+    var logger = provider.GetRequiredService<ILogger<LoginCliService>>();
+    return new LoginCliService(connectionString, logger);
+});
+
+
+builder.Services.AddScoped<EmpleadoDAO>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new EmpleadoDAO(connectionString);
+});
+
+//servicio para el envio del correo
+builder.Services.AddTransient<CorreoHelper>();
 
 // Agregar controladores y vistas
 builder.Services.AddControllersWithViews();
 
-// Configuración de autenticación
+// Configuraciï¿½n de autenticaciï¿½n y cookies
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Login/Login";
-        options.LogoutPath = "/Login/Salir";
-        options.AccessDeniedPath = "/Login/Login";
-        options.Cookie.Name = "GP_Session";
+        options.LoginPath = "/LoginCli/LoginCli"; // Ruta de inicio de sesiï¿½n
+        options.LogoutPath = "/LoginCli/Salir"; // Ruta de cierre de sesiï¿½n
+        options.AccessDeniedPath = "/LoginCli/LoginCli"; // Ruta de acceso denegado
+        options.Cookie.Name = "Michus_Session";
         options.ExpireTimeSpan = TimeSpan.FromHours(24);
     });
 
+// Configuraciï¿½n de sesiï¿½n
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
-// Configuración del entorno
+// ConfiguraciÃ³n del entorno
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+// Usar autenticaciï¿½n, autorizaciï¿½n y sesiï¿½n
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
-// Configuración de rutas
+// ConfiguraciÃ³n de rutas
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=Login}/{id?}");
+    pattern: "{controller=Ecommerce}/{action=ListarProductos}/{id?}");
 
 app.Run();

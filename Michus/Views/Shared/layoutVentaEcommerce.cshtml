@@ -1,0 +1,63 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    @{
+        var avatarUrl = User.FindFirst("AvatarUrl")?.Value ?? "https://cdn-icons-png.flaticon.com/512/9385/9385289.png";
+        var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Usuario";  // Corrected Claim lookup
+    }
+
+    <!-- Logo (Add it to the header or main section as needed) -->
+    <header style="text-align: center; margin-bottom: 20px; ">
+        <div>
+            <a asp-action="ListarProductos">
+                <img src="~/assets/img/mishus.png" alt="Logo" style="max-width: 150px;margin-right:1200px;" />
+            </a>
+            
+          
+        </div>
+        <div class="dropdown" style="position: absolute; top: 10px; right: 50px;">
+            <!-- Avatar del usuario -->
+            <img src="@avatarUrl" alt="User Avatar" class="avatar-img" style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false" />
+
+            <!-- Menú desplegable -->
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="right: 0; left: auto;">
+                <li><a class="dropdown-item" href="#">@userName</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form action="@Url.Action("Salir", "LoginCli")" method="post">
+                        <button type="submit" class="dropdown-item">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Sección para mensajes de notificación o alertas opcionales -->
+    @RenderSection("Notifications", required: false)
+
+    <!-- Aquí se cargará el contenido principal de cada vista -->
+    <main role="main" class="container">
+        @RenderBody()
+    </main>
+
+    <!-- Sección opcional de scripts específicos para cada vista -->
+    @RenderSection("Scripts", required: false)
+
+    <!-- Pie de página opcional -->
+
+    <footer style="text-align: center; padding: 20px; background-color: #f8f9fa;">
+        <p>&copy; 2024 Michus. derechos reservados.</p>
+        <p><a href="/privacy-policy">Privacy Policy</a> | <a href="/terms-of-service">Terms of Service</a></p>
+    </footer>
+
+
+
+   
+</body>
+</html>

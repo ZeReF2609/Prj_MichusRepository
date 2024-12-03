@@ -1,0 +1,603 @@
+﻿@using Michus.Models_Store
+@model List<EmpleadoCompleto>
+
+@{
+    ViewData["Title"] = "Lista de Empleados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Enlace para DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- Enlaces para Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<link rel="stylesheet" href="~/assets/css/vistasBootstrap.css">
+<link rel="stylesheet" href="~/assets/css/Empleado.css">
+
+<div class="container-fluid">
+    <main class="py-4">
+        <div class="mb-3 text-end">
+            <button class="btn btn-lila" data-bs-toggle="modal" data-bs-target="#insertModal">
+                <i class="bi bi-plus-circle"></i>Insertar Empleado
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table id="empleadosTable" class="table table-hover table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Empleado</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Nacimiento</th>
+                        <th>DNI</th>
+                        <th>Salario</th>
+                        <th>Teléfono</th>
+                        <th>Dirección</th>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var empleadoCompleto in Model)
+                    {
+                        <tr>
+                            <td>@empleadoCompleto.Empleado.IdEmpleado</td>
+                            <td>@empleadoCompleto.Empleado.Nombres</td>
+                            <td>@empleadoCompleto.Empleado.Apellidos</td>
+                            <td>@empleadoCompleto.Empleado.FechaNacimiento.ToString("dd/MM/yyyy")</td>
+                            <td>@empleadoCompleto.Empleado.DocIdent</td>
+                            <td>@String.Format("{0:F2}", empleadoCompleto.Empleado.Salario)</td>
+                            <td>@empleadoCompleto.Contacto.Telefono</td>
+                            <td>@empleadoCompleto.Contacto.Direccion</td>
+                            <td>@empleadoCompleto.Sistema.Usuario</td>
+                            <td>@empleadoCompleto.Sistema.Email</td>
+                            <td>
+                                <button class="btn btn-link p-0" id="estadoBtn_@empleadoCompleto.Empleado.IdEmpleado"
+                                        data-id="@empleadoCompleto.Empleado.IdEmpleado"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmModal"
+                                        title="Cambiar estado">
+                                    @if (empleadoCompleto.Sistema.Estado == 1)
+                                    {
+                                        <i class="bi bi-check-circle text-success align-content-center" title="Activo"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-x-circle text-danger align-content-center" title="Inactivo"></i>
+                                    }
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" title="Editar" data-id="@empleadoCompleto.Empleado.IdEmpleado">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<!-- Modal para insertar un nuevo empleado -->
+<div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="insertModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-lila text-white">
+                <h5 class="modal-title" id="insertModalLabel"><i class="bi bi-person-plus-fill"></i> Agregar Nuevo Empleado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Imagen decorativa -->
+                    <div class="col-md-4 text-center mb-4">
+                        <img src="~/assets/img/mishus.png" alt="Imagen decorativa" class="img-fluid" style="max-height: 70px;">
+                    </div>
+
+                    <!-- Datos del empleado -->
+                    <div class="col-md-8">
+                        <div class="row g-3">
+                            <!-- Nombres y Apellidos en la misma fila -->
+                            <div class="col-md-6">
+                                <label for="Nombres" class="form-label">Nombres</label>
+                                <input type="text" class="form-control" id="Nombres" name="Nombres" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Apellidos" class="form-label">Apellidos</label>
+                                <input type="text" class="form-control" id="Apellidos" name="Apellidos" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resto de campos con dos por fila -->
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="FechaNacimiento" name="FechaNacimiento" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="DNI" class="form-label">Tipo de Documento</label>
+                        <select class="form-select" id="DNI" name="DNI" required>
+                            <!-- Aquí se agregarán los tipos de documentos dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="DocIdent" class="form-label">Documento de Identificación</label>
+                        <input type="text" class="form-control" id="DocIdent" name="DocIdent" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="Telefono" name="Telefono" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Direccion" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="Direccion" name="Direccion" required />
+                    </div>
+                    <div class="col-md-2">
+                        <label for="Salario" class="form-label">Salario</label>
+                        <input type="number" step="0.01" class="form-control" id="Salario" name="Salario" required />
+                    </div>
+
+                    <!-- Usuario, Email y Contraseña -->
+                    <div class="col-md-4">
+                        <label for="Usuario" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="Usuario" name="Usuario" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="Email" name="Email" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Contrasenia" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="Contrasenia" name="Contrasenia" required />
+                    </div>
+                </div>
+
+                <!-- Área de tipo de documento y DNI -->
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <label for="Rol" class="form-label">Puesto</label>
+                        <select class="form-select" id="Rol" name="Rol" required>
+                            <!-- Opciones de Rol dinámicas -->
+                        </select>
+                    </div>
+                    <!-- Campo de tipo de cuenta -->
+                    <div class="col-md-6">
+                        <label for="TipoCuenta" class="form-label">Tipo de Cuenta</label>
+                        <select class="form-select" id="TipoCuenta" name="TipoCuenta" required>
+                            <!-- Aquí se agregarán los tipos de cuenta dinámicamente -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Campo de número de cuenta (Nuevo campo) -->
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <label for="NumeroCuenta" class="form-label">Número de Cuenta</label>
+                        <input type="text" class="form-control" id="NumeroCuenta" name="NumeroCuenta" required />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cancelar</button>
+                <button type="submit" form="formEmpleado" id="guardarEmpleado" class="btn btn-primary"><i class="bi bi-save"></i> Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar empleado -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-lila text-white">
+                <h5 class="modal-title" id="editModalLabel">Actualizar Información del Empleado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Imagen decorativa -->
+                    <div class="col-md-4 text-center mb-4">
+                        <img src="~/assets/img/mishus.png" alt="Imagen decorativa" class="img-fluid" style="max-height: 70px;">
+                    </div>
+
+                    <!-- Datos del empleado -->
+                    <div class="col-md-8">
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <label for="EDIT_ID" class="form-label">ID</label>
+                                <input type="text" class="form-control" id="EDIT_ID" name="EDIT_ID" required disabled />
+                            </div>
+                            <div class="col-md-5">
+                                <label for="EDIT_Nombres" class="form-label">Nombres</label>
+                                <input type="text" class="form-control" id="EDIT_Nombres" name="EDIT_Nombres" required />
+                            </div>
+                            <div class="col-md-5">
+                                <label for="EDIT_Apellidos" class="form-label">Apellidos</label>
+                                <input type="text" class="form-control" id="EDIT_Apellidos" name="EDIT_Apellidos" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="EDIT_FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="EDIT_FechaNacimiento" name="EDIT_FechaNacimiento" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="EDIT_DNI" class="form-label">Tipo de Documento</label>
+                        <select class="form-select" id="EDIT_DNI" name="EDIT_DNI" required>
+                            <!-- Los tipos de documentos se agregarán aquí dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="EDIT_DocIdent" class="form-label">Documento de Identificación</label>
+                        <input type="text" class="form-control" id="EDIT_DocIdent" name="EDIT_DocIdent" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="EDIT_Telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="EDIT_Telefono" name="EDIT_Telefono" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="EDIT_Direccion" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="EDIT_Direccion" name="EDIT_Direccion" required />
+                    </div>
+                    <div class="col-md-2">
+                        <label for="EDIT_Salario" class="form-label">Salario</label>
+                        <input type="number" step="0.01" class="form-control" id="EDIT_Salario" name="EDIT_Salario" required disabled />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="EDIT_Usuario" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="EDIT_Usuario" name="EDIT_Usuario" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="EDIT_Email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="EDIT_Email" name="EDIT_Email" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="EDIT_FechaIngreso" class="form-label">Fecha de Ingreso</label>
+                        <input type="date" class="form-control" id="EDIT_FechaIngreso" name="EDIT_FechaIngreso" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="guardarCambiosBtn" class="btn btn-primary">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación de Cambio de Estado de Empleado -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header con fondo pastel lila -->
+            <div class="modal-header bg-lilac text-white">
+                <h5 class="modal-title" id="confirmModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Confirmar Cambio de Estado
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Icono en el centro con tamaño mayor -->
+                <div class="d-flex justify-content-center mb-3">
+                    <i class="bi bi-question-circle-fill" style="font-size: 2.5rem;"></i>
+                </div>
+                <p class="text-center" style="font-size: 1.1rem;">¿Está seguro de que desea cambiar el estado de este empleado?</p>
+            </div>
+            <div class="modal-footer">
+                <!-- Botón de cancelar con color pastel morado -->
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </button>
+                <!-- Botón de confirmar con color pastel morado y texto blanco -->
+                <button type="button" class="btn btn-outline-primary" id="confirmActionBtn">
+                    <i class="bi bi-check-circle"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // DataTable
+        $('#empleadosTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "ordering": true,
+            "lengthChange": true,
+            "pageLength": 5,
+            "lengthMenu": [5, 10, 15, 20], 
+            "dom": 'Bfrtip', 
+            "buttons": ['copy', 'csv', 'excel', 'pdf', 'print'],
+            "language": {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "No hay datos disponibles en la tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Último"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        });
+
+
+        // Obtener Tipo Documento
+        $.ajax({
+            url: '@Url.Action("ObtenerTiposDocumento", "Empleado")',
+            type: 'GET',
+            success: function (response) {
+                if (response && response.length > 0) {
+                    var $selectEditDNI = $('#EDIT_DNI');
+                    $selectEditDNI.empty();
+                    $.each(response, function (index, item) {
+                        $selectEditDNI.append('<option value="' + item.idDoc + '">' + item.descripcion + '</option>');
+                    });
+
+                    var $selectDNI = $('#DNI');
+                    $selectDNI.empty();
+                    $.each(response, function (index, item) {
+                        $selectDNI.append('<option value="' + item.idDoc + '">' + item.descripcion + '</option>');
+                    });
+                } else {
+                    alertify.alert("No se encontraron tipos de documento.");
+                }
+            },
+            error: function () {
+                alertify.alert("Error al obtener los tipos de documento.");
+            }
+        });
+
+        // Obtener Tipo Cuenta
+        $.ajax({
+            url: '@Url.Action("ObtenerTipoCuenta", "Empleado")',
+            type: 'GET',
+            success: function (response) {
+                if (response && response.length > 0) {
+                    var $select = $('#TipoCuenta');
+                    $select.empty();
+                    $.each(response, function (index, item) {
+                        $select.append('<option value="' + item.iD_CUENTA + '">' + item.descripcion + '</option>');
+                    });
+                } else {
+                    alertify.alert("No se encontraron tipos de cuenta.");
+                }
+            },
+            error: function () {
+                alertify.alert("Error al obtener los tipos de cuenta.");
+            }
+        });
+
+        // Obtener Roles
+        $.ajax({
+            url: '@Url.Action("ObtenerRoles", "Empleado")',
+            type: 'GET',
+            success: function (response) {
+                if (response && response.length > 0) {
+                    var $select = $('#Rol');
+                    $select.empty();
+                    $.each(response, function (index, item) {
+                        $select.append('<option value="' + item.idRol + '">' + item.rol + '</option>');
+                    });
+                } else {
+                    alertify.alert("No se encontraron roles.");
+                }
+            },
+            error: function () {
+                alertify.alert("Error al obtener los roles.");
+            }
+        });
+
+        // Guardar Empleado
+        $("#guardarEmpleado").on("click", function (e) {
+            e.preventDefault();
+
+            var empleadoCompleto = {
+                empleado: {
+                    nombres: $("#Nombres").val(),
+                    apellidos: $("#Apellidos").val(),
+                    idDoc: $("#DNI").val(),
+                    docIdent: $("#DocIdent").val(),
+                    fechaNacimiento: $("#FechaNacimiento").val(),
+                    salario: $("#Salario").val()
+                },
+                contacto: {
+                    telefono: $("#Telefono").val(),
+                    direccion: $("#Direccion").val()
+                },
+                sistema: {
+                    usuario: $("#Usuario").val(),
+                    email: $("#Email").val(),
+                    contrasenia: $("#Contrasenia").val(),
+                    idRol: $("#Rol").val(),
+                    numeroCuenta: $("#NumeroCuenta").val()
+                },
+                cuenta: {
+                    tipoCuenta: $("#TipoCuenta").val(),
+                    numeroCuenta: $("#NumeroCuenta").val()
+                }
+            };
+
+            $.ajax({
+                url: '@Url.Action("GuardarEmpleado", "Empleado")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(empleadoCompleto),
+                success: function (response) {
+                    if (response && response.success) {
+                        $('#insertModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alertify.alert("Error al insertar el empleado. Respuesta del servidor no válida.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error al enviar la solicitud:", error);
+                    alertify.alert("Error al enviar la solicitud al servidor.");
+                }
+            });
+        });
+
+        //Cambiar Estado
+        $('#confirmModal').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget);
+            var empleadoId = button.data('id');
+            var estadoActual = button.find('i').hasClass('bi-check-circle') ? 1 : 0;
+
+            var url = estadoActual === 1 ? '/Empleado/EliminarEmpleado' : '/Empleado/ActivarEmpleado';
+            var nuevoEstado = estadoActual === 1 ? 0 : 1;
+
+            $('#confirmActionBtn').off('click').on('click', function () {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: { idEmpleado: empleadoId },
+                    success: function (response) {
+                        if (response.success) {
+                            var iconoEstado = $('#estadoBtn_' + empleadoId).find('i');
+                            if (nuevoEstado === 1) {
+                                iconoEstado.removeClass('bi-x-circle text-danger').addClass('bi-check-circle text-success');
+                            } else {
+                                iconoEstado.removeClass('bi-check-circle text-success').addClass('bi-x-circle text-danger');
+                            }
+                            var mensaje = nuevoEstado === 1 ? 'Empleado activado correctamente.' : 'Empleado desactivado correctamente.';
+                            alertify.success(mensaje);
+
+                            $('#confirmModal').modal('hide');
+                        } else {
+                            alertify.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        alertify.error('Error en la comunicación con el servidor.');
+                    }
+                });
+            });
+        });
+
+        //editar
+        $('#editModal').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget);
+            var empleadoId = button.data('id');
+
+            $.ajax({
+                url: '@Url.Action("ObtenerEmpleado", "Empleado")',
+                type: 'GET',
+                data: { idEmpleado: empleadoId },
+                success: function (response) {
+                    if (response) {
+                        $('#EDIT_ID').val(response.empleado.idEmpleado || '');
+                        $('#EDIT_Nombres').val(response.empleado.nombres || '');
+                        $('#EDIT_Apellidos').val(response.empleado.apellidos || '');
+                        $('#EDIT_FechaNacimiento').val(formatDate(response.empleado.fechaNacimiento) || '');
+                        $('#EDIT_DocIdent').val(response.empleado.docIdent || '');
+                        $('#EDIT_Telefono').val(response.contacto.telefono || '');
+                        $('#EDIT_Direccion').val(response.contacto.direccion || '');
+                        $('#EDIT_Salario').val(response.empleado.salario || '');
+                        $('#EDIT_Usuario').val(response.sistema.usuario || '');
+                        $('#EDIT_Email').val(response.sistema.email || '');
+                        $('#EDIT_FechaIngreso').val(formatDate(response.empleado.fechaIngreso) || '');
+                        $('#EDIT_DNI').val(response.empleado.idDoc);
+
+                        $('#editModal').modal('show');
+                    } else {
+                        alertify.error("No se pudo cargar la información del empleado.");
+                    }
+                },
+                error: function () {
+                    alertify.error("Error al obtener los detalles del empleado.");
+                }
+            });
+        });
+
+        $('#guardarCambiosBtn').on('click', function () {
+            var fechaNacimiento = $('#EDIT_FechaNacimiento').val();
+            var fechaIngreso = $('#EDIT_FechaIngreso').val();
+
+            if (new Date(fechaNacimiento) < new Date('1753-01-01') || new Date(fechaIngreso) < new Date('1753-01-01')) {
+                alertify.error("Las fechas deben ser mayores al 1 de enero de 1753.");
+                return;
+            }
+
+            var empleadoData = {
+                empleado: {
+                    IdEmpleado: $('#EDIT_ID').val(),
+                    Nombres: $('#EDIT_Nombres').val(),
+                    Apellidos: $('#EDIT_Apellidos').val(),
+                    FechaNacimiento: fechaNacimiento,
+                    DocIdent: $('#EDIT_DocIdent').val(),
+                    IdDoc: $('#EDIT_DNI').val(),
+                    Salario: $('#EDIT_Salario').val(),
+                    FechaIngreso: fechaIngreso
+                },
+                contacto: {
+                    Telefono: $('#EDIT_Telefono').val(),
+                    Direccion: $('#EDIT_Direccion').val()
+                },
+                sistema: {
+                    Usuario: $('#EDIT_Usuario').val(),
+                    Email: $('#EDIT_Email').val()
+                }
+            };
+
+            $.ajax({
+                url: '@Url.Action("ActualizarEmpleado", "Empleado")', // Acción para actualizar el empleado
+                type: 'POST',
+                data: JSON.stringify(empleadoData), // Convertir los datos a formato JSON
+                contentType: 'application/json',
+                success: function (response) {
+                    if (response && response.success) {
+                        alertify.success("Los cambios se han realizado con éxito.");
+                        $('#editModal').modal('hide');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        alertify.error("Error al actualizar el empleado.");
+                    }
+                },
+                error: function () {
+                    alertify.error("Error al actualizar los detalles del empleado.");
+                }
+            });
+        });
+    });
+
+    function formatDate(date) {
+        if (!date) return '';
+
+        var d = new Date(date);
+        var year = d.getFullYear();
+        var month = ('0' + (d.getMonth() + 1)).slice(-2); 
+        var day = ('0' + d.getDate()).slice(-2);
+
+        return year + '-' + month + '-' + day;
+    }
+</script>
+
+

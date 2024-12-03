@@ -1,0 +1,437 @@
+@{
+    ViewBag.Title = "Listado de Promociones";
+    var errorMensaje = TempData["ErrorMensaje"];
+}
+
+<link rel="stylesheet" href="~/assets/css/PromocionesStyle.css">
+
+
+
+<div class="container mt-4">
+    <!--MANEJO DE ERRORES-->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+
+        <div class="d-flex align-items-center justify-content-between p-3"
+         style="background-color: #393153; border: 1px solid #444; border-radius: 10px; color: white; display: inline-flex; margin-left: 60px;">
+            <h3 class="m-0" style="margin-left: 10px;">Promociones Disponibles</h3>
+
+        <img id="agregar" src="~/assets/img/addPromociones.png"
+             width="50px" height="50px"
+             style="cursor:pointer; object-fit: cover;
+                margin-left: 20px; margin-right: 10px; margin-top: 4px;"
+             data-toggle="modal" data-target="#addPromoModal"
+             data-id="modalAgregar" />
+
+        <button type="button" class="btn btn-primary" onclick="mostrarModalEnviarToken()">Desbloquear Interruptores</button>
+        <button type="button" class="btn btn-primary" onclick="mostrarModalValidarToken()">Validar Token</button>
+
+        </div>
+
+
+    @if (ViewBag.Promociones != null && ViewBag.Promociones.Count > 0)
+    {
+        <div class="promociones-grid">
+            @foreach (var promo in ViewBag.Promociones)
+            {
+                <div class="nft position-relative">
+
+                    <!-- Descuento-->
+                    <div class="discount-badge">
+                        @(promo.TipoPromocion == 1 ? "%" : "S/.") @promo.Descuento
+                    </div>
+
+                    <!-- Interruptor -->
+                    <div class="toggle">
+                        <input type="checkbox" id="btn_@promo.IdPromociones"
+                        @(promo.Estado == 1 ? "checked" : "")
+                               onclick="event.preventDefault(); validarYMostrarModal(@promo.IdPromociones)">
+                        <label for="btn_@promo.IdPromociones"></label>
+                    </div>
+
+
+
+
+                    <!-- Detalles de la Promoción -->
+                    <div class="main">
+                        <h2 data-toggle="modal" data-target="#newModal" data-id="@promo.IdPromociones">@promo.NomPromo</h2>
+                        <p class="description" data-toggle="modal" data-target="#newModal" data-id="@promo.IdPromociones">
+                            <strong>Desde:</strong> @promo.FechaInicio.ToString("dd/MM/yyyy")<br>
+                            <strong>Hasta:</strong> @promo.FechaFin.ToString("dd/MM/yyyy")<br>
+                        </p>
+                        <div class="tokenInfo" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="background-color: black; color: white; padding: 5px 10px; border-radius: 5px;">
+                                Michus
+                            </div>
+
+                            <!-- Tipo de descuento -->
+                            <div style="margin-left: auto;">
+                                <p style="margin: 0; padding-left: 5px;">
+                                    @if (promo.TipoPromocion == 1)
+                                    {
+                                        @:Porcentual
+                                    }
+                                    else
+                                    {
+                                        @:Fijo
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-white" style="color: black;">No se encontraron promociones.</p>
+    }
+</div>
+
+<!--ESTADO DE LA PROMOCION-->
+<div id="modalEstado" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEstadoTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cambiar Estado de Promoción</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas cambiar el estado de esta promoción?</p>
+                <input type="hidden" id="promoIdInput">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="actualizarEstadoPromo()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal para Enviar Token -->
+<div class="modal fade" id="enviarTokenModal" tabindex="-1" role="dialog" aria-labelledby="enviarTokenModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="enviarTokenModalLabel">Enviar Token de Activación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="enviarTokenForm">
+                    <div class="form-group">
+                        <label for="correoDestino">Correo del Destinatario</label>
+                        <input type="email" class="form-control" id="correoDestino" placeholder="Ingrese el correo del destinatario" required>
+                    </div>
+                </form>
+                <div id="mensajeError" class="alert alert-danger" style="display: none;">
+                    Por favor ingrese un correo válido.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="enviarTokenBtn">Enviar Token</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal para Validar Token -->
+<div class="modal fade" id="validarTokenModal" tabindex="-1" role="dialog" aria-labelledby="validarTokenModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="validarTokenModalLabel">Validar Código de Acceso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="validarTokenForm">
+                    <div class="form-group">
+                        <label for="tokenIngresado">Código de Acceso</label>
+                        <input type="text" class="form-control" id="tokenIngresado" placeholder="Ingrese el código de acceso recibido" required>
+                    </div>
+                </form>
+                <div id="mensajeErrorToken" class="alert alert-danger" style="display: none;">
+                    El código de acceso es inválido o ha expirado.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="validarTokenBtn">Validar Token</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de Agregar Promoción -->
+<div id="addPromoModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addPromoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90%; max-height: 90%;" role="document">
+        <div class="modal-content rounded-0" style="height: 100%; display: flex; flex-direction: column;">
+            <div class="modal-header" style="background-color: #007bff; color: white;">
+                <h2 class="modal-title" id="addPromoModalLabel" style="margin-left: 30px;">Agregar Nueva Promoción</h2>
+                <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-4 px-5" style="height: 100%; display: flex; flex-direction: column;">
+                <form id="promoForm" asp-action="CrearPromocion" asp-controller="Promociones" method="post" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                    <!-- Sección principal -->
+                    <div class="row" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div class="col-md-12" style="flex: 1;">
+                            <div class="section-box" style="height: 100%; border: 1px solid #ccc; padding: 10px; display: flex; flex-direction: column; justify-content: space-between;">
+                                <!-- Nombre de la Promoción -->
+                                <div class="form-group mb-3">
+                                    <input type="text" class="form-control" id="promocion" name="nombrePromocion" placeholder="Ingrese el nombre de la promoción" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                </div>
+
+                                <!-- Tipo de la Promoción -->
+                                <div class="form-group mb-3">
+                                    <select class="form-control" id="tipoPromocion" name="tipoPromocion" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                        <option value="" disabled selected>Seleccione un tipo de promoción</option>
+                                        <option value="0">Fijo</option>
+                                        <option value="1">Porcentual</option>
+                                    </select>
+                                </div>
+
+                                <!-- Descuento de la Promoción -->
+                                <div class="form-group mb-3">
+                                    <input type="number" class="form-control" id="descuento" name="descuento" placeholder="Descuento de la promoción" required min="1" style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                </div>
+
+                                <!-- Descripcion de la Promoción -->
+                                <div class="form-group mb-3">
+                                    <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción de la promoción" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                </div>
+
+                                <!-- Fecha de Inicio -->
+                                <div class="form-group mb-3">
+                                    <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                </div>
+
+                                <!-- Fecha de Finalización -->
+                                <div class="form-group mb-3">
+                                    <input type="date" class="form-control" id="fechaFin" name="fechaFin" required style="border-radius: 8px; padding: 12px; font-size: 16px; border: 1px solid #ddd; width: 98%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Guardar -->
+                    <button type="submit" class="btn btn-primary" style="background-color: #007bff; color: white; padding: 12px 25px; font-size: 16px; border-radius: 8px; border: none; cursor: pointer; margin-top: 20px;">
+                        Guardar Promoción
+                    </button>
+                </form>
+            </div>
+
+            <!-- Cerrar Modal -->
+            <a href="#" class="close-agregar" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Modal de Listado de Detalles -->
+<div id="newModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90%; max-height: 90%;" role="document">
+        <div class="modal-content rounded-0" style="height: 100%; display: flex; flex-direction: column;">
+            <div class="modal-body p-4 px-5" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="row" style="flex: 1; display: flex; flex-direction: column;">
+                    <!-- Sección principal (arriba) -->
+                    <div class="col-md-12" style="flex: 1;">
+                        <div class="section-box" style="height: 100%; border: 1px solid #ccc; padding: 10px;">
+                            <h5 style="font-weight: bold; color: black;">Gestion Principal</h5>
+                            <form id="formRegistrarDetalle" method="post" action="/Promociones/RegistrarDetallePromo">
+                                <!-- Campo para seleccionar la promoción -->
+                                <div class="mb-3">
+                                    @Html.DropDownList("idPromocion",
+                                             new SelectList(ViewBag.PromocionesFiltradas as List<dynamic>, "IdPromociones", "NomPromo", ViewBag.PromocionesList?.SelectedValue),
+                                             "Seleccione una promoción",
+                                             new { @class = "form-select custom-select-style", required = "required", onchange = "updatePromotionDetails()" })
+                                </div>
+
+                                <!-- Contenedor de detalles de la promoción en cuadros separados -->
+                                <div id="promotionDetails" class="mb-3 d-flex">
+                                    <div class="promotion-box mb-2 p-3 border rounded">
+                                        <strong>Descuento:</strong>
+                                        <span id="descuentoPromocion">Seleccione una Promoción</span>
+                                    </div>
+                                    <div class="promotion-box mb-2 p-3 border rounded">
+                                        <strong>Descripción:</strong>
+                                        <span id="descripcionPromocion">Seleccione una Promoción</span>
+                                    </div>
+
+                                    <!-- Campo para ingresar la cantidad aplicable -->
+                                    <div class="mb-3 d-flex align-items-center" style="justify-content: flex-start;">
+                                        <input type="number" class="form-control" id="cantidadAplicable" name="cantidadAplicable" required
+                                               style="width: 150px; padding: 10px; border-radius: 0.375rem; display: inline-block;" placeholder="Ingrese la cantidad">
+                                        <input type="text" id="selectedProducts" name="selectedProducts" class="form-control" readonly required style="display: none">
+                                        <button type="submit" id="submitButton" class="btn btn-primary" style="margin-left: 10px;">Registrar Detalle</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listado de Productos y Detalles Promociones al mismo nivel (50% cada uno) -->
+                <div class="row mt-3" style="flex-shrink: 0; width: 100%; height: 90%; display: flex;">
+                    <!-- Sección de productos (60%) -->
+                    <div class="col-md-7" style="padding-right: 10px; width: 55%;">
+                        <div class="section-box" style="border: 1px solid #ccc; padding: 10px;">
+                            <h5 style="font-weight: bold; color: black;">Lista de Productos</h5>
+                            <div class="table-container">
+                                <!-- Contenedor con desplazamiento -->
+                                @if (ViewBag.Promociones != null && ViewBag.Promociones.Count > 0)
+                                {
+                                    <table class="table table-bordered" style="background-color: #f8f9fa; border: 1px solid #333;">
+                                        <thead>
+                                            <tr style="background-color: #e9ecef;">
+                                                <th style="width: 10%;">Seleccion</th>
+                                                <th>Producto</th>
+                                                <th>Descripcion</th>
+                                                <th>Categoria</th>
+                                                <th>Fecha Disponible</th>
+                                                <th>Precio</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var productos in ViewBag.Productos)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <label class="custom-checkbox">
+                                                            <input type="checkbox" class="productoCheckbox" data-producto-id="@productos.IdProductos" name="productosSeleccionados[]" value="@productos.IdProductos">
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </td>
+
+                                                    <td>@productos.Producto</td>
+                                                    <td>@productos.Descripcion</td>
+                                                    <td>@productos.Categoria</td>
+                                                    <td>@productos.FechaDisponible</td>
+                                                    <td>@productos.Precio</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <p>No hay productos disponibles.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de detalles de promoción (40%) -->
+                    <div class="col-md-5" style="padding-left: 10px; width: 45%;">
+                        <div class="section-box" style="border: 1px solid #ccc; padding: 10px;">
+                            <h5 style="font-weight: bold; color: black;">Lista de Detalles</h5>
+                            <div class="table-container">
+                                <!-- Contenedor con desplazamiento -->
+                                @if (ViewBag.DetallePromocion != null && ViewBag.DetallePromocion.Count > 0)
+                                {
+                                    <table class="table table-bordered" style="background-color: #f8f9fa; border: 1px solid #333;">
+                                        <thead>
+                                            <tr style="background-color: #e9ecef;">
+                                                <th>Código</th>
+                                                <th>Promoción</th>
+                                                <th>Producto</th>
+                                                <th>Cantidad Aplicable</th>
+                                                <th>Tipo Aplicación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ViewBag.DetallePromocion)
+                                            {
+                                                <tr>
+                                                    <td>@item.IdDetalle</td>
+                                                    <td>@item.Promocion</td>
+                                                    <td>@item.Producto</td>
+                                                    <td>@item.CantAplicable</td>
+                                                    <td>
+                                                        @if (item.TipoAplicacion == 1)
+                                                        {
+                                                            @:Fijo
+                                                        }
+                                                        else
+                                                        {
+                                                            @:Porcentual
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <p>No hay detalles de promoción disponibles.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Cerrar Modal -->
+                <a href="#" class="close-detalle" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">Cerrar</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="~/assets/js/PromocionesScript.js"></script>
+
+<script>
+    // Pasar promociones como variable global
+    window.promociones = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Promociones));
+
+    $('#modalToken').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // El botón que abrió el modal
+        var promoId = button.data('id'); // Extraer el ID de la promoción
+
+        // Asignar el ID de la promoción al campo oculto en el modal
+        $('#promoIdInput').val(promoId);
+    });
+
+
+    $(document).ready(function () {
+        $('#agregar').click(function (event) {
+            $('#exampleModalCenter').modal('hide'); // Cierra el modal de ejemplo
+            $('#addPromoModal').modal('show'); // Abre solo el modal de agregar promoción
+        });
+    });
+
+
+
+    
+</script>
+<!-- Actualizado a la fecha 26/11/2024 -->

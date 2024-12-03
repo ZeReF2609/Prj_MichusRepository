@@ -26,12 +26,40 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = D:\2024_Ciclo-6\PROYECTO_INTEGRADOR\PROYECTO\Prj_MichusRepository\Michus
 build_property._RazorSourceGeneratorDebug = 
 
+[D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Clientes/ListaClientes.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcTGlzdGFDbGllbnRlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Descuentos/listadescuentos.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVzY3VlbnRvc1xsaXN0YWRlc2N1ZW50b3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Ecommerce/Cart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXENhcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Ecommerce/Checkout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXENoZWNrb3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Ecommerce/ListarProductos.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXExpc3RhclByb2R1Y3Rvcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Empleado/ListaEmpleados.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbGVhZG9cTGlzdGFFbXBsZWFkb3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/LoginCli/LoginCli.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5DbGlcTG9naW5DbGkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Login/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Logistica/Producto.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naXN0aWNhXFByb2R1Y3RvLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Logistica/Productos.cshtml]
@@ -42,12 +70,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Promociones/ListarPromociones.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvbW9jaW9uZXNcTGlzdGFyUHJvbW9jaW9uZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Reservas/ListarClientes.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXNcTGlzdGFyQ2xpZW50ZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Reservas/ListarReserva.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXNcTGlzdGFyUmVzZXJ2YS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Shared/layoutVentaEcommerce.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXGxheW91dFZlbnRhRWNvbW1lcmNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/2024_Ciclo-6/PROYECTO_INTEGRADOR/PROYECTO/Prj_MichusRepository/Michus/Views/Shared/layout_blanco.cshtml]

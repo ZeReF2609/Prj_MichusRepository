@@ -1,6 +1,5 @@
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.Dynamic;
 using Michus.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -120,68 +119,38 @@ namespace Michus.DAO
 
 
         // SIN USAR
-        public async Task<List<dynamic>> ListarProductosAsync()
+        public async Task RegistrarDescuentoAsync(Descuento descuento)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                var productos = new List<dynamic>();
-
-                // Listar productos usando SP_LISTAR_PRODUCTOS_DESCUENTO
-                using (var command = new SqlCommand("SP_LISTAR_PRODUCTOS_DESCUENTO", connection))
+                using (var command = new SqlCommand("SP_CREAR_DESCUENTO", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            var producto = new ExpandoObject() as IDictionary<string, object>;
-                            for (int i = 0; i < reader.FieldCount; i++)
-                            {
-                                producto[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
-                            }
-                            productos.Add(producto);
-                        }
-                    }
-                }
+                    // Parámetros para el procedimiento almacenado
+                    command.Parameters.AddWithValue("@ID_DESCUENTO", descuento.IdDescuento ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@ID_PROMOCION", descuento.IdPromocion ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@ID_EVENTO", descuento.IdEvento ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@FECHA_INICIO", descuento.FechaInicio);
+                    command.Parameters.AddWithValue("@FECHA_FIN", descuento.FechaFin);
+                    command.Parameters.AddWithValue("@PRECIO_DESCUENTO", descuento.PrecioDescuento);
+                    command.Parameters.AddWithValue("@TIPO_DESCUENTO", descuento.TipoDescuento);
+                    command.Parameters.AddWithValue("@APLICAR_CATEGORIA", descuento.AplicarCategoria);
+                    command.Parameters.AddWithValue("@ID_CATEGORIA", descuento.AplicarCategoria ? descuento.IdCategoria : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@ID_ARTICULOS", !descuento.AplicarCategoria ? descuento.IdArticulos : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@APLICAR_CATEGORIA", descuento.TI_SITU);
 
-                return productos;
+                    // Ejecutar el comando
+                    await command.ExecuteNonQueryAsync();
+                }
             }
         }
 
-        public async Task<List<dynamic>> ListarCategoriasAsync()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
 
-                var categorias = new List<dynamic>();
 
-                // Listar categorías usando SP_LISTAR_CATEGORIA_DESCUENTO
-                using (var command = new SqlCommand("SP_LISTAR_CATEGORIA_DESCUENTO", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            var categoria = new ExpandoObject() as IDictionary<string, object>;
-                            for (int i = 0; i < reader.FieldCount; i++)
-                            {
-                                categoria[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
-                            }
-                            categorias.Add(categoria);
-                        }
-                    }
-                }
-
-                return categorias;
-            }
-        }
-
+        
 
 
     }

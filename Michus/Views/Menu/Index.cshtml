@@ -1,12 +1,179 @@
-﻿@{
-    ViewData["Title"] = "Index";
+@model Michus.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="container-fluid">
-    <main class="py-2">
-        <div class="content-container">
-            <h1>Dashboard</h1>
+<style>
+    /* Contenedor para las tarjetas */
+    .totals-container {
+        display: flex;
+        justify-content: space-between; /* Espacia las tarjetas uniformemente */
+        gap: 20px; /* Espacio entre tarjetas */
+        margin-bottom: 20px;
+    }
 
+    /* Estilo de cada tarjeta */
+    .totals-card {
+        background-color: #f4f7fa; /* Color pastel suave */
+        border-radius: 10px;
+        padding: 10px 15px; /* Reducido el padding (más compacto verticalmente) */
+        border: 1px solid #e1e6f0; /* Borde suave */
+        width: 30%; /* Manteniendo el mismo ancho */
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .totals-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+    /* Títulos dentro de las tarjetas */
+    .title {
+        font-size: 1.15rem; /* Ajustado para ser un poco más pequeño */
+        font-weight: 600;
+        color: #4a4a4a;
+        margin-bottom: 6px; /* Reducido el margen */
+    }
+
+    /* Valores dentro de las tarjetas */
+    .total {
+        font-size: 1.6rem; /* Ajustado para ser un poco más pequeño */
+        font-weight: 700;
+        color: #4e97fd; /* Color pastel suave para el valor */
+    }
+
+    /* Colores pastel para cada tarjeta */
+    .totals-card:nth-child(1) {
+        background-color: #ffcccb; /* Rosa pastel */
+    }
+
+    .totals-card:nth-child(2) {
+        background-color: #cce7ff; /* Azul pastel */
+    }
+
+    .totals-card:nth-child(3) {
+        background-color: #d1ffd1; /* Verde pastel */
+    }
+
+</style>
+<div class="min-h-screen bg-gray-100 py-6">
+    <div class="container mx-auto px-4">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-8 px-6 rounded-lg shadow-lg mb-8">
+            <h1 class="text-4xl font-bold text-center uppercase tracking-wide">Dashboard Michus</h1>
+        </header>
+
+        <div class="totals-container">
+            <div class="totals-card">
+                <h5 class="title">Total Ventas</h5>
+                <p class="total">@Model.TotalSales.ToString("N0")</p>
+            </div>
+            <div class="totals-card">
+                <h5 class="title">Total Productos</h5>
+                <p class="total">@Model.TotalProducts.ToString("N0")</p>
+            </div>
+            <div class="totals-card">
+                <h5 class="title">Total Clientes</h5>
+                <p class="total">@Model.TotalClients.ToString("N0")</p>
+            </div>
         </div>
-    </main>
+
+
+        <!-- Charts Section -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Product Count Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-300">
+                <h5 class="text-xl font-semibold mb-4 text-center text-gray-700">Productos por Categoría</h5>
+                <div class="h-64">
+                    <canvas id="productCountChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Product Value Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-300">
+                <h5 class="text-xl font-semibold mb-4 text-center text-gray-700">Valor por Categoría</h5>
+                <div class="h-64">
+                    <canvas id="productValueChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Chart Data Preparation
+        const productCountData = {
+            labels: [@Html.Raw(string.Join(",", Model.ProductCountByCategory.Select(x => $"'{x.Category}'")))],
+            datasets: [{
+                label: 'Cantidad de Productos',
+                data: [@string.Join(",", Model.ProductCountByCategory.Select(x => x.ProductCount))],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const productValueData = {
+            labels: [@Html.Raw(string.Join(",", Model.ProductValueByCategory.Select(x => $"'{x.Category}'")))],
+            datasets: [{
+                data: [@string.Join(",", Model.ProductValueByCategory.Select(x => x.TotalValue))],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Render Charts
+        new Chart(document.getElementById('productCountChart').getContext('2d'), {
+            type: 'bar',
+            data: productCountData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('productValueChart').getContext('2d'), {
+            type: 'pie',
+            data: productValueData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+}
+
+//ACTUALIZADO A LA FECHA 26/11/2024

@@ -45,17 +45,18 @@ namespace Michus.Controllers
 
             _logger.LogDebug($"Intento de inicio de sesión: Email: {email}");
 
-            var (message, userId, userType, role) = await _loginService.ValidateLoginAsync(email, password);
+            var (message, userId, userType, role, avatarUrl) = await _loginService.ValidateLoginAsync(email, password);
 
             if (message == "Bienvenido")
             {
                 var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, email),
-                    new Claim(ClaimTypes.Role, role ?? "Unknown"),
-                    new Claim(ClaimTypes.NameIdentifier, userId ?? "0")
-                };
-
+        {
+            new Claim(ClaimTypes.Name, email),
+            new Claim(ClaimTypes.Role, role ?? "Unknown"),
+            new Claim(ClaimTypes.NameIdentifier, userId ?? "0"),
+            new Claim("AvatarUrl", avatarUrl), // Almacenamos la URL del avatar
+            new Claim("UserName", email) // Almacenamos el nombre del usuario (puedes cambiar esto si lo deseas)
+        };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -69,6 +70,7 @@ namespace Michus.Controllers
             TempData["ErrorMessage"] = message;
             return View();
         }
+
 
         [AllowAnonymous]
         public async Task<IActionResult> Salir()
@@ -97,5 +99,18 @@ namespace Michus.Controllers
             Response.Headers["Expires"] = "0";
             return View();
         }
+
+        public IActionResult LoginCli()
+        {
+
+
+
+
+            return null;
+        }
+
+
+
+
     }
 }

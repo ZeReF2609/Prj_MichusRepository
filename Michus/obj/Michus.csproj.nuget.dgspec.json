@@ -76,6 +76,10 @@
               "target": "Package",
               "version": "[13.0.3, )"
             },
+            "System.Collections.NonGeneric": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.6, )"
