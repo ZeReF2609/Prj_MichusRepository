@@ -1,4 +1,4 @@
-﻿using Michus.Models;
+using Michus.Models;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -258,6 +258,56 @@ namespace Michus.Service
                     return "Ha ocurrido un error en el registro.";
             }
         }
+
+        ///
+        public async Task<Cliente?> ObtenerClientePorIdAsync(string idCliente)
+        {
+            Cliente? cliente = null;
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand("sp_obtener_cliente_por_id", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@p_idCliente", idCliente);
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                cliente = new Cliente
+                                {
+                                    IdCliente = reader.GetString(0),
+                                    Nombres = reader.GetString(1),
+                                    Apellidos = reader.GetString(2),
+                                    IdDoc = reader.GetInt32(3),
+                                    DocIdent = reader.GetString(4),
+                                    FechaNacimiento =DateOnly.FromDateTime(reader.GetDateTime(5)), // Conversión corregida
+                                    FechaRegistro = reader.IsDBNull(6) ? null : reader.GetDateTime(6),
+                                    FechaUltimaCompra = reader.IsDBNull(7) ? null : reader.GetDateTime(7),
+                                    NivelFidelidad = reader.GetByte(8),
+                                    PuntosFidelidad = reader.GetInt32(9)
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener cliente por ID: {ex.Message}");
+                throw; // Lanza la excepción para que el controlador maneje el error
+            }
+
+            return cliente;
+        }
+
+
+
+
 
 
 
