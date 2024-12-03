@@ -204,7 +204,7 @@ namespace Michus.Service
                                 userId = userIdParam.Value.ToString();
 
                                 // Si el ID de usuario es válido, commit de la transacción
-                                if (userId!=null)
+                                if (userId != null)
                                 {
                                     _logger.LogInformation($"Usuario registrado exitosamente: {userId}");
                                     transaction.Commit();
@@ -242,7 +242,7 @@ namespace Michus.Service
             }
         }
 
-     
+
 
         private string GetFriendlyErrorMessage(SqlException ex)
         {
@@ -260,6 +260,6 @@ namespace Michus.Service
         }
 
 
-       
+
     }
 }
