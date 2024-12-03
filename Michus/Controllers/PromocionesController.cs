@@ -24,7 +24,7 @@ namespace Michus.Controllers
 
         private readonly CorreoHelper _correoHelper;
 
-        public PromocionesController(IConfiguration configuration,MenuService menuService, CorreoHelper correoHelper)
+        public PromocionesController(IConfiguration configuration, MenuService menuService, CorreoHelper correoHelper)
         {
             _cnx = configuration.GetConnectionString("cn1")!;
             _menuService = menuService;
@@ -56,29 +56,26 @@ namespace Michus.Controllers
 
 
         [HttpPost]
-        public IActionResult ValidarToken([FromBody] TokenRequest request)
+        public IActionResult ValidarToken(string token)
         {
-            if (string.IsNullOrEmpty(request.Token) || request.IdPromocion == 0)
-            {
-                return Json(new { success = false, message = "Token o ID de promoción no proporcionado." });
-            }
+            var esValido = _correoHelper.ValidarToken(token);
 
-            bool isValid = _correoHelper.ValidarToken(request.Token);
-
-            if (isValid)
+            if (esValido)
             {
-                ActualizarEstadoPromo(request.IdPromocion);
-                return Json(new { success = true, message = "Token válido. Promoción activada." });
+                return Json(new { valido = true });
             }
             else
             {
-                return Json(new { success = false, message = "Token inválido o expirado." });
+                return Json(new { valido = false });
             }
         }
 
 
+
+
         // Actualizar el estado de la promoción
-        public void ActualizarEstadoPromo(int idPromocion)
+        [HttpPost]
+        public IActionResult ActualizarEstadoPromo(int idPromocion)
         {
             using (SqlConnection cnn = new SqlConnection(_cnx))
             {
@@ -99,16 +96,14 @@ namespace Michus.Controllers
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Ocurrió un error: {ex.Message}");
+                    return StatusCode(500, "Error al actualizar el estado de la promoción.");
                 }
             }
+
+            return Ok(); // Respuesta HTTP 200 si todo salió bien
         }
 
 
-        public class TokenRequest
-        {
-            public string Token { get; set; }
-            public int IdPromocion { get; set; }
-        }
 
 
         // GET: PromocionesController
@@ -290,9 +285,6 @@ namespace Michus.Controllers
 
 
 
-
-
-
         [HttpPost]
         public async Task<ActionResult> CrearPromocion(string nombrePromocion, byte tipoPromocion, decimal descuento, string descripcion, DateTime fechaInicio, DateTime fechaFin, byte estado = 0)
         {
@@ -351,6 +343,7 @@ namespace Michus.Controllers
             var roleIdClaim = User.FindFirst(ClaimTypes.Role);
             return roleIdClaim?.Value ?? string.Empty;
         }
+
 
         private async Task LoadMenuDataAsync()
         {
