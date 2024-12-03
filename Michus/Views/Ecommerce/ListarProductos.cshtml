@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Michus.Models.Producto>
+@model IEnumerable<Michus.Models.Producto>
 
 @{
     Layout = "~/Views/Shared/layoutVentaEcommerce.cshtml";
@@ -8,51 +8,83 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Menú lateral con categorías -->
-        <aside class="col-md-3 bg-success text-white p-4" style="min-height: 100vh;">
-            <h5 class="mb-4">Categories</h5>
-            <ul class="list-unstyled">
+        <aside class="col-lg-3 bg-light border-end py-4" style="min-height: 100vh;">
+            <h4 class="text-center mb-4">Categorías</h4>
+            <ul class="list-group list-group-flush">
                 <!-- Enlace para mostrar todos los productos -->
-                <li>
-                    <a asp-action="ListarProductos" asp-route-category="" class="text-white text-decoration-none d-block py-2 border-bottom">Todos los productos</a>
+                <li class="list-group-item bg-light">
+                    <a asp-action="ListarProductos" asp-route-category="" class="text-dark text-decoration-none d-block py-2 fw-bold">
+                        <i class="fas fa-store me-2"></i> Todos los productos
+                    </a>
                 </li>
                 @foreach (var category in categories)
                 {
-                    <li>
-                        <a asp-action="ListarProductos" asp-route-category="@category.Value" class="text-white text-decoration-none d-block py-2 border-bottom">@category.Text</a>
+                    <li class="list-group-item bg-light">
+                        <a asp-action="ListarProductos" asp-route-category="@category.Value" class="text-dark text-decoration-none d-block py-2 fw-bold">
+                            @if (category.Text.Contains("Café"))
+                            {
+                                <i class="fas fa-coffee me-2"></i>
+                            }
+                            else if (category.Text.Contains("Refrescos"))
+                            {
+                                <i class="fas fa-glass-martini-alt me-2"></i>
+                            }
+                            else if (category.Text.Contains("Snacks"))
+                            {
+                                <i class="fas fa-cookie-bite me-2"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-tags me-2"></i>
+                            }
+                            @category.Text
+                        </a>
                     </li>
                 }
             </ul>
-            <form asp-action="Cart" method="get">
-                <button type="submit">Go to Cart</button>
-            </form>
+            <div class="mt-4 text-center">
+                <form asp-action="Cart" method="get">
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                        <i class="fas fa-shopping-cart me-2"></i> Ver Carrito
+                    </button>
+                </form>
+            </div>
         </aside>
 
+
         <!-- Listado de productos -->
-        <main class="col-md-9">
-            <div class="container">
-                <h2 class="text-center my-4">Our Products</h2>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center">
+        <main class="col-lg-9">
+            <div class="bg-primary text-white text-center py-5">
+                <h1 class="display-4">Descubre nuestros productos</h1>
+                <p class="fs-5">Encuentra las mejores ofertas y productos de calidad.</p>
+            </div>
+            <div class="container py-4">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                     @if (Model != null && Model.Any())
                     {
                         @foreach (var product in Model)
                         {
                             <div class="col">
-                                <div class="card h-100 shadow-sm">
-                                    <div class="card-body d-flex flex-column justify-content-between">
-                                        <!-- Título del producto -->
-                                        <h5 class="card-title text-center">@product.ProdNom</h5>
+                                <div class="card h-100 shadow-sm border-0">
+                                    <!-- Imagen del producto -->
+                                    <div class="position-relative">
+                                        <img src="@product.Imagen" class="card-img-top rounded-top" alt="@product.ProdNom" style="height: 220px; object-fit: cover;">
+                                        <span class="badge bg-success position-absolute top-0 start-0 m-2">Nuevo</span>
+                                    </div>
 
-                                        <!-- Descripción -->
-                                        <p class="card-text text-muted">@product.Descripcion</p>
+                                    <!-- Contenido del producto -->
+                                    <div class="card-body">
+                                        <h5 class="card-title text-truncate fw-bold">@product.ProdNom</h5>
+                                        <p class="card-text text-muted text-truncate">@product.Descripcion</p>
+                                    </div>
 
-                                        <!-- Precio y botón -->
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="fw-bold">S/ @product.Precio</span>
-                                            <form asp-action="AddToCart" method="post">
-                                                <input type="hidden" name="productId" value="@product.IdProducto" />
-                                                <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
-                                            </form>
-                                        </div>
+                                    <!-- Precio y acciones -->
+                                    <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+                                        <span class="text-primary fs-5 fw-bold">S/ @product.Precio</span>
+                                        <form asp-action="AddToCart" method="post">
+                                            <input type="hidden" name="productId" value="@product.IdProducto" />
+                                            <button type="submit" class="btn btn-outline-primary btn-sm fw-bold">Agregar</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -60,7 +92,10 @@
                     }
                     else
                     {
-                        <p class="text-center">No products found in this category.</p>
+                        <div class="text-center fs-5 text-muted py-5">
+                            <i class="fas fa-box-open fs-1 mb-3"></i>
+                            <p>No hay productos disponibles en esta categoría.</p>
+                        </div>
                     }
                 </div>
             </div>
@@ -70,24 +105,108 @@
 
 <!-- Estilos adicionales -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <style>
+    body {
+        background-color: #D9C7F2; /* Fondo suave lavanda */
+        color: #513012; /* Texto base */
+    }
+
     aside {
+        background-color: #8E5737; /* Fondo marrón medio */
+        color: white;
         position: sticky;
         top: 0;
     }
 
-        aside a:hover {
-            background-color: #145a32;
+        aside h4 {
+            color: #D9C7F2; /* Título en lavanda claro */
+        }
+
+        aside a {
+            transition: background-color 0.3s, color 0.3s;
+            color: #D9C7F2; /* Texto inicial */
+        }
+
+            aside a:hover {
+                background-color: #513012; /* Fondo marrón oscuro */
+                color: white;
+            }
+
+    .btn-primary {
+        background-color: #6F29B5; /* Botón púrpura intenso */
+        border-color: #6F29B5;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background-color: #A478D4; /* Lavanda oscuro al pasar el mouse */
+            border-color: #A478D4;
+        }
+
+    .btn-outline-primary {
+        border-color: #6F29B5;
+        color: #6F29B5;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #6F29B5;
+            color: white;
         }
 
     .card {
-        border-radius: 10px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #8E5737; /* Borde marrón medio */
+        background-color: #D9C7F2; /* Fondo de tarjeta lavanda claro */
+        transition: transform 0.3s, box-shadow 0.3s;
     }
 
         .card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
+
+    .card-title {
+        color: #513012; /* Títulos en marrón oscuro */
+    }
+
+    .card-footer {
+        background-color: #A478D4; /* Fondo lavanda oscuro */
+    }
+
+        .card-footer span {
+            color: white; /* Precio en blanco */
+        }
+
+        .card-footer button {
+            background-color: white;
+            color: #6F29B5;
+            border: 1px solid #6F29B5;
+        }
+
+            .card-footer button:hover {
+                background-color: #6F29B5;
+                color: white;
+            }
+
+    .bg-primary {
+        background-color: #6F29B5 !important; /* Encabezado púrpura intenso */
+        color: white;
+    }
+
+    .list-group-item {
+        background-color: #8E5737; /* Fondo marrón medio */
+        color: white;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .list-group-item:hover {
+            background-color: #513012; /* Fondo marrón oscuro */
+            color: #D9C7F2; /* Texto lavanda claro */
+        }
+
+    .badge.bg-success {
+        background-color: #A478D4; /* Badge lavanda oscuro */
+    }
 </style>
+
