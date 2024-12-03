@@ -32,7 +32,6 @@ namespace Michus.Controllers
             {
                 await connection.OpenAsync();
 
-                // If a category is selected, use the procedure that accepts the category parameter
                 SqlCommand cmm;
                 if (!string.IsNullOrEmpty(category))
                 {
@@ -41,7 +40,6 @@ namespace Michus.Controllers
                 }
                 else
                 {
-                    // Otherwise, use the procedure that doesn't take parameters
                     cmm = new SqlCommand("SP_LISTAR_PRODUCTO", connection);
                 }
 
@@ -53,13 +51,14 @@ namespace Michus.Controllers
                     {
                         productos.Add(new Producto
                         {
-                            IdProducto = rd["ID_PRODUCTO"].ToString(),
-                            ProdNom = rd["PROD_NOM"].ToString(),
-                            ProdNomweb = rd["PROD_NOMWEB"].ToString(),
+                            IdProducto = rd["ID_PRODUCTO"].ToString()!,
+                            ProdNom = rd["PROD_NOM"].ToString()!,
+                            ProdNomweb = rd["PROD_NOMWEB"].ToString()!,
                             Descripcion = rd["DESCRIPCION"].ToString(),
-                            IdCategoria = rd["ID_CATEGORIA"].ToString(),
                             Precio = (decimal)rd["PRECIO"],
-                            Estado = (int)rd["ESTADO"]
+                            Estado = (int)rd["ESTADO"],
+                            // Verificar si la columna "IMAGEN" existe antes de asignar el valor
+                            Imagen = rd.GetOrdinal("IMAGEN") >= 0 ? rd["IMAGEN"].ToString() : string.Empty
                         });
                     }
                 }
@@ -94,6 +93,7 @@ namespace Michus.Controllers
 
             return View(productos); // Pass the list of products as the model
         }
+
 
 
 
@@ -311,6 +311,70 @@ namespace Michus.Controllers
             }
             return null;
         }
+
+        public async Task<ActionResult> HistorialCompras()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["ErrorMessage"] = "No se puede identificar al usuario. Por favor, inicie sesión.";
+                return RedirectToAction("LoginCli", "LoginCli");
+            }
+
+            var ventas = new List<Venta>();
+            using (SqlConnection connection = new SqlConnection(_cnx))
+            {
+                await connection.OpenAsync();
+                using (SqlCommand cmm = new SqlCommand("SP_LISTAR_VENTAS_POR_USUARIO", connection))
+                {
+                    cmm.CommandType = CommandType.StoredProcedure;
+                    cmm.Parameters.Add(new SqlParameter("@ID_USUARIO", userId));
+
+                    using (SqlDataReader rd = await cmm.ExecuteReaderAsync())
+                    {
+                        Venta currentVenta = null;
+                        while (await rd.ReadAsync())
+                        {
+                            // If this is a new sale, create a new Venta object
+                            if (currentVenta == null || currentVenta.IdVenta != rd["ID_VENTA"].ToString())
+                            {
+                                currentVenta = new Venta
+                                {
+                                    IdVenta = rd["ID_VENTA"].ToString(),
+                                    FechaVenta = (DateTime)rd["FECHA_VENTA"],
+                                    MontoTotal = (decimal)rd["MONTO_TOTAL"],
+                                    IdMetodoPago = Convert.ToInt32(rd["ID_METODO_PAGO"]),
+                                    Estado = (int)rd["ESTADO"],
+                                    IdMetodoPagoNavigation = new MetodoPago
+                                    {
+                                        Metodo = rd["METODO_PAGO"].ToString()
+                                    },
+                                    Detalles = new List<VentaDetalle>()
+                                };
+                                ventas.Add(currentVenta);
+                            }
+
+                            // Add product details if they exist
+                            if (rd["ID_PRODUCTO"] != DBNull.Value)
+                            {
+                                currentVenta.Detalles.Add(new VentaDetalle
+                                {
+                                    IdProducto = rd["ID_PRODUCTO"].ToString(),
+                                    NombreProducto = rd["NOMBRE_PRODUCTO"].ToString(),
+                                    Cantidad = Convert.ToInt32(rd["CANTIDAD"]),
+                                    PrecioUnitario = (decimal)rd["PRECIO_UNITARIO"]
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            return View(ventas);
+        }
+
+
+
+
 
     }
 }
