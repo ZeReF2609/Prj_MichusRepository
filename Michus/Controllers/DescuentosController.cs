@@ -12,11 +12,12 @@ using System;
 using System.Data;
 using System.Dynamic;
 using System.Text.Json;
+using Dapper;
 
 namespace Michus.Controllers
 {
     [Route("Descuentos")]
-    [Authorize]
+
     public class DescuentosController : Controller
     {
         private readonly MenuService _menuService;
@@ -30,34 +31,39 @@ namespace Michus.Controllers
             _descuentosDAO = new DescuentosDAO(_connectionString);
         }
 
-        // Ruta general para la lista de descuentos
         [HttpGet("ListaDescuentos")]
         public async Task<ActionResult> Listadescuentos(int? FECHA_INICIO = null, int? FECHA_FIN = null, string? TI_SITU = "PAP")
         {
-            // Cargar datos del menú
             await LoadMenuDataAsync();
 
-            // Obtener años de inicio y fin para los descuentos
             var aniosInicioDesc = await _descuentosDAO.GetAnioInicioDesc();
             var aniosFinDesc = await _descuentosDAO.GetAnioFinDesc();
 
-            // Asignar a ViewBag para los select lists
             ViewBag.AniosInicioDesc = new SelectList(aniosInicioDesc, "anio", "anio");
             ViewBag.AniosFinDesc = new SelectList(aniosFinDesc, "anio", "anio");
 
-            // Asignar valores de los filtros al ViewBag
             ViewBag.TiSitu = TI_SITU;
             ViewBag.FechaInicio = FECHA_INICIO;
             ViewBag.FechaFin = FECHA_FIN;
 
-            // Obtener los descuentos con los filtros aplicados
             var descuentos = await _descuentosDAO.GetDescuentosCartilla(FECHA_INICIO, FECHA_FIN, TI_SITU);
 
-            // Retornar la vista con los descuentos
             return View(descuentos);
         }
 
-        // Ruta para obtener los detalles del descuento
+        [HttpGet("ListaDescuentos/Data")]
+        public async Task<IActionResult> GetDescuentosData(int? FECHA_INICIO = null, int? FECHA_FIN = null, string? TI_SITU = "PAP")
+        {
+            var descuentos = await _descuentosDAO.GetDescuentosCartilla(FECHA_INICIO, FECHA_FIN, TI_SITU);
+
+            if (descuentos == null || !descuentos.Any())
+            {
+                return NotFound(new { message = "No se encontraron descuentos." });
+            }
+
+            return Ok(descuentos);
+        }
+
         [HttpGet("DetallesDescuento/{id}")]
         public async Task<IActionResult> GetDetallesDescuento(string id)
         {
@@ -117,7 +123,6 @@ namespace Michus.Controllers
             }
         }
 
-        // Ruta para actualizar el estado del descuento
         [HttpPost("ActualizarSitu")]
         public IActionResult ActualizarSitu()
         {
@@ -136,7 +141,13 @@ namespace Michus.Controllers
 
                     try
                     {
-                        command.ExecuteNonQuery();
+                        var result = command.ExecuteNonQuery();
+
+                        if (result == 0)
+                        {
+                            return BadRequest("No se puede cambiar TI_SITU porque el estado del descuento es 1.");
+                        }
+
                         return Ok($"Estado actualizado a {situ} para el descuento {idDescuento}");
                     }
                     catch (Exception ex)
@@ -147,14 +158,11 @@ namespace Michus.Controllers
             }
         }
 
-
-
         [HttpPost("RegistrarDescuento")]
         public async Task<IActionResult> RegistrarDescuento([FromBody] JsonElement request)
         {
             try
             {
-                // Obtención de las propiedades del JSON
                 var fechaInicio = request.GetProperty("FECHA_INICIO").ToString();
                 var fechaFin = request.GetProperty("FECHA_FIN").ToString();
                 var precioDescuento = request.GetProperty("PRECIO_DESCUENTO").ToString();
@@ -163,64 +171,52 @@ namespace Michus.Controllers
                 var idCategorias = request.GetProperty("ID_CATEGORIA");
                 var idArticulos = request.GetProperty("ID_ARTICULOS");
 
-                // Variables para convertir las fechas
                 DateTime fechaInicioDateTime;
                 DateTime fechaFinDateTime;
 
-                // Verificación de la fecha de inicio
                 if (string.IsNullOrWhiteSpace(fechaInicio) || !DateTime.TryParse(fechaInicio, out fechaInicioDateTime))
                 {
                     return BadRequest("El formato de la fecha de inicio es inválido.");
                 }
 
-                // Verificación de la fecha de fin
                 if (string.IsNullOrWhiteSpace(fechaFin) || !DateTime.TryParse(fechaFin, out fechaFinDateTime))
                 {
                     return BadRequest("El formato de la fecha de fin es inválido.");
                 }
 
-                // Verificación de 'precioDescuento'
                 if (string.IsNullOrWhiteSpace(precioDescuento) || !decimal.TryParse(precioDescuento, out decimal result))
                 {
                     return BadRequest("El campo 'PrecioDescuento' es inválido.");
                 }
 
-                // Verificación de 'tipoDescuento'
                 if (string.IsNullOrEmpty(tipoDescuento))
                 {
                     return BadRequest("El campo 'TipoDescuento' es obligatorio.");
                 }
 
-                // Validación de la categoría
                 if (aplicarCategoria != null && (aplicarCategoria == "categoria" && idCategorias.ValueKind == JsonValueKind.Null))
                 {
                     return BadRequest("Se debe especificar al menos una categoría si el tipo de descuento es 'categoria'.");
                 }
 
-                // Validación de artículos
                 if (aplicarCategoria != null && (aplicarCategoria == "articulo" && idArticulos.ValueKind == JsonValueKind.Null))
                 {
                     return BadRequest("Se debe especificar al menos un artículo si el tipo de descuento es 'articulo'.");
                 }
 
-                // Convertir 'idCategorias' y 'idArticulos' a listas
                 var idArticulosList = new List<string>();
                 var idCategoriasList = new List<string>();
 
-
-                // Si 'idCategorias' es una cadena separada por comas
                 if (idCategorias.ValueKind == JsonValueKind.String)
                 {
-                    idCategoriasList = idCategorias.GetString().Split(',').ToList();
+                    idCategoriasList = idCategorias.GetString()!.Split(',').ToList();
                 }
 
-                // Si 'idArticulos' es una cadena separada por comas
                 if (idArticulos.ValueKind == JsonValueKind.String)
                 {
-                    idArticulosList = idArticulos.GetString().Split(',').ToList();
+                    idArticulosList = idArticulos.GetString()!.Split(',').ToList();
                 }
 
-                // Conexión a la base de datos y ejecución del procedimiento almacenado
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
@@ -229,7 +225,6 @@ namespace Michus.Controllers
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
-                        // Parámetros para el procedimiento almacenado
                         command.Parameters.AddWithValue("@FECHA_INICIO", fechaInicioDateTime);
                         command.Parameters.AddWithValue("@FECHA_FIN", fechaFinDateTime);
                         command.Parameters.AddWithValue("@PRECIO_DESCUENTO", precioDescuento);
@@ -238,11 +233,9 @@ namespace Michus.Controllers
                         command.Parameters.AddWithValue("@ID_CATEGORIA", idCategoriasList.Any() ? string.Join(",", idCategoriasList) : DBNull.Value);
                         command.Parameters.AddWithValue("@ID_ARTICULOS", idArticulosList.Any() ? string.Join(",", idArticulosList) : DBNull.Value);
 
-                        // Ejecutar el procedimiento almacenado
                         await command.ExecuteNonQueryAsync();
                     }
 
-                    // Responder con un mensaje de éxito
                     return NoContent();
                 }
             }
@@ -252,18 +245,34 @@ namespace Michus.Controllers
             }
         }
 
+        [HttpPost("activar-descuento/{idDescuento}")]
+        public async Task<IActionResult> ActivarDescuento(string idDescuento)
+        {
+            if (string.IsNullOrEmpty(idDescuento))
+            {
+                return BadRequest("El ID de descuento es obligatorio.");
+            }
 
+            try
+            {
+                using (IDbConnection dbConnection = new SqlConnection(_connectionString))
+                {
+                    dbConnection.Open();
 
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@ID_DESCUENTO", idDescuento, DbType.String);
 
+                    var result = await dbConnection.ExecuteAsync("SP_ESTADO_DESCUENTO", parameters, commandType: CommandType.StoredProcedure);
 
+                    return Ok(new { mensaje = "Descuento actualizado correctamente" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Hubo un error al procesar el descuento", error = ex.Message });
+            }
+        }
 
-
-
-
-
-
-
-        // Ruta para listar productos
         [HttpGet("ListarProductos")]
         public async Task<IActionResult> ListarProductos()
         {
@@ -271,7 +280,6 @@ namespace Michus.Controllers
             return Ok(productos);
         }
 
-        // Ruta para listar categorías
         [HttpGet("ListarCategorias")]
         public async Task<IActionResult> ListarCategorias()
         {
@@ -279,7 +287,6 @@ namespace Michus.Controllers
             return Ok(categoria);
         }
 
-        // Cargar datos de menú
         private async Task LoadMenuDataAsync()
         {
             string roleId = GetCurrentRoleId();
@@ -287,7 +294,6 @@ namespace Michus.Controllers
             ViewData["MenuItems"] = string.IsNullOrEmpty(menuJson) ? "[]" : menuJson;
         }
 
-        // Obtener el ID del rol actual
         private string GetCurrentRoleId()
         {
             var roleIdClaim = User.FindFirst(ClaimTypes.Role);
