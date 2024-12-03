@@ -1,63 +1,128 @@
-﻿@using System.Security.Claims
+@using System.Security.Claims
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]</title>
+    <title>@ViewData["Title"] - Michus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            max-width: 150px;
+        }
+
+        .dropdown .avatar-img {
+            border: 2px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+            .dropdown .avatar-img:hover {
+                border-color: #0d6efd;
+                transform: scale(1.1);
+            }
+
+        footer {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 20px;
+        }
+
+            footer a {
+                color: #adb5bd;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+
+                footer a:hover {
+                    color: #ffffff;
+                }
+
+        .main-container {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
+    @* Datos del usuario *@
     @{
         var avatarUrl = User.FindFirst("AvatarUrl")?.Value ?? "https://cdn-icons-png.flaticon.com/512/9385/9385289.png";
-        var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Usuario";  // Corrected Claim lookup
+        var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Usuario";
     }
 
-    <!-- Logo (Add it to the header or main section as needed) -->
-    <header style="text-align: center; margin-bottom: 20px; ">
-        <div>
+    <!-- Encabezado -->
+    <header>
+        <!-- Logo -->
+        <div class="logo">
             <a asp-action="ListarProductos">
-                <img src="~/assets/img/mishus.png" alt="Logo" style="max-width: 150px;margin-right:1200px;" />
+                <img src="~/assets/img/mishus.png" alt="Logo Michus" />
             </a>
-
-
         </div>
-        <div class="dropdown" style="position: absolute; top: 10px; right: 50px;">
-            <!-- Avatar del usuario -->
-            <img src="@avatarUrl" alt="User Avatar" class="avatar-img" style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false" />
 
-            <!-- Menú desplegable -->
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="right: 0; left: auto;">
-                <li><a class="dropdown-item" href="#">@userName</a></li>
+        <!-- Menú y avatar del usuario -->
+        <div class="dropdown">
+            <a href="@Url.Action("HistorialCompras", "Ecommerce")" class="btn btn-link text-decoration-none text-dark me-3 fw-bold">
+                <i class="fas fa-history me-1"></i>Historial de Compras
+            </a>
+            <img src="@avatarUrl" alt="User Avatar" class="avatar-img rounded-circle" style="width: 40px; height: 40px; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false" />
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item" href="@Url.Action("PerfilCliente", "LoginCli")">
+                        <i class="fas fa-user-circle me-2"></i>Perfil: @userName
+                    </a>
+
+                </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                    <form action="@Url.Action("Salir", "LoginCli")" method="post">
-                        <button type="submit" class="dropdown-item">Logout</button>
+                    <form action="@Url.Action("Salir", "LoginCli")" method="post" class="m-0">
+                        <button type="submit" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </button>
                     </form>
                 </li>
             </ul>
         </div>
     </header>
 
-    <!-- Sección para mensajes de notificación o alertas opcionales -->
-    @RenderSection("Notifications", required: false)
+    <!-- Sección principal -->
+    <div class="container my-4">
+        <div class="main-container">
+            @RenderSection("Notifications", required: false)
+            @RenderBody()
+        </div>
+    </div>
 
-    <!-- Aquí se cargará el contenido principal de cada vista -->
-    <main role="main" class="container">
-        @RenderBody()
-    </main>
-
-    <!-- Sección opcional de scripts específicos para cada vista -->
-    @RenderSection("Scripts", required: false)
-
-    <!-- Pie de página opcional -->
-
-    <footer style="text-align: center; padding: 20px; background-color: #f8f9fa;">
-        <p>&copy; 2024 Michus. derechos reservados.</p>
-        <p><a href="/privacy-policy">Privacy Policy</a> | <a href="/terms-of-service">Terms of Service</a></p>
+    <!-- Pie de página -->
+    <footer>
+        <div class="text-center">
+            <p>&copy; 2024 Michus. Todos los derechos reservados.</p>
+            <p>
+                <a href="/privacy-policy">Política de Privacidad</a> |
+                <a href="/terms-of-service">Términos de Servicio</a>
+            </p>
+        </div>
     </footer>
 
-
-
-
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
