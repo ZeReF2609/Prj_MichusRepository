@@ -137,7 +137,7 @@ namespace Michus.Controllers
 
             // Si el usuario es válido, se crea la sesión
             var claims = new List<Claim>{
-        new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+        new Claim(ClaimTypes.NameIdentifier, userId!.ToString()),
         new Claim(ClaimTypes.Name, email),
         new Claim(ClaimTypes.Role, role)
 
@@ -163,5 +163,50 @@ namespace Michus.Controllers
             Response.Cookies.Delete("Michus_Session");
             return RedirectToAction("LoginCli", "LoginCli");
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> PerfilCliente()
+        {
+            try
+                {
+                // Obtener el ID del cliente desde los claims
+                var clienteId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(clienteId))
+                {
+                    TempData["ErrorMessage"] = "No se pudo identificar al cliente. Por favor, inicie sesión.";
+                    return RedirectToAction("LoginCli");
+                }
+                if (clienteId.StartsWith("U"))
+                {
+                    clienteId = "C" + clienteId.Substring(1);
+                }
+                // Obtener el cliente usando el servicio
+                var cliente = await _loginCliService.ObtenerClientePorIdAsync(clienteId);
+
+                if (cliente == null)
+                {
+                    TempData["ErrorMessage"] = "No se encontró el cliente.";
+                    return RedirectToAction("ListarProductos", "Ecommerce");
+                }
+
+                // Cargar tipos de documento si se editan
+                var tiposDocumento = await _loginCliService.ObtenerTiposDocumentoAsync();
+                ViewBag.TipoDocumento = tiposDocumento;
+
+                return View(cliente); // Asegúrate de que la vista coincida con el modelo devuelto
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al cargar el perfil: {ex}");
+                TempData["ErrorMessage"] = "Ocurrió un error al cargar el perfil.";
+                return RedirectToAction("ListarProductos", "Ecommerce");
+            }
+        }
+
+
+
+
     }
 }
