@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "DmTFIEJOYapdE12V8wqTzWlvFYsuyq6ynmTOCF9NVjU=",
+  "Hash": "U0XLrhscyWAvcH2kjIFtOG+C+80b/WwQlRCFC6TXnE8=",
   "Source": "Michus",
   "BasePath": "_content/Michus",
   "Mode": "Default",
@@ -585,6 +585,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\bootstrap\\popper.min.js"
+    },
+    {
+      "Identity": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\wwwroot\\assets\\css\\DescuentoStyle.css",
+      "SourceId": "Michus",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\wwwroot\\",
+      "BasePath": "_content/Michus",
+      "RelativePath": "assets/css/DescuentoStyle.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\css\\DescuentoStyle.css"
     },
     {
       "Identity": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\wwwroot\\assets\\css\\LoginStyle.css",

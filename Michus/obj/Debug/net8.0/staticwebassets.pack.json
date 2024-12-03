@@ -117,6 +117,10 @@
       "PackagePath": "staticwebassets\\assets\\bootstrap\\popper.min.js"
     },
     {
+      "Id": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\wwwroot\\assets\\css\\DescuentoStyle.css",
+      "PackagePath": "staticwebassets\\assets\\css\\DescuentoStyle.css"
+    },
+    {
       "Id": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\wwwroot\\assets\\css\\LoginStyle.css",
       "PackagePath": "staticwebassets\\assets\\css\\LoginStyle.css"
     },

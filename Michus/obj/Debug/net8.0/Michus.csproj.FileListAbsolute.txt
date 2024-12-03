@@ -527,3 +527,4 @@ D:\2024_Ciclo-6\PROYECTO_INTEGRADOR\PROYECTO\Prj_MichusRepository\Michus\obj\Deb
 D:\2024_Ciclo-6\PROYECTO_INTEGRADOR\PROYECTO\Prj_MichusRepository\Michus\obj\Debug\net8.0\Michus.pdb
 D:\2024_Ciclo-6\PROYECTO_INTEGRADOR\PROYECTO\Prj_MichusRepository\Michus\obj\Debug\net8.0\Michus.genruntimeconfig.cache
 D:\2024_Ciclo-6\PROYECTO_INTEGRADOR\PROYECTO\Prj_MichusRepository\Michus\obj\Debug\net8.0\ref\Michus.dll
+D:\2024_Ciclo-6\PROYECTO_INTEGRADOR\PROYECTO\Prj_MichusRepository\Michus\bin\Debug\net8.0\Dapper.dll

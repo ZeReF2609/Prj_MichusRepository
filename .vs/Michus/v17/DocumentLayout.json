@@ -7,20 +7,8 @@
       "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\views\\descuentos\\listadescuentos.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|d:\\2024_ciclo-6\\proyecto_integrador\\proyecto\\prj_michusrepository\\michus\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|d:\\2024_ciclo-6\\proyecto_integrador\\proyecto\\prj_michusrepository\\michus\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|d:\\2024_ciclo-6\\proyecto_integrador\\proyecto\\prj_michusrepository\\michus\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|d:\\2024_ciclo-6\\proyecto_integrador\\proyecto\\prj_michusrepository\\michus\\views\\logistica\\productos.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\views\\logistica\\productos.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|d:\\2024_ciclo-6\\proyecto_integrador\\proyecto\\prj_michusrepository\\michus\\controllers\\descuentoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D393CA57-6799-4480-8451-CA33C9C523B3}|Michus\\Michus.csproj|solutionrelative:michus\\controllers\\descuentoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 202,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -43,53 +31,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\appsettings.json",
-              "RelativeDocumentMoniker": "Michus\\appsettings.json",
-              "ToolTip": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\appsettings.json",
-              "RelativeToolTip": "Michus\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-11-06T21:15:55.131Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "LoginController.cs",
-              "DocumentMoniker": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Controllers\\LoginController.cs",
-              "RelativeDocumentMoniker": "Michus\\Controllers\\LoginController.cs",
-              "ToolTip": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Controllers\\LoginController.cs",
-              "RelativeToolTip": "Michus\\Controllers\\LoginController.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "DescuentosController.cs",
+              "DocumentMoniker": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Controllers\\DescuentosController.cs",
+              "RelativeDocumentMoniker": "Michus\\Controllers\\DescuentosController.cs",
+              "ToolTip": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Controllers\\DescuentosController.cs",
+              "RelativeToolTip": "Michus\\Controllers\\DescuentosController.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAQwGQAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-06T21:15:14.219Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Program.cs",
-              "RelativeDocumentMoniker": "Michus\\Program.cs",
-              "ToolTip": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Program.cs",
-              "RelativeToolTip": "Michus\\Program.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAAAD8AAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-06T21:13:20.286Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Productos.cshtml",
-              "DocumentMoniker": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Views\\Logistica\\Productos.cshtml",
-              "RelativeDocumentMoniker": "Michus\\Views\\Logistica\\Productos.cshtml",
-              "ToolTip": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Views\\Logistica\\Productos.cshtml",
-              "RelativeToolTip": "Michus\\Views\\Logistica\\Productos.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-06T20:43:42.728Z",
+              "WhenOpened": "2024-12-03T02:34:30.039Z",
               "EditorCaption": ""
             },
             {
@@ -100,7 +49,7 @@
               "RelativeDocumentMoniker": "Michus\\Views\\Descuentos\\listadescuentos.cshtml",
               "ToolTip": "D:\\2024_Ciclo-6\\PROYECTO_INTEGRADOR\\PROYECTO\\Prj_MichusRepository\\Michus\\Views\\Descuentos\\listadescuentos.cshtml",
               "RelativeToolTip": "Michus\\Views\\Descuentos\\listadescuentos.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAMgAAAAAAAAAAAAAANQAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-11-06T20:43:31.285Z",
               "EditorCaption": ""
