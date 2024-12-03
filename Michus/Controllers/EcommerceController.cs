@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Michus.util;
+using System.Security.Claims;
 
 namespace Michus.Controllers
 {
@@ -97,13 +98,6 @@ namespace Michus.Controllers
 
 
 
-        // 2. LISTING PROMOTIONS
-
-
-
-
-
-
 
         // 3. SHOPPING CART
 
@@ -150,22 +144,139 @@ namespace Michus.Controllers
 
         // 4. CHECKOUT
 
-        public ActionResult Checkout()
+        public async Task<ActionResult> Checkout()
         {
             var cart = HttpContext.Session.GetObjectFromJson<List<Producto>>("Cart") ?? new List<Producto>();
+
+            // Cargar los métodos de pago
+            var metodosPago = new List<SelectListItem>();
+            using (SqlConnection connection = new SqlConnection(_cnx))
+            {
+                await connection.OpenAsync();
+
+                using (SqlCommand cmm = new SqlCommand("SELECT ID_METODO_PAGO, METODO FROM METODO_PAGO", connection))
+                {
+                    using (SqlDataReader rd = await cmm.ExecuteReaderAsync())
+                    {
+                        while (await rd.ReadAsync())
+                        {
+                            metodosPago.Add(new SelectListItem
+                            {
+                                Value = rd["ID_METODO_PAGO"].ToString(),
+                                Text = rd["METODO"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+
+            ViewBag.MetodosPago = metodosPago;  // Pasar los métodos de pago a la vista
+
             return View(cart);
         }
 
+
+
         [HttpPost]
-        public ActionResult ProcessPayment()
+        public async Task<ActionResult> ProcessPayment(int MetodoPago)
         {
             var cart = HttpContext.Session.GetObjectFromJson<List<Producto>>("Cart") ?? new List<Producto>();
 
-            // Payment processing logic can be added here
+            // Verificar si el carrito está vacío
+            if (cart.Count == 0)
+            {
+                TempData["ErrorMessage"] = "El carrito está vacío. No se puede completar la compra.";
+                return RedirectToAction("Cart");
+            }
 
-            HttpContext.Session.Remove("Cart"); // Clear the cart after payment
-            return RedirectToAction("ListarProductos");
+            // Obtener el ID del usuario autenticado
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["ErrorMessage"] = "No se puede identificar al usuario. Por favor, inicie sesión.";
+                return RedirectToAction("LoginCli", "LoginCli");
+            }
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_cnx))
+                {
+                    await connection.OpenAsync();
+
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Registrar la venta (cabecera) utilizando el procedimiento almacenado
+                            SqlCommand command = new SqlCommand("SP_REGISTRAR_VENTA", connection, transaction)
+                            {
+                                CommandType = CommandType.StoredProcedure
+                            };
+
+                            decimal total = cart.Sum(p => p.Precio); // Obtener el monto total de la compra
+
+                            // Parámetros para el procedimiento almacenado
+                            command.Parameters.AddWithValue("@ID_USUARIO", userId); // ID del usuario
+                            command.Parameters.AddWithValue("@MONTO_TOTAL", total); // Monto total de la venta
+                            command.Parameters.AddWithValue("@ID_METODO_PAGO", MetodoPago); // Método de pago
+
+                            // Parámetro de salida para obtener el ID de la venta
+                            SqlParameter idVentaParam = new SqlParameter("@ID_VENTA", SqlDbType.NVarChar)
+                            {
+                                Direction = ParameterDirection.Output,
+                                Size = 8 // Asegurar que el tamaño sea de 8 caracteres
+                            };
+                            command.Parameters.Add(idVentaParam);
+
+                            await command.ExecuteNonQueryAsync(); // Ejecutar el procedimiento almacenado
+
+                            // Obtener el ID de la venta generado
+                            string idVenta = (string)idVentaParam.Value;
+
+                            // Registrar los detalles de la venta
+                            // Registrar los detalles de la venta
+                            foreach (var producto in cart)
+                            {
+                                SqlCommand detailCommand = new SqlCommand("SP_REGISTRAR_DETALLE_VENTA", connection, transaction)
+                                {
+                                    CommandType = CommandType.StoredProcedure
+                                };
+                                detailCommand.Parameters.AddWithValue("@ID_VENTA", idVenta); // ID de la venta registrada
+                                detailCommand.Parameters.AddWithValue("@ID_PRODUCTO", producto.IdProducto); // ID del producto
+                                detailCommand.Parameters.AddWithValue("@CANTIDAD", 1); // Asumir cantidad 1 (puedes ajustar según sea necesario)
+                                detailCommand.Parameters.AddWithValue("@PRECIO_UNITARIO", producto.Precio); // Precio unitario
+
+                                await detailCommand.ExecuteNonQueryAsync(); // Ejecutar el detalle de la venta
+                            }
+
+
+                            // Confirmar la transacción si todo salió bien
+                            transaction.Commit();
+
+                            // Limpiar el carrito de la sesión
+                            HttpContext.Session.Remove("Cart");
+
+                            TempData["SuccessMessage"] = "Compra completada con éxito.";
+                            return RedirectToAction("ListarProductos"); // Redirigir a la página de productos
+                        }
+                        catch (Exception ex)
+                        {
+                            // Si ocurre algún error, hacer rollback y mostrar mensaje de error
+                            transaction.Rollback();
+                            TempData["ErrorMessage"] = "Ocurrió un error al procesar la compra: " + ex.Message;
+                            return RedirectToAction("Cart");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Si ocurre algún error al conectar con la base de datos, mostrar mensaje de error
+                TempData["ErrorMessage"] = "Error al conectar con la base de datos: " + ex.Message;
+                return RedirectToAction("Cart");
+            }
         }
+
 
         // HELPER METHOD TO GET A PRODUCT BY ID
 
