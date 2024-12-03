@@ -1,12 +1,240 @@
-﻿
+﻿@using Michus.Models
 @{
-    ViewData["Title"] = "ListarReserva";
+    ViewData["Title"] = "Lista de Reservas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<!-- Enlace para DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- Enlaces para Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<link rel="stylesheet" href="~/assets/css/vistasBootstrap.css">
+
 <div class="container-fluid">
-    <main class="py-2">
+    <main class="py-4">
+        <h2>Lista de Reservas</h2>
         <div class="content-container">
-            <h1>ListarReserva</h1>
+            <!-- Botón para abrir el modal de creación de reserva -->
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#crearReservaModal">Crear Reserva</button>
+
+            <!-- Tabla con DataTable -->
+            <table id="mesasTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Seleccionar</th>
+                        <th>ID Mesa</th>
+                        <th>Capacidad</th>
+                        <th>Disponibilidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se cargarían dinámicamente las mesas -->
+                    @foreach (var reservas in Model)
+                    {
+                        <tr>
+                            <td>@reservas.ID_Reserva</td>
+                            <td>@reservas.Nombre_Usuario</td>
+                            <td>@reservas.Numero_Mesa</td>
+                            <td>@reservas.Asientos</td>  
+                            <td>@reservas.Fecha_Reserva</td>
+                            <td>@reservas.Hora_Reserva</td>
+                            <td>@reservas.Estado_Mesa</td>
+                            <td>@reservas.Disponibilidad_Mesa</td>
+                            <td>@reservas.Mensaje</td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
         </div>
     </main>
 </div>
+
+<!-- Modal para Crear Reserva -->
+<div class="modal fade" id="crearReservaModal" tabindex="-1" aria-labelledby="crearReservaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="crearReservaModalLabel">Crear Reserva</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="crearReservaForm">
+                    <div class="mb-3">
+                        <label for="fechaReserva" class="form-label">Fecha de Reserva</label>
+                        <input type="date" class="form-control" id="fechaReserva" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="horaReserva" class="form-label">Hora de Reserva</label>
+                        <input type="time" class="form-control" id="horaReserva" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="cantidadPersonas" class="form-label">Cantidad de Personas</label>
+                        <input type="number" class="form-control" id="cantidadPersonas" min="1" required />
+                    </div>
+
+                    @foreach (var mesas in ViewData["Mesas"] as List<dynamic>)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input mesaCheckbox" type="checkbox" value="@mesas.ID_Mesa" data-mesa-id="@mesas.ID_Mesa" data-mesa-numero="@mesas.NumeroMesa" data-mesa-capacidad="@mesas.Asientos" data-mesa-disponibilidad="@mesas.Disponibilidad" id="mesa_@mesas.ID_Mesa">
+                            <label class="form-check-label" for="mesa_@mesas.ID_Mesa">
+                                Mesa @mesas.NumeroMesa - Capacidad: @mesas.Asientos Personas (@(mesas.Disponibilidad == "Disponible" ? "Disponible" : "Ocupada")
+
+                                )
+                            </label>
+                        </div>
+                    }
+
+
+
+                    <div class="mb-3">
+                        <h5>Mesas Seleccionadas</h5>
+                        <ul id="mesasSeleccionadas"></ul>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">Confirmar Reserva</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal para ver las Reservas -->
+<div class="modal fade" id="verReservasModal" tabindex="-1" aria-labelledby="verReservasModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="verReservasModalLabel">Lista de Reservas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul id="listaReservas"></ul> <!-- Lista de reservas -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Inicializar DataTable
+        
+
+        // Evento para seleccionar mesas
+        $('.mesaCheckbox').change(function () {
+            let mesaId = $(this).data('mesa-id');
+            let numeroMesa = $(this).data('mesa-numero');
+            let capacidad = $(this).data('mesa-capacidad');
+            let disponibilidad = $(this).data('mesa-disponibilidad');
+            let mesaInfo = `Mesa ${numeroMesa} - Capacidad: ${capacidad} Personas (${disponibilidad == 1 ? 'Disponible' : 'Ocupada'})`;
+
+            // Si la mesa está seleccionada, agregarla a la lista de seleccionadas
+            if ($(this).prop('checked')) {
+                $('#mesasSeleccionadas').append(`<li id="mesa_${mesaId}">${mesaInfo}</li>`);
+            } else {
+                // Si se deselecciona, eliminarla de la lista de seleccionadas
+                $(`#mesa_${mesaId}`).remove();
+            }
+        });
+
+        // Enviar el formulario de creación de reserva
+        $('#crearReservaForm').submit(function (e) {
+            e.preventDefault();
+
+            // Obtener las mesas seleccionadas
+            let mesasSeleccionadas = [];
+            $('.mesaCheckbox:checked').each(function () {
+                mesasSeleccionadas.push($(this).data('mesa-id'));
+            });
+
+            // Validar que se haya seleccionado al menos una mesa
+            if (mesasSeleccionadas.length === 0) {
+                alert('Debe seleccionar al menos una mesa.');
+                return;
+            }
+
+            // Obtener los datos del formulario
+            let fechaReserva = $('#fechaReserva').val();
+            let horaReserva = $('#horaReserva').val();
+            let cantidadPersonas = $('#cantidadPersonas').val();
+
+            // Validar que todos los campos estén completos
+            if (!fechaReserva || !horaReserva || !cantidadPersonas) {
+                alert('Debe completar todos los campos.');
+                return;
+            }
+
+            // Llamar al controlador para crear la reserva
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CrearReserva", "Reservas")',
+                data: {
+                    idMesa: mesasSeleccionadas.join(','), // Pasamos las mesas como una lista de IDs
+                    fechaReserva: fechaReserva,
+                    horaReserva: horaReserva,
+                    cantidadPersonas: cantidadPersonas
+                },
+                success: function (response) {
+                    // Cerrar el modal después de la acción
+                    $('#crearReservaModal').modal('hide');
+                    alert('Reserva confirmada!');
+                    location.reload(); // Recargar la página para ver la lista actualizada
+                },
+                error: function () {
+                    alert('Hubo un error al crear la reserva. Por favor intente nuevamente.');
+                }
+            });
+        });
+
+        // Llamar al controlador para obtener la lista de reservas y mostrarla en el modal
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("listar-reserva", "Reservas")',
+            success: function (reservas) {
+                console.log(reservas);  // Ver la respuesta en la consola para asegurarnos de que es un array
+                let listaReservas = $('#listaReservas');
+                listaReservas.empty(); // Limpiar la lista antes de agregar nuevas reservas
+
+                // Verificar si la respuesta es un arreglo válido
+                if (Array.isArray(reservas)) {
+                    if (reservas.length > 0) {
+                        reservas.forEach(reservas => {
+                            // Construir el contenido HTML con los datos de cada reserva
+                            let reservaHTML = `
+                            <li>
+                                        <strong>Usuario:</strong> ${reservas.nombre_Usuario}<br>
+                                    <strong>ID Reserva:</strong> ${reservas.iD_Reserva}<br>
+                                    <strong>Mesa:</strong> ${reservas.numero_Mesa}<br>
+                                    <strong>Asientos:</strong> ${reservas.asientos}<br>
+                                    <strong>Fecha:</strong> ${new Date(reservas.fecha_Reserva).toLocaleDateString()}<br>
+                                    <strong>Hora:</strong> ${reservas.hora_Reserva}<br>
+                                    <strong>Estado de la mesa:</strong> ${reservas.estado_Mesa === 0 ? 'Libre' : 'Ocupada'}<br>
+                                    <strong>Disponibilidad de la mesa:</strong> ${reservas.disponibilidad_Mesa === 0 ? 'Disponible' : 'No disponible'}<br>
+                            </li>
+                        `;
+                            // Agregar el contenido HTML a la lista
+                            listaReservas.append(reservaHTML);
+                        });
+                    } else {
+                        listaReservas.append('<li>No hay reservas.</li>');
+                    }
+                } else {
+                    alert('Error: la respuesta del servidor no es un arreglo.');
+                }
+            },
+            error: function () {
+                alert('Hubo un error al cargar las reservas.');
+            }
+        });
+    });
+</script>
