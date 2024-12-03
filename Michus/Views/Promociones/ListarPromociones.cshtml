@@ -28,6 +28,8 @@
              data-toggle="modal" data-target="#addPromoModal"
              data-id="modalAgregar" />
 
+        <button type="button" class="btn btn-primary" onclick="mostrarModalEnviarToken()">Desbloquear Interruptores</button>
+        <button type="button" class="btn btn-primary" onclick="mostrarModalValidarToken()">Validar Token</button>
 
         </div>
 
@@ -45,10 +47,15 @@
                     </div>
 
                     <!-- Interruptor -->
-                    <div class="toggle" data-toggle="modal" data-target="#modalToken" data-id="@promo.IdPromociones">
-                        <input type="checkbox" id="btn_@promo.IdPromociones" @(promo.Estado == 1 ? "checked" : "") onclick="return false;">
+                    <div class="toggle">
+                        <input type="checkbox" id="btn_@promo.IdPromociones"
+                        @(promo.Estado == 1 ? "checked" : "")
+                               onclick="event.preventDefault(); validarYMostrarModal(@promo.IdPromociones)">
                         <label for="btn_@promo.IdPromociones"></label>
                     </div>
+
+
+
 
                     <!-- Detalles de la Promoción -->
                     <div class="main">
@@ -88,29 +95,88 @@
     }
 </div>
 
-<!-- Modal -->
-<div id="modalToken" class="modal fade modal-promo" tabindex="-1" role="dialog" aria-labelledby="modalTokenTitle" aria-hidden="true">
+<!--ESTADO DE LA PROMOCION-->
+<div id="modalEstado" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEstadoTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content rounded-0">
-            <div class="modal-body p-4 px-5">
-                <div class="main-content text-center">
-                    <a href="#" class="close-btn" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><span class="icon-close2"></span></span>
-                    </a>
-                    <div class="warp-icon mb-4">
-                        <span class="icon-lock2"></span>
-                    </div>
-                    <p id="mensajeModal" class="mb-4">Revisa tu correo para encontrar el token.</p>
-                    <input type="text" id="tokenInput" class="form-control mb-3" placeholder="Ingresa tu token aquí">
-                    <input type="hidden" id="promoIdInput">
-                    <button onclick="enviarCorreo()" class="btn btn-success">Generar Token</button>
-                    <button onclick="validarToken()" class="btn btn-primary">Validar Token</button>
-                </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cambiar Estado de Promoción</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas cambiar el estado de esta promoción?</p>
+                <input type="hidden" id="promoIdInput">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="actualizarEstadoPromo()">Confirmar</button>
             </div>
         </div>
     </div>
 </div>
 
+
+
+<!-- Modal para Enviar Token -->
+<div class="modal fade" id="enviarTokenModal" tabindex="-1" role="dialog" aria-labelledby="enviarTokenModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="enviarTokenModalLabel">Enviar Token de Activación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="enviarTokenForm">
+                    <div class="form-group">
+                        <label for="correoDestino">Correo del Destinatario</label>
+                        <input type="email" class="form-control" id="correoDestino" placeholder="Ingrese el correo del destinatario" required>
+                    </div>
+                </form>
+                <div id="mensajeError" class="alert alert-danger" style="display: none;">
+                    Por favor ingrese un correo válido.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="enviarTokenBtn">Enviar Token</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal para Validar Token -->
+<div class="modal fade" id="validarTokenModal" tabindex="-1" role="dialog" aria-labelledby="validarTokenModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="validarTokenModalLabel">Validar Código de Acceso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="validarTokenForm">
+                    <div class="form-group">
+                        <label for="tokenIngresado">Código de Acceso</label>
+                        <input type="text" class="form-control" id="tokenIngresado" placeholder="Ingrese el código de acceso recibido" required>
+                    </div>
+                </form>
+                <div id="mensajeErrorToken" class="alert alert-danger" style="display: none;">
+                    El código de acceso es inválido o ha expirado.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="validarTokenBtn">Validar Token</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- Modal de Agregar Promoción -->
@@ -366,6 +432,6 @@
 
 
 
-
+    
 </script>
 <!-- Actualizado a la fecha 26/11/2024 -->

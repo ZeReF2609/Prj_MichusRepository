@@ -27,7 +27,7 @@ namespace Michus.DAO
             // Genera un token de 5 dígitos
             string token = GenerarToken();
 
-            // Almacena el token y la fecha de expiración (5 minutos desde ahora)
+            // Almacena el token y su tiempo de expiración
             TokenStore.Token = token;
             TokenStore.Expiration = DateTime.Now.AddMinutes(5);
 
@@ -38,7 +38,7 @@ namespace Michus.DAO
                 mail.From = new MailAddress(_correoOrigen);
                 mail.To.Add(destinatario);
                 mail.Subject = "Código de Acceso";
-                mail.Body = $"MAURO SE LA COME, Aquí tienes tu código de acceso: {token}";
+                mail.Body = $"Aquí tienes tu código de acceso: {token}";
 
                 // Configura el cliente SMTP
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587)
@@ -58,26 +58,32 @@ namespace Michus.DAO
             }
         }
 
+
         private string GenerarToken()
         {
             Random random = new Random();
             return random.Next(10000, 99999).ToString(); // Genera un número aleatorio de 5 dígitos
         }
 
+        public static class TokenStore
+        {
+            public static string? Token { get; set; }
+            public static DateTime Expiration { get; set; }
+        }
+
+
         public bool ValidarToken(string tokenIngresado)
         {
-            // Verifica que el token coincida y que no haya expirado
             if (TokenStore.Token == tokenIngresado && DateTime.Now <= TokenStore.Expiration)
             {
                 Console.WriteLine("Token válido.");
                 return true;
             }
-            else
-            {
-                Console.WriteLine("Token inválido o expirado.");
-                return false;
-            }
+
+            Console.WriteLine("Token inválido o expirado.");
+            return false;
         }
+
 
     }
 }

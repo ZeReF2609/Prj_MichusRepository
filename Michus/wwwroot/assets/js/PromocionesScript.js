@@ -75,60 +75,111 @@ function updatePromotionDetails() {
 
 
 
-
-function enviarCorreo() {
-    // Obtener el correo del destinatario desde el formulario o el contexto
-    let destinatario = 'josejuliosanchezcruzado1@gmail.com';  
-
-    fetch(`/Promociones/EnviarTokenPorPromocion?destinatario=${encodeURIComponent(destinatario)}`, {
-        method: 'GET',
-    })
-        .then(response => response.json())
-        .then(data => {
-            // Mostrar el mensaje en el modal o notificación
-            document.getElementById('mensajeModal').innerText = data.message || "Correo enviado correctamente.";
-            $('#exampleModalCenter').modal('show');
-        })
-        .catch(error => {
-            console.error('Error al enviar el correo:', error);
-            alert('Hubo un problema al enviar el correo.');
-        });
+// Mostrar el modal para enviar el token
+function mostrarModalEnviarToken() {
+    $('#enviarTokenModal').modal('show');
 }
 
+// Enviar el token por correo cuando se hace clic en el botón "Enviar Token"
+$('#enviarTokenBtn').click(function () {
+    var correoDestino = $('#correoDestino').val();
 
-
-function validarToken() {
-    var promoId = $('#promoIdInput').val();  
-    var token = $('#tokenInput').val(); 
-
-    // Validar que el token no esté vacío
-    if (!token) {
-        alert('Por favor ingresa un token');
-        return;
-    }
-
-    // Hacer la solicitud AJAX al backend
-    $.ajax({
-        url: '/Promociones/ValidarToken',  
-        type: 'POST',
-        data: JSON.stringify({
-            Token: token,
-            PromoId: promoId 
-        }),
-        contentType: 'application/json',
-        success: function (response) {
-            if (response.success) {
-                $('#mensajeModal').text('Token válido. ¡Promoción activada!');
-                $('#exampleModalCenter').modal('hide');
-            } else {
-                $('#mensajeModal').text('Token inválido o expirado.');
+    if (correoDestino) {
+        // Realizar la llamada AJAX para enviar el correo
+        $.ajax({
+            url: '/Promociones/EnviarTokenPorPromocion',
+            type: 'GET',
+            data: { destinatario: correoDestino },
+            success: function (response) {
+                alert('Correo enviado exitosamente con el token.');
+                $('#enviarTokenModal').modal('hide');
+            },
+            error: function (xhr, status, error) {
+                var mensaje = xhr.responseText ? xhr.responseText : 'Hubo un error al enviar el correo.';
+                alert(mensaje);
+                $('#mensajeError').show();
             }
+        });
+    } else {
+        $('#mensajeError').show();
+    }
+});
+
+
+// Mostrar el modal para validar el token
+// Variable global para rastrear si el token es válido
+let tokenValido = false;
+
+// Función para mostrar el modal para validar el token
+function mostrarModalValidarToken() {
+    $('#validarTokenModal').modal('show');
+}
+
+// Función para validar el token
+$('#validarTokenBtn').click(function () {
+    var tokenIngresado = $('#tokenIngresado').val();
+
+    if (tokenIngresado) {
+        $.ajax({
+            url: '/Promociones/ValidarToken',
+            type: 'POST',
+            data: { token: tokenIngresado },
+            success: function (response) {
+                if (response.valido) {
+                    alert('Token válido. Ahora puedes editar el estado.');
+                    tokenValido = true; // Actualizar el estado del token
+                    $('#validarTokenModal').modal('hide');
+                } else {
+                    $('#mensajeErrorToken').show(); // Mostrar mensaje de error si el token no es válido
+                }
+            },
+            error: function (xhr, status, error) {
+                var mensaje = xhr.responseText ? xhr.responseText : 'Hubo un error al validar el token.';
+                alert(mensaje);
+                $('#mensajeErrorToken').show(); // Mostrar mensaje de error
+            }
+        });
+    } else {
+        $('#mensajeErrorToken').show(); // Mostrar mensaje si no hay token ingresado
+    }
+});
+
+// Función para validar el token antes de mostrar el modal de actualización de estado
+function validarYMostrarModal(idPromocion) {
+    if (!tokenValido) {
+        alert('Debes validar el token antes de editar el estado.');
+        mostrarModalValidarToken(); // Mostrar el modal de validación de token
+    } else {
+        mostrarModal(idPromocion); // Si el token es válido, mostrar el modal de actualización
+    }
+}
+
+// Mostrar el modal para actualizar el estado
+function mostrarModal(idPromocion) {
+    $('#promoIdInput').val(idPromocion); // Asignar el ID de la promoción al input oculto
+    $('#modalEstado').modal('show'); // Mostrar el modal
+}
+
+// Función para actualizar el estado de la promoción
+function actualizarEstadoPromo() {
+    var idPromocion = $('#promoIdInput').val(); // Obtener el ID de la promoción
+
+    $.ajax({
+        url: '/Promociones/ActualizarEstadoPromo', // Ruta del método en el backend
+        type: 'POST',
+        data: { idPromocion: idPromocion },
+        success: function () {
+            alert('Estado de la promoción actualizado correctamente.');
+            $('#modalEstado').modal('hide'); // Ocultar el modal
+            location.reload(); // Recargar la página
         },
         error: function (xhr, status, error) {
-            $('#mensajeModal').text('Hubo un error al validar el token.');
+            console.error('Error:', error);
+            alert('Ocurrió un error al actualizar el estado.');
         }
     });
 }
+
 
 
 //AGREGAR PROMOCIONES A PRODUCTOS SELECCUONADOS
