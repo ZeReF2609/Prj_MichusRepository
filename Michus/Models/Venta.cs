@@ -20,4 +20,5 @@ public partial class Venta
     public virtual MetodoPago IdMetodoPagoNavigation { get; set; } = null!;
 
     public virtual Cliente? IdUsuarioNavigation { get; set; }
+    public List<VentaDetalle> Detalles { get; set; }
 }
