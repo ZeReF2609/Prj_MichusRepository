@@ -92,7 +92,7 @@ namespace Michus.Controllers
                     model.FechaNacimiento);
 
 
-                if (userId!=null)
+                if (userId != null)
                 {
                     _logger.LogInformation($"Registro exitoso para usuario ID: {userId}");
                     TempData["SuccessMessage"] = "Registro exitoso. Por favor, inicie sesión.";
@@ -140,7 +140,7 @@ namespace Michus.Controllers
         new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
         new Claim(ClaimTypes.Name, email),
         new Claim(ClaimTypes.Role, role)
-              
+
 
         };
             ViewBag.email = email;
