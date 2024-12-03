@@ -1,4 +1,4 @@
-﻿/* Estilos del contenedor principal */
+/* Estilos del contenedor principal */
 .discount-manager {
     max-width: 1200px;
     margin: 20px auto;
@@ -308,6 +308,18 @@ p {
         margin: 0 5px;
     }
 
+
+/* Estilo para la tabla */
+/* Contenedor para la tabla desplazable */
+.scrollable-container {
+    max-height: 150px; /* Altura máxima para el área desplazable */
+    overflow-y: auto; /* Habilita desplazamiento vertical */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    position: relative;
+}
+
 /* Estilo para la tabla */
 .custom-table {
     width: 100%;
@@ -315,23 +327,24 @@ p {
     text-align: left;
     background-color: #343a40;
     color: #ffffff;
+    table-layout: fixed;
 }
 
     .custom-table thead {
         background-color: #212529;
-
+        position: sticky; 
+        top: 0; 
+        z-index: 10;
     }
 
-    .custom-table th {
-        padding: 10px;
-        border: 1px solid #495057;
-        text-align: left;
-        font-weight: bold;
-    }
-
+    .custom-table th,
     .custom-table td {
         padding: 10px;
         border: 1px solid #495057;
+        text-align: left;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .custom-table tbody tr:nth-child(odd) {
@@ -343,18 +356,7 @@ p {
         cursor: pointer;
     }
 
-.scrollable-container {
-    max-height: 150px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
 
-.scrollable-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-}
 
 
 /* Botones de DESACTIVA o ACTIVAR */
@@ -392,3 +394,86 @@ p {
         background-color: #a00000; 
         transform: scale(1.1);
     }
+
+    /*-- MODAL CREAR */
+/* Formulario modal con grid */
+.modal-form {
+    margin-top: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    grid-gap: 20px; /* Espaciado entre filas y columnas */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group label {
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-group input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        width: 100%;
+    }
+
+/* Botón estilizado */
+.styled-button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: #28a745;
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+    .styled-button:hover {
+        background-color: #218838;
+        transform: scale(1.05);
+    }
+
+/* Estilo general para los select */
+.select-custom {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: #f8f9fa;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .select-custom:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        outline: none;
+    }
+
+
+
+.select-custom {
+    background-color: #fff;
+    color: #333;
+    font-weight: bold;
+}
+
+.scrollable-table {
+    max-height: calc(5 * 40px); /* Calcula la altura para 5 filas */
+    overflow-y: auto; /* Permite el scroll vertical */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    position: relative;
+}
