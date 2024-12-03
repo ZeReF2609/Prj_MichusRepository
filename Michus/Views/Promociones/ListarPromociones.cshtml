@@ -21,17 +21,27 @@
          style="background-color: #393153; border: 1px solid #444; border-radius: 10px; color: white; display: inline-flex; margin-left: 60px;">
             <h3 class="m-0" style="margin-left: 10px;">Promociones Disponibles</h3>
 
-        <img id="agregar" src="~/assets/img/addPromociones.png"
-             width="50px" height="50px"
-             style="cursor:pointer; object-fit: cover;
-                margin-left: 20px; margin-right: 10px; margin-top: 4px;"
-             data-toggle="modal" data-target="#addPromoModal"
-             data-id="modalAgregar" />
+            <img id="agregar" src="~/assets/img/addPromociones.png"
+                 width="50px" height="50px"
+                 style="cursor:pointer; object-fit: cover;
+                    margin-left: 20px; margin-right: 10px; margin-top: 4px;"
+                 data-toggle="modal" data-target="#addPromoModal"
+                 data-id="modalAgregar" />
 
-        <button type="button" class="btn btn-primary" onclick="mostrarModalEnviarToken()">Desbloquear Interruptores</button>
-        <button type="button" class="btn btn-primary" onclick="mostrarModalValidarToken()">Validar Token</button>
+       
 
         </div>
+
+    <div class="d-flex mt-1" style="margin-left: 80%; width: 300px; margin-top:-50px;">
+        <button type="button" class="btn btn-success d-flex align-items-center" style="width: 100px; height:50px; margin-right: 10px;" onclick="mostrarModalEnviarToken()">
+            <i class="fas fa-lock-open mr-2"></i> Desbloquear Interruptores
+        </button>
+
+        <button type="button" class="btn btn-warning d-flex align-items-center" style="width: 100px; height:50px;" onclick="mostrarModalValidarToken()">
+            <i class="fas fa-key mr-2"></i> Validar Token
+        </button>
+    </div>
+
 
 
     @if (ViewBag.Promociones != null && ViewBag.Promociones.Count > 0)
@@ -95,88 +105,109 @@
     }
 </div>
 
+
 <!--ESTADO DE LA PROMOCION-->
 <div id="modalEstado" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEstadoTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Cambiar Estado de Promoción</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <div class="modal-content" style="border-radius: 10px; box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);">
+            <div class="modal-header" style="background-color: ##c7c7c7; color: #212529; border-bottom: none; height: 50px;">
+                <h5 class="modal-title" style="font-weight: bold; text-align: center;">Cambiar Estado de Promoción</h5>
             </div>
-            <div class="modal-body">
-                <p>¿Estás seguro de que deseas cambiar el estado de esta promoción?</p>
+            <div class="modal-body" style="font-family: Arial, sans-serif; font-size: 15px; color: #333; line-height: 1.5;">
+                <p style="margin-bottom: 20px; text-align: center;">¿Estás seguro de que deseas cambiar el estado de esta promoción?</p>
                 <input type="hidden" id="promoIdInput">
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="actualizarEstadoPromo()">Confirmar</button>
+            <div class="modal-footer" style="border-top: none; display: flex; justify-content: space-between;">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        style="background-color: #6c757d; color: white; border: none; border-radius: 5px; padding: 8px 20px; transition: background-color 0.3s;"
+                        onmouseover="this.style.backgroundColor='#5a6268'"
+                        onmouseout="this.style.backgroundColor='#6c757d'">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" onclick="actualizarEstadoPromo()"
+                        style="background-color: #007bff; color: white; border: none; border-radius: 5px; padding: 8px 20px; transition: background-color 0.3s;"
+                        onmouseover="this.style.backgroundColor='#0056b3'"
+                        onmouseout="this.style.backgroundColor='#007bff'">
+                    Confirmar
+                </button>
             </div>
         </div>
     </div>
 </div>
+
 
 
 
 <!-- Modal para Enviar Token -->
 <div class="modal fade" id="enviarTokenModal" tabindex="-1" role="dialog" aria-labelledby="enviarTokenModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 10px; box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);">
+            <div class="modal-header" style="background-color: #007bff; color: white; border-bottom: none; height: 40px;">
                 <h5 class="modal-title" id="enviarTokenModalLabel">Enviar Token de Activación</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="font-family: Arial, sans-serif; color: #333;">
                 <form id="enviarTokenForm">
                     <div class="form-group">
-                        <label for="correoDestino">Correo del Destinatario</label>
-                        <input type="email" class="form-control" id="correoDestino" placeholder="Ingrese el correo del destinatario" required>
+                        <input type="email" class="form-control" id="correoDestino"
+                               placeholder="Ingrese el correo del destinatario" required>
                     </div>
                 </form>
-                <div id="mensajeError" class="alert alert-danger" style="display: none;">
+                <div id="mensajeError" class="alert alert-danger mt-3" style="display: none;">
                     Por favor ingrese un correo válido.
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="enviarTokenBtn">Enviar Token</button>
+            <div class="modal-footer" style="border-top: none;">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        style="background-color: #6c757d; color: white; border-radius: 5px; border: none; padding: 8px 20px; transition: background-color 0.3s;">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" id="enviarTokenBtn"
+                        style="background-color: #007bff; color: white; border-radius: 5px; border: none; padding: 8px 20px; transition: background-color 0.3s;">
+                    Enviar Token
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+
 
 
 <!-- Modal para Validar Token -->
 <div class="modal fade" id="validarTokenModal" tabindex="-1" role="dialog" aria-labelledby="validarTokenModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="validarTokenModalLabel">Validar Código de Acceso</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 10px; box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);">
+            <div class="modal-header" style="background-color: #28a745; color: white; border-bottom: none; height: 40px;">
+                <h5 class="modal-title" id="validarTokenModalLabel" style="font-weight: bold;">Validar Código de Acceso</h5>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="font-family: Arial, sans-serif; color: #333;">
                 <form id="validarTokenForm">
                     <div class="form-group">
-                        <label for="tokenIngresado">Código de Acceso</label>
-                        <input type="text" class="form-control" id="tokenIngresado" placeholder="Ingrese el código de acceso recibido" required>
+                        <label for="tokenIngresado" style="font-weight: bold;">Código de Acceso</label>
+                        <input type="text" class="form-control" id="tokenIngresado"
+                               placeholder="Ingrese el código de acceso recibido" required
+                               style="border: 1px solid #ccc; border-radius: 5px; padding: 8px;">
                     </div>
                 </form>
-                <div id="mensajeErrorToken" class="alert alert-danger" style="display: none;">
+                <div id="mensajeErrorToken" class="alert alert-danger mt-3"
+                     style="display: none; font-size: 14px; text-align: center; border-radius: 5px;">
                     El código de acceso es inválido o ha expirado.
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="validarTokenBtn">Validar Token</button>
+            <div class="modal-footer" style="border-top: none;">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        style="background-color: #6c757d; color: white; border-radius: 5px; border: none; padding: 8px 20px; transition: background-color 0.3s;">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-success" id="validarTokenBtn"
+                        style="background-color: #28a745; color: white; border-radius: 5px; border: none; padding: 8px 20px; transition: background-color 0.3s;">
+                    Validar Token
+                </button>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <!-- Modal de Agregar Promoción -->
