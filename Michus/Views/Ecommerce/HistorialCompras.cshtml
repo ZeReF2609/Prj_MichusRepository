@@ -1,0 +1,97 @@
+﻿@model List<Michus.Models.Venta>
+
+@{
+    Layout = "~/Views/Shared/layoutVentaEcommerce.cshtml";
+    ViewData["Title"] = "Historial de Compras";
+}
+
+<div class="container my-4">
+    <h1 class="text-center mb-4">Historial de Compras</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>ID Venta</th>
+                    <th>Fecha</th>
+                    <th>Monto Total</th>
+                    <th>Método de Pago</th>
+                    <th>Estado</th>
+                    <th>Detalles</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var venta in Model)
+                {
+                    <tr>
+                        <td class="text-center">@venta.IdVenta</td>
+                        <td>@venta.FechaVenta.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@venta.MontoTotal.ToString("C")</td>
+                        <td>
+                            @if (venta.IdMetodoPagoNavigation != null)
+                            {
+                                @venta.IdMetodoPagoNavigation.Metodo
+                            }
+                            else
+                            {
+                                <span class="text-muted">No disponible</span>
+                            }
+                        </td>
+                        <td>
+                            @if (venta.Estado == 1)
+                            {
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i>Completada
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    <i class="fas fa-clock me-1"></i>Pendiente
+                                </span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-info" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#detalles-@venta.IdVenta" aria-expanded="false">
+                                <i class="fas fa-list me-1"></i>Ver Productos
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="p-0">
+                            <div class="collapse" id="detalles-@venta.IdVenta">
+                                <div class="card card-body">
+                                    <h6 class="text-center text-primary mb-3">Productos Comprados</h6>
+                                    <table class="table table-sm table-striped mb-0">
+                                        <thead>
+                                            <tr class="table-secondary text-center">
+                                                <th>Producto</th>
+                                                <th>Cantidad</th>
+                                                <th>Precio Unitario</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var detalle in venta.Detalles)
+                                            {
+                                                <tr>
+                                                    <td>@detalle.NombreProducto</td>
+                                                    <td class="text-center">@detalle.Cantidad</td>
+                                                    <td>@detalle.PrecioUnitario.ToString("C")</td>
+                                                    <td>@(detalle.Cantidad * detalle.PrecioUnitario)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
