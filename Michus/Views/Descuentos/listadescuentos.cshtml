@@ -197,9 +197,9 @@
                             ? JSON.stringify(data.idEvento)
                             : 'NO APLICA';
 
-                        const categorias = Array.isArray(data.Categorias)
-                            ? data.Categorias
-                            : JSON.parse(data.Categorias || '[]');
+                        const categorias = Array.isArray(data.categorias)
+                            ? data.categorias
+                            : JSON.parse(data.categorias || '[]');
 
                         const categoriasHTML = categorias.map(cat =>
                             `<tr>
@@ -208,9 +208,9 @@
                         </tr>`
                         ).join('');
 
-                        const productos = Array.isArray(data.Productos)
-                            ? data.Productos
-                            : JSON.parse(data.Productos || '[]');
+                        const productos = Array.isArray(data.productos)
+                            ? data.productos
+                            : JSON.parse(data.productos || '[]');
 
                         const productosHTML = productos.map(prod =>
                             `<tr>
@@ -226,17 +226,17 @@
                         // Insertar los detalles en el modal
                         document.getElementById('discount-details-content').innerHTML = `
                         <div>
-                            <h3>Descuento: ${data.IdDescuento}</h3>
+                            <h3>Descuento: ${data.idDescuento}</h3>
                             <p>Promoción: ${promocion}</p>
                             <p>Evento: ${evento}</p>
-                            <p>Desde: ${data.FechaInicio ? new Date(data.FechaInicio).toLocaleDateString() : 'NO APLICA'}</p>
-                            <p>Hasta: ${data.FechaFin ? new Date(data.FechaFin).toLocaleDateString() : 'NO APLICA'}</p>
+                            <p>Desde: ${data.fechaInicio ? new Date(data.fechaInicio).toLocaleDateString() : 'NO APLICA'}</p>
+                            <p>Hasta: ${data.fechaFin ? new Date(data.fechaFin).toLocaleDateString() : 'NO APLICA'}</p>
                             <p>
-                                ${data.TipoDescuento == 1
-                                ? `Descuento Fijo: S/. ${data.PrecioDescuento}`
-                                : `Descuento Porcentual: ${data.PrecioDescuento}%`}
+                                ${data.tipoDescuento == 1
+                                ? `Descuento Fijo: S/. ${data.precioDescuento}`
+                                : `Descuento Porcentual: ${data.precioDescuento}%`}
                             </p>
-                            <p>TI_SITU: ${data.TI_SITU}</p>
+                            <p>TI_SITU: ${data.tI_SITU}</p>
                         </div>
                         <div style="display: flex; gap: 20px; margin-top: 20px;">
                             <div style="flex: 1;">
