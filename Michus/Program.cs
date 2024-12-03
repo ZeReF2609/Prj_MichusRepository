@@ -23,10 +23,11 @@ builder.Services.AddScoped<MenuService>(provider =>
     return new MenuService(connectionString);
 });
 
-builder.Services.AddScoped<ProductoDAO>(provider =>
+builder.Services.AddScoped<ProductoDao>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
-    return new ProductoDAO(configuration);
+    var connectionString = configuration.GetConnectionString("cn1");
+    return new ProductoDao(connectionString);
 });
 
 builder.Services.AddScoped<LoginCliService>(provider =>
@@ -47,18 +48,18 @@ builder.Services.AddDbContext<MichusContext>(options =>
 // Agregar controladores y vistas
 builder.Services.AddControllersWithViews();
 
-// Configuraci髇 de autenticaci髇 y cookies
+// Configuraci贸n de autenticaci贸n y cookies
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/LoginCli/LoginCli"; // Ruta de inicio de sesi髇
-        options.LogoutPath = "/LoginCli/Salir"; // Ruta de cierre de sesi髇
+        options.LoginPath = "/LoginCli/LoginCli"; // Ruta de inicio de sesi贸n
+        options.LogoutPath = "/LoginCli/Salir"; // Ruta de cierre de sesi贸n
         options.AccessDeniedPath = "/LoginCli/LoginCli"; // Ruta de acceso denegado
         options.Cookie.Name = "Michus_Session";
         options.ExpireTimeSpan = TimeSpan.FromHours(24);
     });
 
-// Configuraci髇 de sesi髇
+// Configuraci贸n de sesi贸n
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -68,7 +69,7 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Configuraci髇 del entorno
+// Configuraci贸n del entorno
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -78,12 +79,12 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseRouting();
 
-// Usar autenticaci髇, autorizaci髇 y sesi髇
+// Usar autenticaci贸n, autorizaci贸n y sesi贸n
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
-// Configuraci髇 de rutas
+// Configuraci贸n de rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ecommerce}/{action=ListarProductos}/{id?}");
