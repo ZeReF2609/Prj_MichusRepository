@@ -19,7 +19,4 @@ public partial class Reserva
 
     public DateTime? FechaActualizacion { get; set; }
 
-    public virtual Mesa IdUsuario1 { get; set; } = null!;
-
-    public virtual Cliente IdUsuarioNavigation { get; set; } = null!;
 }

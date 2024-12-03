@@ -943,16 +943,6 @@ public partial class MichusContext : DbContext
             entity.Property(e => e.TiSitu)
                 .HasDefaultValue(1)
                 .HasColumnName("TI_SITU");
-
-            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Reservas)
-                .HasForeignKey(d => d.IdUsuario)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RESERVA__ID_USUA__14270015");
-
-            entity.HasOne(d => d.IdUsuario1).WithMany(p => p.Reservas)
-                .HasForeignKey(d => d.IdUsuario)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RESERVA__ID_USUA__151B244E");
         });
 
         modelBuilder.Entity<Role>(entity =>

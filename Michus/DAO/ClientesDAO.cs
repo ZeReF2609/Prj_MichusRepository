@@ -291,7 +291,7 @@ namespace Michus.DAO
                     command.Parameters.AddWithValue("@EMAIL", email ?? (object)DBNull.Value); // @EMAIL
 
                     // Abrir conexión y ejecutar el comando
-                    connection.Open();
+                    connection.Open();  
                     int rowsAffected = command.ExecuteNonQuery();
 
                     try
@@ -304,7 +304,7 @@ namespace Michus.DAO
                     {
                         Console.WriteLine($"Error al actualizar cliente: {ex.Message}");
                         return false;
-                    }
+                    }   
                 }
             }
         }
