@@ -51,9 +51,9 @@
                         <td>@producto.Precio.ToString("C")</td>
                         <td>@(producto.Estado == 1 ? "Activo" : "Inactivo")</td>
                         <td>
-                            @if (!string.IsNullOrEmpty(producto.Imagen))
+                            @if (!string.IsNullOrEmpty(producto.IdProducto))
                             {
-                                <img src="@producto.Imagen" alt="Imagen del producto" class="img-thumbnail" style="max-width: 100px; object-fit:cover;" />
+                                <img src="~/assets/imagen/@(producto.IdProducto).jpg" class="img-thumbnail" style="max-width: 100px; object-fit:cover;" />
                             }
                             else
                             {
