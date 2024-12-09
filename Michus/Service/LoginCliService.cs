@@ -4,8 +4,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Michus.Service
@@ -56,6 +58,19 @@ namespace Michus.Service
             return tiposDocumento;
         }
 
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
 
         public async Task<(string message, string? userId, string role)> ValidarUsuarioAsync(string email, string password)
         {
@@ -65,6 +80,9 @@ namespace Michus.Service
 
             try
             {
+                // Hash the password for verification
+                string hashedPassword = HashPassword(password);
+
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
@@ -73,14 +91,14 @@ namespace Michus.Service
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@p_email", email);
-                        command.Parameters.AddWithValue("@p_password", password);
+                        command.Parameters.AddWithValue("@p_password", hashedPassword);
 
                         using (var reader = await command.ExecuteReaderAsync())
                         {
                             if (reader.Read())
                             {
-                                userId = reader.GetString(0);  // Asumiendo que ID_USUARIO es un entero
-                                role = reader.GetString(3);  // Asumiendo que el rol está en la 4ta columna
+                                userId = reader.GetString(0);
+                                role = reader.GetString(3);
                             }
                             else
                             {
@@ -101,25 +119,26 @@ namespace Michus.Service
 
 
 
-        // Método para registrar cliente y usuario en una transacción
         public async Task<(string message, string? userId)> RegisterClientAsync(
-       string email,
-       string password,
-       string nombres,
-       string apellidos,
-       string userType,
-       string role,
-       string avatarUrl,
-       string idCliente,
-       int idDoc,
-       string docIdent,
-       DateTime fechaNacimiento)
+         string emailre,
+         string passwordre,
+         string nombres,
+         string apellidos,
+         string userType,
+         string role,
+         string avatarUrl,
+         string idCliente,
+         int idDoc,
+         string docIdent,
+         DateTime fechaNacimiento)
         {
             string message = string.Empty;
             string? userId = null;
 
             try
             {
+                string hashedPassword = HashPassword(passwordre);
+
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
@@ -127,21 +146,9 @@ namespace Michus.Service
                     {
                         try
                         {
-                            _logger.LogInformation($"Iniciando transacción de registro para cliente {idCliente}, tipo documento: {idDoc}");
 
-                            // Validar si el email ya existe
-                            using (var checkEmailCommand = new SqlCommand("sp_check_email_exists", connection, transaction))
-                            {
-                                checkEmailCommand.CommandType = CommandType.StoredProcedure;
-                                checkEmailCommand.Parameters.AddWithValue("@p_email", email);
-                                var emailExists = (int)await checkEmailCommand.ExecuteScalarAsync();
-                                if (emailExists > 0)
-                                {
-                                    return ("El correo electrónico ya está registrado.", null);
-                                }
-                            }
 
-                            // Registro en tabla Cliente
+                            // 2. Then, register the client
                             using (var clientCommand = new SqlCommand("sp_register_cliente", connection, transaction))
                             {
                                 clientCommand.CommandType = CommandType.StoredProcedure;
@@ -169,19 +176,17 @@ namespace Michus.Service
                             }
 
 
-                            // Registro en tabla UsuarioSistema
+                            // 1. First, register the user
                             using (var userCommand = new SqlCommand("sp_register_usuario", connection, transaction))
                             {
                                 userCommand.CommandType = CommandType.StoredProcedure;
 
-                                // Agregar los parámetros de entrada
-                                userCommand.Parameters.AddWithValue("@p_email", email);
-                                userCommand.Parameters.AddWithValue("@p_password", password); // Considerar hashear el password antes de guardarlo
+                                userCommand.Parameters.AddWithValue("@p_email", emailre);
+                                userCommand.Parameters.AddWithValue("@p_password", hashedPassword);
                                 userCommand.Parameters.AddWithValue("@p_userType", userType);
                                 userCommand.Parameters.AddWithValue("@p_role", "R05");
                                 userCommand.Parameters.AddWithValue("@p_avatarUrl", avatarUrl);
 
-                                // Agregar los parámetros de salida
                                 var messageParam = new SqlParameter("@p_message", SqlDbType.NVarChar, 100)
                                 {
                                     Direction = ParameterDirection.Output
@@ -194,31 +199,21 @@ namespace Michus.Service
                                 userCommand.Parameters.Add(messageParam);
                                 userCommand.Parameters.Add(userIdParam);
 
-                                // Ejecutar el procedimiento almacenado
                                 await userCommand.ExecuteNonQueryAsync();
 
-                                // Obtener el valor del mensaje de salida
                                 message = messageParam.Value?.ToString() ?? string.Empty;
+                                userId = userIdParam.Value?.ToString();
 
-                                // Obtener el valor del ID de usuario recién creado
-                                userId = userIdParam.Value.ToString();
-
-                                // Si el ID de usuario es válido, commit de la transacción
-                                if (userId != null)
+                                if (string.IsNullOrEmpty(userId))
                                 {
-                                    _logger.LogInformation($"Usuario registrado exitosamente: {userId}");
-                                    transaction.Commit();
-                                    return ("Registro exitoso", userId);
-                                }
-                                else
-                                {
-                                    // Si no se obtiene un ID de usuario, hacer rollback y retornar mensaje de error
                                     transaction.Rollback();
                                     return ("Error al registrar el usuario", null);
                                 }
                             }
 
-
+                            transaction.Commit();
+                            _logger.LogInformation($"Usuario y cliente registrados exitosamente. UserId: {userId}");
+                            return ("Registro exitoso", userId);
                         }
                         catch (SqlException sqlEx)
                         {
@@ -285,7 +280,7 @@ namespace Michus.Service
                                     Apellidos = reader.GetString(2),
                                     IdDoc = reader.GetInt32(3),
                                     DocIdent = reader.GetString(4),
-                                    FechaNacimiento =DateOnly.FromDateTime(reader.GetDateTime(5)), // Conversión corregida
+                                    FechaNacimiento = DateOnly.FromDateTime(reader.GetDateTime(5)), // Conversión corregida
                                     FechaRegistro = reader.IsDBNull(6) ? null : reader.GetDateTime(6),
                                     FechaUltimaCompra = reader.IsDBNull(7) ? null : reader.GetDateTime(7),
                                     NivelFidelidad = reader.GetByte(8),
