@@ -78,9 +78,13 @@
 
         <!-- Menú y avatar del usuario -->
         <div class="dropdown">
-            <a href="@Url.Action("HistorialCompras", "Ecommerce")" class="btn btn-link text-decoration-none text-dark me-3 fw-bold">
+            <a id="historialcompra" href="@Url.Action("HistorialCompras", "Ecommerce")" class="btn btn-link text-decoration-none text-dark me-3 fw-bold">
                 <i class="fas fa-history me-1"></i>Historial de Compras
             </a>
+            <a href="@Url.Action("Reservas", "Ecommerce")" class="btn btn-link text-decoration-none text-dark me-3 fw-bold">
+                <i class="fas fa-calendar-check me-1"></i>Hacer Reserva
+            </a>
+
             <img src="@avatarUrl" alt="User Avatar" class="avatar-img rounded-circle" style="width: 40px; height: 40px; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false" />
             <ul class="dropdown-menu dropdown-menu-end">
                 <li>
