@@ -3,12 +3,20 @@ using Michus.Service;
 using Michus.DAO;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configurar DbContext
 builder.Services.AddDbContext<MichusContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("cn1")));
+
+// Configuración de Autorización
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("R01")); // Solo usuarios con rol R01 pueden acceder
+});
 
 // Configurar los servicios y el DbContext
 builder.Services.AddScoped<LoginService>(provider =>
@@ -77,7 +85,6 @@ builder.Services.AddScoped<LoginCliService>(provider =>
     return new LoginCliService(connectionString, logger);
 });
 
-
 builder.Services.AddScoped<EmpleadoDAO>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
@@ -92,24 +99,32 @@ builder.Services.AddScoped<ReservasDAO>(provider =>
     return new ReservasDAO(connectionString);
 });
 
-//servicio para el envio del correo
+// Servicio para el envío del correo
 builder.Services.AddTransient<CorreoHelper>();
 
 // Agregar controladores y vistas
 builder.Services.AddControllersWithViews();
 
-// Configuraci�n de autenticaci�n y cookies
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/LoginCli/LoginCli"; // Ruta de inicio de sesi�n
-        options.LogoutPath = "/LoginCli/Salir"; // Ruta de cierre de sesi�n
-        options.AccessDeniedPath = "/LoginCli/LoginCli"; // Ruta de acceso denegado
-        options.Cookie.Name = "Michus_Session";
-        options.ExpireTimeSpan = TimeSpan.FromHours(24);
-    });
+// Configuración de autenticación y cookies
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.LoginPath = "/LoginCli/LoginCli"; // Ruta de inicio de sesión
+    options.LogoutPath = "/LoginCli/Salir"; // Ruta de cierre de sesión
+    options.AccessDeniedPath = "/LoginCli/LoginCli"; // Ruta de acceso denegado
+    options.Cookie.Name = "Michus_Session";
+    options.ExpireTimeSpan = TimeSpan.FromHours(24);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
 
-// Configuraci�n de sesi�n
+// Configuración de sesión
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -125,12 +140,16 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+else
+{
+    app.UseDeveloperExceptionPage();
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Usar autenticaci�n, autorizaci�n y sesi�n
+// Usar autenticación, autorización y sesión
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
@@ -139,5 +158,16 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ecommerce}/{action=ListarProductos}/{id?}");
+
+// Agregar middleware personalizado para manejar acceso denegado
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == 403) // Acceso Denegado
+    {
+        context.Response.Redirect("/LoginCli/LoginCli");
+    }
+});
 
 app.Run();
