@@ -132,7 +132,7 @@ namespace Michus.DAO
             command.Parameters.AddWithValue("@DIRECCION", direccion ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@USUARIO", usuario ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@EMAIL", email ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@CONTRASENIA", EncriptarContrasenia(contrasenia));
+            command.Parameters.AddWithValue("@CONTRASENIA", (contrasenia) ?? (object)DBNull.Value);
 
             try
             {
@@ -167,12 +167,6 @@ namespace Michus.DAO
             }
 
             throw new Exception("Formato inválido en el ID del cliente."); 
-        }
-        private string EncriptarContrasenia(string contrasenia)
-        {
-            using var sha256 = SHA256.Create();
-            var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contrasenia));
-            return Convert.ToBase64String(bytes); // Convertimos el hash en un formato legible
         }
         public ClienteCompleto ObtenerClientePorId(string idCliente)
         {

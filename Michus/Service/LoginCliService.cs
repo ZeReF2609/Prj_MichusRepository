@@ -58,20 +58,6 @@ namespace Michus.Service
             return tiposDocumento;
         }
 
-        private string HashPassword(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
-            }
-        }
-
         public async Task<(string message, string? userId, string role)> ValidarUsuarioAsync(string email, string password)
         {
             string message = string.Empty;
@@ -80,9 +66,6 @@ namespace Michus.Service
 
             try
             {
-                // Hash the password for verification
-                string hashedPassword = HashPassword(password);
-
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
@@ -90,21 +73,37 @@ namespace Michus.Service
                     using (var command = new SqlCommand("sp_validar_usuario", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@p_email", email);
-                        command.Parameters.AddWithValue("@p_password", hashedPassword);
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        // Parámetros de entrada
+                        command.Parameters.AddWithValue("@p_email", email);
+                        command.Parameters.AddWithValue("@p_password", password);
+
+                        // Parámetros de salida
+                        var messageParam = new SqlParameter("@p_mensaje", SqlDbType.VarChar, 100)
                         {
-                            if (reader.Read())
-                            {
-                                userId = reader.GetString(0);
-                                role = reader.GetString(3);
-                            }
-                            else
-                            {
-                                message = "Usuario o contraseña incorrectos.";
-                            }
-                        }
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(messageParam);
+
+                        var userIdParam = new SqlParameter("@p_userId", SqlDbType.VarChar, 5)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(userIdParam);
+
+                        var roleParam = new SqlParameter("@p_role", SqlDbType.VarChar, 50)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(roleParam);
+
+                        // Ejecutar el comando
+                        await command.ExecuteNonQueryAsync();
+
+                        // Obtener los resultados de los parámetros de salida
+                        message = messageParam.Value.ToString();
+                        userId = userIdParam.Value.ToString();
+                        role = roleParam.Value.ToString();
                     }
                 }
             }
@@ -116,6 +115,7 @@ namespace Michus.Service
 
             return (message, userId, role);
         }
+
 
 
 
@@ -137,8 +137,6 @@ namespace Michus.Service
 
             try
             {
-                string hashedPassword = HashPassword(passwordre);
-
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
@@ -182,7 +180,7 @@ namespace Michus.Service
                                 userCommand.CommandType = CommandType.StoredProcedure;
 
                                 userCommand.Parameters.AddWithValue("@p_email", emailre);
-                                userCommand.Parameters.AddWithValue("@p_password", hashedPassword);
+                                userCommand.Parameters.AddWithValue("@p_password", passwordre);
                                 userCommand.Parameters.AddWithValue("@p_userType", userType);
                                 userCommand.Parameters.AddWithValue("@p_role", "R05");
                                 userCommand.Parameters.AddWithValue("@p_avatarUrl", avatarUrl);
@@ -236,8 +234,6 @@ namespace Michus.Service
                 return ("Error en la conexión con el servidor.", null);
             }
         }
-
-
 
         private string GetFriendlyErrorMessage(SqlException ex)
         {

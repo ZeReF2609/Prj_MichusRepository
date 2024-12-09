@@ -113,8 +113,6 @@ namespace Michus.Controllers
             }
         }
 
-
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> LoginCli(string email, string password)
         {
@@ -129,29 +127,40 @@ namespace Michus.Controllers
             // Llamada al servicio para validar el usuario
             var (message, userId, role) = await _loginCliService.ValidarUsuarioAsync(email, password);
 
-            if (!string.IsNullOrEmpty(message))
+            // Verificar el mensaje de respuesta del servicio
+            if (message != "Inicio de sesión exitoso")
             {
                 TempData["ErrorMessage"] = message;
                 return View();
             }
 
+            // Verificar si el userId o el rol son nulos o vacíos
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
+            {
+                TempData["ErrorMessage"] = "Error en los datos del usuario, por favor intente nuevamente.";
+                return View();
+            }
+
             // Si el usuario es válido, se crea la sesión
-            var claims = new List<Claim>{
-        new Claim(ClaimTypes.NameIdentifier, userId!.ToString()),
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, userId),
         new Claim(ClaimTypes.Name, email),
         new Claim(ClaimTypes.Role, role)
+    };
 
-
-        };
             ViewBag.email = email;
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
+            // Iniciar sesión con la cookie de autenticación
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
+            // Redirigir a la página de productos después de un inicio de sesión exitoso
             return RedirectToAction("ListarProductos", "Ecommerce");
         }
+
 
 
 
