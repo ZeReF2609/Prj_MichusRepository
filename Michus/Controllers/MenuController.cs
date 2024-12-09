@@ -11,16 +11,15 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Michus.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")] // Solo accesible para usuarios con la política 'AdminOnly'
     public class MenuController : Controller
     {
         private readonly MenuService _menuService;
-
         private readonly IConfiguration _configuration;
+
         public MenuController(MenuService menuService, IConfiguration configuration)
         {
             _configuration = configuration;
@@ -35,28 +34,28 @@ namespace Michus.Controllers
             {
                 await connection.OpenAsync();
 
-                // Get total sales
+                // Obtener total de ventas
                 await using (var command = new SqlCommand("SP_GetTotalSales", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     dashboardViewModel.TotalSales = Convert.ToInt32(await command.ExecuteScalarAsync());
                 }
 
-                // Get total products
+                // Obtener total de productos
                 await using (var command = new SqlCommand("SP_GetTotalProducts", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     dashboardViewModel.TotalProducts = Convert.ToInt32(await command.ExecuteScalarAsync());
                 }
 
-                // Get total clients
+                // Obtener total de clientes
                 await using (var command = new SqlCommand("SP_GetTotalClients", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     dashboardViewModel.TotalClients = Convert.ToInt32(await command.ExecuteScalarAsync());
                 }
 
-                // Get product count by category
+                // Obtener cantidad de productos por categoría
                 dashboardViewModel.ProductCountByCategory = new List<CategoryProductCount>();
                 await using (var command = new SqlCommand("SP_GetProductCountByCategory", connection))
                 {
@@ -72,7 +71,7 @@ namespace Michus.Controllers
                     }
                 }
 
-                // Get total product value by category
+                // Obtener valor total de productos por categoría
                 dashboardViewModel.ProductValueByCategory = new List<CategoryProductValue>();
                 await using (var command = new SqlCommand("SP_GetTotalProductValueByCategory", connection))
                 {
@@ -88,17 +87,17 @@ namespace Michus.Controllers
                     }
                 }
             }
+
             SetNoCacheHeaders();
 
-            // Carga los datos del menú según el rol del usuario actual
+            // Carga el menú dinámico según el rol del usuario
             await LoadMenuDataAsync();
             return View(dashboardViewModel);
         }
 
-
         private string GetCurrentRoleId()
         {
-            // Obtiene el ID del rol del usuario, si está disponible
+            // Obtiene el rol actual del usuario autenticado
             var roleIdClaim = User.FindFirst(ClaimTypes.Role);
             return roleIdClaim?.Value ?? string.Empty;
         }
@@ -107,7 +106,6 @@ namespace Michus.Controllers
         {
             string roleId = GetCurrentRoleId();
 
-            // Si el rol no está disponible, establece los elementos de menú como vacíos para evitar errores
             if (string.IsNullOrEmpty(roleId))
             {
                 ViewData["MenuItems"] = "[]";
@@ -116,7 +114,6 @@ namespace Michus.Controllers
 
             var menuJson = await _menuService.GetMenusJsonByRoleAsync(roleId);
 
-            // Verifica si el JSON es válido, en caso contrario, define un menú vacío
             if (string.IsNullOrEmpty(menuJson) || !IsValidJson(menuJson))
             {
                 menuJson = "[]";
@@ -146,5 +143,3 @@ namespace Michus.Controllers
         }
     }
 }
-
-//ACTUALIZADO A LA FECHA 26/11/2024
