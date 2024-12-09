@@ -79,8 +79,8 @@ namespace Michus.Controllers
                 _logger.LogInformation(model.ToString());
 
                 var (message, userId) = await _loginCliService.RegisterClientAsync(
-                    model.Email,
-                    model.Password,
+                    model.Emailre,
+                    model.Passwordre,
                     model.Nombres,
                     model.Apellidos,
                     "cliente", // userType
@@ -169,7 +169,7 @@ namespace Michus.Controllers
         public async Task<IActionResult> PerfilCliente()
         {
             try
-                {
+            {
                 // Obtener el ID del cliente desde los claims
                 var clienteId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
