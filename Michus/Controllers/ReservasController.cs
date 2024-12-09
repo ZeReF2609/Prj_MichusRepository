@@ -20,153 +20,77 @@ namespace Michus.Controllers
             _reservasDAO = reservasDAO;
         }
 
-        // Acción para listar todas las reservas
         [HttpGet]
         [Route("Reservas/listar-reserva")]
         public async Task<ActionResult> ListarReserva()
         {
+            var reservas = _reservasDAO.ListarReservas();
+
+            var mesas = ListarMesas();
+
             await LoadMenuDataAsync();
 
-            var reservas = _reservasDAO.ListarReservas().ToList();
+            ViewData["Mesas"] = mesas;
 
-            var mesas = _reservasDAO.ListarMesas().ToList();
-
-            // Depuración
-            if (mesas == null)
-            {
-                Console.WriteLine("Las mesas son null.");
-            }
-            else if (mesas.Count == 0)
-            {
-                Console.WriteLine("No hay mesas disponibles.");
-            }
-            else
-            {
-                Console.WriteLine($"Se encontraron {mesas.Count} mesas.");
-            }
-
-            // Pasar las reservas y mesas al modelo de la vista
-            ViewData["Mesas"] = mesas; // Asegúrate de pasar las mesas con "Mesas" (con mayúscula)
-
-            return View(reservas);  // Esto devolverá una vista con la lista de reservas
+            return View(reservas);
         }
 
-        // Acción para crear una reserva
+        public ActionResult CrearReserva(string nombreUsuario, string idMesa, DateOnly fechaReserva, TimeOnly horaReserva, int cantidadPersonas)
+        {
+            try
+            {
+                // Llamamos al DAO para crear la reserva
+                var reservaCreada = _reservasDAO.CrearReserva(nombreUsuario, idMesa, fechaReserva, horaReserva, cantidadPersonas);
+
+                // Si la reserva se creó correctamente
+                if (reservaCreada)
+                {
+                    return Json(new { success = true, mensaje = "Reserva creada exitosamente." });
+                }
+                else
+                {
+                    // Si la reserva no se creó correctamente
+                    return Json(new { success = false, mensaje = "Error al procesar la solicitud." });
+                }
+            }
+            catch (Exception ex)
+            {
+                // En caso de un error inesperado, retornamos un mensaje de error
+                return StatusCode(500, new { success = false, mensaje = "Error al procesar la solicitud", error = ex.Message });
+            }
+        }
+
         [HttpPost]
-        [Route("Reservas/crear-reserva")]
-        public async Task<ActionResult> CrearReserva(string idMesa, DateOnly fechaReserva, TimeOnly horaReserva, int cantidadPersonas)
+        public ActionResult LiberarMesa(string idReserva)
         {
-            await LoadMenuDataAsync();
-
-            string nombreUsuario = GetCurrentUser(); // Obtener el nombre del usuario actual desde el claim
-
-            // Llamar al método de DAO para crear la reserva
-            bool resultado = _reservasDAO.CrearReserva(nombreUsuario, idMesa, fechaReserva, horaReserva, cantidadPersonas);
-
-            // Verificar el resultado
-            if (resultado)
+            try
             {
-                // Redirigir a la lista de reservas
-                return RedirectToAction("ListarReserva");
+                // Llamar al método del DAO para liberar la mesa
+                var mesaLiberada = _reservasDAO.LiberarMesa(idReserva);
+
+                if (mesaLiberada)
+                {
+                    return Json(new { success = true, mensaje = "Mesa liberada exitosamente." });
+                }
+                else
+                {
+                    return Json(new { success = false, mensaje = "Error al liberar la mesa." });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // En caso de error, pasar el mensaje a la vista
-                ViewData["ErrorMessage"] = "No se pudo crear la reserva. Por favor, intente nuevamente.";
-                return View();
+                return StatusCode(500, new { success = false, mensaje = "Error al procesar la solicitud", error = ex.Message });
             }
         }
 
-        // Acción para liberar una mesa
-        [HttpPost]
-        [Route("Reservas/liberar-mesa")]
-        public async Task<ActionResult> LiberarMesa(string nombreUsuario, string idMesa)
+        public ActionResult ListarMesas()
         {
-            await LoadMenuDataAsync();
+            var mesas = _reservasDAO.ListarMesas();
 
-            // Llamar al DAO para liberar la mesa
-            bool resultado = _reservasDAO.LiberarMesa(nombreUsuario, idMesa);
-
-            // Verificar el resultado
-            if (resultado)
-            {
-                // Redirigir a la lista de reservas
-                return RedirectToAction("ListarReserva");
-            }
-            else
-            {
-                // En caso de error, pasar el mensaje a la vista
-                ViewData["ErrorMessage"] = "No se pudo liberar la mesa. Por favor, intente nuevamente.";
-                return View();
-            }
+            return Json(mesas);
         }
 
-        // Acción para verificar la disponibilidad de una mesa
-        [HttpGet]
-        [Route("Reservas/verificar-disponibilidad")]
-        public async Task<ActionResult> VerificarDisponibilidad(string idMesa)
-        {
-            await LoadMenuDataAsync();
 
-            // Llamar al DAO para verificar disponibilidad
-            bool resultado = _reservasDAO.VerificarDisponibilidadMesa(idMesa);
-
-            // Pasar el resultado a la vista
-            ViewData["DisponibilidadMessage"] = resultado ? "La mesa está disponible." : "La mesa no está disponible.";
-            return View();
-        }
-
-        // Acción para actualizar una reserva
-        [HttpPost]
-        [Route("Reservas/actualizar-reserva")]
-        public async Task<ActionResult> ActualizarReserva(string idReserva, DateOnly? fechaReserva, TimeOnly? horaReserva, int? cantidadPersonas)
-        {
-            await LoadMenuDataAsync();
-
-            string nombreUsuario = GetCurrentUser(); // Obtener el nombre del usuario actual desde el claim
-
-            // Llamar al DAO para actualizar la reserva
-            bool resultado = _reservasDAO.ActualizarReserva(idReserva, nombreUsuario, fechaReserva, horaReserva, cantidadPersonas);
-
-            // Verificar el resultado
-            if (resultado)
-            {
-                // Redirigir a la lista de reservas
-                return RedirectToAction("ListarReserva");
-            }
-            else
-            {
-                // En caso de error, pasar el mensaje a la vista
-                ViewData["ErrorMessage"] = "No se pudo actualizar la reserva. Por favor, intente nuevamente.";
-                return View();
-            }
-        }
-
-        // Acción para eliminar una reserva
-        [HttpPost]
-        [Route("Reservas/eliminar-reserva")]
-        public async Task<ActionResult> EliminarReserva(string idReserva)
-        {
-            await LoadMenuDataAsync();
-
-            // Llamar al DAO para eliminar la reserva
-            bool resultado = _reservasDAO.EliminarReserva(idReserva);
-
-            // Verificar el resultado
-            if (resultado)
-            {
-                // Redirigir a la lista de reservas
-                return RedirectToAction("ListarReserva");
-            }
-            else
-            {
-                // En caso de error, pasar el mensaje a la vista
-                ViewData["ErrorMessage"] = "No se pudo eliminar la reserva. Por favor, intente nuevamente.";
-                return View();
-            }
-        }
-
-        // Método para cargar los datos del menú
         private async Task LoadMenuDataAsync()
         {
             string roleId = GetCurrentRoleId();
@@ -174,32 +98,10 @@ namespace Michus.Controllers
             ViewData["MenuItems"] = string.IsNullOrEmpty(menuJson) ? "[]" : menuJson;
         }
 
-        // Acción para listar todas las mesas
-        [HttpGet]
-        [Route("Reservas/listar-mesas")]
-        public async Task<ActionResult> ListarMesas()
-        {
-            await LoadMenuDataAsync();  // Cargar el menú de datos
-
-            // Obtener la lista de mesas desde el DAO
-            var mesas = _reservasDAO.ListarMesas().ToList();
-
-            // Pasar las mesas a la vista
-            return View(mesas);
-        }
-
-        // Método para obtener el rol del usuario actual
         private string GetCurrentRoleId()
         {
             var roleIdClaim = User.FindFirst(ClaimTypes.Role);
             return roleIdClaim?.Value ?? string.Empty;
-        }
-
-        // Método para obtener el nombre del usuario actual desde los claims
-        private string GetCurrentUser()
-        {
-            var usernameClaim = User.FindFirst(ClaimTypes.Name);
-            return usernameClaim?.Value ?? string.Empty;
         }
     }
 }
