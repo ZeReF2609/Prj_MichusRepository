@@ -128,7 +128,7 @@ namespace Michus.DAO
             command.Parameters.AddWithValue("@DIRECCION", direccion ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@USUARIO", usuario ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@EMAIL", email ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@CONTRASENIA", EncriptarContrasenia(contrasenia));
+            command.Parameters.AddWithValue("@CONTRASENIA", contrasenia ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@ROL", rol ?? (object)DBNull.Value);  
             command.Parameters.AddWithValue("@TIPO_CUENTA", tipoCuenta);  
             command.Parameters.AddWithValue("@NUMERO_CUENTA", numeroCuenta ?? (object)DBNull.Value); 
@@ -345,12 +345,6 @@ namespace Michus.DAO
             }
 
             throw new Exception("Formato inválido en el ID del Empleado.");
-        }
-        private string EncriptarContrasenia(string contrasenia)
-        {
-            using var sha256 = SHA256.Create();
-            var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contrasenia));
-            return Convert.ToBase64String(bytes);
         }
     }
 }
