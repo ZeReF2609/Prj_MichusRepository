@@ -58,6 +58,8 @@ namespace Michus.Service
             return tiposDocumento;
         }
 
+
+
         public async Task<(string message, string? userId, string role)> ValidarUsuarioAsync(string email, string password)
         {
             string message = string.Empty;
@@ -117,138 +119,73 @@ namespace Michus.Service
         }
 
 
-
-
-        public async Task<(string message, string? userId)> RegisterClientAsync(
-         string emailre,
-         string passwordre,
-         string nombres,
-         string apellidos,
-         string userType,
-         string role,
-         string avatarUrl,
-         string idCliente,
-         int idDoc,
-         string docIdent,
-         DateTime fechaNacimiento)
+        public bool RegisterClientAsync(string usuario, string email, string contrasenia, string nombres, string apellidos, int idDoc, string docIdent, DateTime fechaNacimiento, int accion)
         {
-            string message = string.Empty;
-            string? userId = null;
+            string idCliente = GenerarIdCliente();
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            using var command = new SqlCommand("sp_CRUD_Clientes", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            // Parámetros de entrada
+            command.Parameters.AddWithValue("@ACCION", 1);
+            command.Parameters.AddWithValue("@ID_CLIENTE", idCliente);
+            command.Parameters.AddWithValue("@NOMBRES", nombres ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@APELLIDOS", apellidos ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@ID_DOC", idDoc);
+            command.Parameters.AddWithValue("@DOC_IDENT", docIdent ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@FECHA_NACIMIENTO", fechaNacimiento);
+            command.Parameters.AddWithValue("@NIVEL_FIDELIDAD", "0");
+            command.Parameters.AddWithValue("@PUNTOS_FIDELIDAD", "0");
+            command.Parameters.AddWithValue("@TELEFONO", "000");
+            command.Parameters.AddWithValue("@DIRECCION","Sin Direccion");
+            command.Parameters.AddWithValue("@USUARIO", "Cliente" ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@EMAIL", email ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@CONTRASENIA", (contrasenia) ?? (object)DBNull.Value);
 
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    await connection.OpenAsync();
-                    using (var transaction = connection.BeginTransaction())
-                    {
-                        try
-                        {
-
-
-                            // 2. Then, register the client
-                            using (var clientCommand = new SqlCommand("sp_register_cliente", connection, transaction))
-                            {
-                                clientCommand.CommandType = CommandType.StoredProcedure;
-
-                                // Agregar parámetros de entrada
-                                clientCommand.Parameters.AddWithValue("@p_nombres", nombres);
-                                clientCommand.Parameters.AddWithValue("@p_apellidos", apellidos);
-                                clientCommand.Parameters.AddWithValue("@p_docIdent", docIdent);
-                                clientCommand.Parameters.AddWithValue("@p_fechaNacimiento", fechaNacimiento);
-                                clientCommand.Parameters.AddWithValue("@p_idDoc", idDoc);
-
-                                // Parámetro de salida @p_idCliente
-                                var idClienteParam = new SqlParameter("@p_idCliente", SqlDbType.VarChar, 5)
-                                {
-                                    Direction = ParameterDirection.Output
-                                };
-                                clientCommand.Parameters.Add(idClienteParam);
-
-                                // Ejecutar el procedimiento
-                                await clientCommand.ExecuteNonQueryAsync();
-
-                                // Obtener el valor generado de @p_idCliente
-                                idCliente = idClienteParam.Value?.ToString();
-                                _logger.LogInformation($"Cliente registrado exitosamente: {idCliente}");
-                            }
-
-
-                            // 1. First, register the user
-                            using (var userCommand = new SqlCommand("sp_register_usuario", connection, transaction))
-                            {
-                                userCommand.CommandType = CommandType.StoredProcedure;
-
-                                userCommand.Parameters.AddWithValue("@p_email", emailre);
-                                userCommand.Parameters.AddWithValue("@p_password", passwordre);
-                                userCommand.Parameters.AddWithValue("@p_userType", userType);
-                                userCommand.Parameters.AddWithValue("@p_role", "R05");
-                                userCommand.Parameters.AddWithValue("@p_avatarUrl", avatarUrl);
-
-                                var messageParam = new SqlParameter("@p_message", SqlDbType.NVarChar, 100)
-                                {
-                                    Direction = ParameterDirection.Output
-                                };
-                                var userIdParam = new SqlParameter("@p_userId", SqlDbType.VarChar, 5)
-                                {
-                                    Direction = ParameterDirection.Output
-                                };
-
-                                userCommand.Parameters.Add(messageParam);
-                                userCommand.Parameters.Add(userIdParam);
-
-                                await userCommand.ExecuteNonQueryAsync();
-
-                                message = messageParam.Value?.ToString() ?? string.Empty;
-                                userId = userIdParam.Value?.ToString();
-
-                                if (string.IsNullOrEmpty(userId))
-                                {
-                                    transaction.Rollback();
-                                    return ("Error al registrar el usuario", null);
-                                }
-                            }
-
-                            transaction.Commit();
-                            _logger.LogInformation($"Usuario y cliente registrados exitosamente. UserId: {userId}");
-                            return ("Registro exitoso", userId);
-                        }
-                        catch (SqlException sqlEx)
-                        {
-                            _logger.LogError($"Error SQL en registro: {sqlEx.Message}, Número: {sqlEx.Number}");
-                            transaction.Rollback();
-                            return (GetFriendlyErrorMessage(sqlEx), null);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError($"Error general en registro: {ex.Message}");
-                            transaction.Rollback();
-                            return ("Error en el registro de usuario y cliente.", null);
-                        }
-                    }
-                }
+                // Ejecutamos el procedimiento almacenado
+                command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error en conexión: {ex.Message}");
-                return ("Error en la conexión con el servidor.", null);
+                Console.WriteLine($"Error al insertar cliente: {ex.Message}");
+                return false;
             }
         }
 
-        private string GetFriendlyErrorMessage(SqlException ex)
+
+        private string GenerarIdCliente()
         {
-            switch (ex.Number)
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            using var command = new SqlCommand("SELECT TOP 1 ID_CLIENTE FROM CLIENTES ORDER BY ID_CLIENTE DESC", connection);
+            var ultimoId = command.ExecuteScalar() as string;
+
+            if (string.IsNullOrEmpty(ultimoId))
             {
-                case 2627: // Unique constraint error
-                    return "Ya existe un registro con estos datos.";
-                case 547:  // Foreign key violation
-                    return "El tipo de documento seleccionado no es válido.";
-                case 2601: // Duplicate key error
-                    return "Ya existe un registro con estos datos.";
-                default:
-                    return "Ha ocurrido un error en el registro.";
+                return "C001";
             }
+
+            var numeroStr = ultimoId.Substring(1);
+            if (int.TryParse(numeroStr, out int numero))
+            {
+                return $"C{(numero + 1):D3}";
+            }
+
+            throw new Exception("Formato inválido en el ID del cliente.");
         }
+
+
+
+        
 
         ///
         public async Task<Cliente?> ObtenerClientePorIdAsync(string idCliente)
