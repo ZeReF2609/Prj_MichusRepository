@@ -2,7 +2,7 @@
 {
     public class ClienteRegistroModel
     {
-        public string Emailre { get; set; }
+        public string? Emailre { get; set; }
         public string Passwordre { get; set; }
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
