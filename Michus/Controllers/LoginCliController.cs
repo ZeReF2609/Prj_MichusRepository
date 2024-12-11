@@ -64,54 +64,59 @@ namespace Michus.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> RegistrarCliente(ClienteRegistroModel model)
+        public IActionResult RegistrarCliente(ClienteRegistroModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-                TempData["ErrorMessage"] = "Por favor, corrija los siguientes errores: " + string.Join(", ", errors);
-                // Recargar los tipos de documento para la vista
-                ViewBag.TipoDocumento = await _loginCliService.ObtenerTiposDocumentoAsync();
-            }
 
+
+            ViewBag.TipoDocumento = _loginCliService.ObtenerTiposDocumentoAsync().Result;
             try
             {
                 _logger.LogInformation(model.ToString());
 
-                var (message, userId) = await _loginCliService.RegisterClientAsync(
-                    model.Emailre,
-                    model.Passwordre,
-                    model.Nombres,
-                    model.Apellidos,
-                    "cliente", // userType
-                    "User",    // role
-                    "/images/default-avatar.png", // avatarUrl
-                    model.IdCliente,
-                    model.IdDoc,
-                    model.DocIdent,
-                    model.FechaNacimiento);
+                // Validación de campos nulos y asignación de valores predeterminados
+                var idCliente = model.IdCliente ?? Guid.NewGuid().ToString();
+                var email = model.Emailre ?? string.Empty;
+                var contrasenia = model.Passwordre ?? string.Empty;
+                var nombres = model.Nombres ?? "Sin Nombre";
+                var apellidos = model.Apellidos ?? "Sin Apellidos";
+                var idDoc = model.IdDoc != 0 ? model.IdDoc : -1; // Asignar un ID de documento predeterminado si es 0
+                var docIdent = model.DocIdent ?? "Sin Documento";
+                var fechaNacimiento = model.FechaNacimiento != DateTime.MinValue ? model.FechaNacimiento : DateTime.Now;
 
+                // Llamada al servicio con parámetros
+                bool isRegistered = _loginCliService.RegisterClientAsync(
+                    idCliente,         // ID_CLIENTE
+                    email,             // EMAIL
+                    contrasenia,       // CONTRASENIA
+                    nombres,           // NOMBRES
+                    apellidos,         // APELLIDOS
+                    idDoc,             // ID_DOC
+                    docIdent,          // DOC_IDENT
+                    fechaNacimiento,   // FECHA_NACIMIENTO
+                    1                  // ACCION
+                );
 
-                if (userId != null)
+                if (isRegistered)
                 {
-                    _logger.LogInformation($"Registro exitoso para usuario ID: {userId}");
+                    _logger.LogInformation("Registro exitoso para usuario");
                     TempData["SuccessMessage"] = "Registro exitoso. Por favor, inicie sesión.";
                     return RedirectToAction("LoginCli", "LoginCli");
                 }
 
-                _logger.LogWarning($"Fallo en el registro: {message}");
-                TempData["ErrorMessage"] = message;
-                ViewBag.TipoDocumento = await _loginCliService.ObtenerTiposDocumentoAsync();
+                _logger.LogWarning("Fallo en el registro");
+                TempData["ErrorMessage"] = "No se pudo completar el registro.";
+                ViewBag.TipoDocumento = _loginCliService.ObtenerTiposDocumentoAsync().Result;
                 return View("LoginCli");
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error no controlado en registro: {ex}");
                 TempData["ErrorMessage"] = "Ha ocurrido un error inesperado. Por favor, intente nuevamente.";
-                ViewBag.TipoDocumento = await _loginCliService.ObtenerTiposDocumentoAsync();
+                ViewBag.TipoDocumento = _loginCliService.ObtenerTiposDocumentoAsync().Result;
                 return View("LoginCli");
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> LoginCli(string email, string password)
