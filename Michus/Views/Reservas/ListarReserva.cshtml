@@ -15,7 +15,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <link rel="stylesheet" href="~/assets/css/vistasBootstrap.css">
-
+<link rel="stylesheet" href="~/assets/css/Reservas.css">
 <div class="container-fluid">
     <main class="py-4">
         <div class="content-container">
@@ -130,13 +130,20 @@
             <div class="modal-body">
                 <form id="crearReservaForm">
                     <div class="mb-3">
-                        <label for="nombreUsuario" class="form-label">Nombre del Usuario</label>
-                        <input type="text" class="form-control" id="nombreUsuario" name="nombreUsuario" required>
+                        <label for="correoUsuario" class="form-label">Correo Electrónico</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                            <input type="email" class="form-control" id="correoUsuario" name="correoUsuario" 
+                                   placeholder="usuario@ejemplo.com"
+                                   required>
+                            <div class="invalid-feedback">
+                                Por favor, ingrese un correo electrónico válido.
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="idMesa" class="form-label">Mesa</label>
                         <select class="form-select" id="idMesa" name="idMesa" required>
-
                         </select>
                     </div>
                     <div class="mb-3">
@@ -234,7 +241,7 @@
             event.preventDefault();
 
             var formData = {
-                nombreUsuario: $('#nombreUsuario').val(),
+                nombreUsuario: $('#correoUsuario').val(),
                 idMesa: $('#idMesa').val(),
                 fechaReserva: $('#fechaReserva').val(),
                 horaReserva: $('#horaReserva').val(),

@@ -16,7 +16,7 @@ namespace Michus.DAO
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-        private bool EjecutarSP(int accion, string? nombreUsuario, string idMesa, DateOnly? fechaReserva, TimeOnly? horaReserva, int? cantidadPersonas, string? idReserva = null)
+        private object EjecutarSP(int accion, string? nombreUsuario, string idMesa, DateOnly? fechaReserva, TimeOnly? horaReserva, int? cantidadPersonas, string? idReserva = null)
         {
             try
             {
@@ -25,7 +25,6 @@ namespace Michus.DAO
                     connection.Open();
                     var parameters = new DynamicParameters();
                     parameters.Add("@Accion", accion);
-
                     parameters.Add("@Nombre_Usuario", string.IsNullOrEmpty(nombreUsuario) ? null : nombreUsuario);
                     parameters.Add("@ID_Mesa", string.IsNullOrEmpty(idMesa) ? null : idMesa);
                     parameters.Add("@Fecha_Reserva", fechaReserva.HasValue ? (object)fechaReserva.Value.ToString("yyyy-MM-dd") : null);
@@ -33,24 +32,54 @@ namespace Michus.DAO
                     parameters.Add("@Cantidad_Personas", cantidadPersonas.HasValue ? (object)cantidadPersonas.Value : null);
                     parameters.Add("@ID_Reserva", string.IsNullOrEmpty(idReserva) ? null : idReserva);
 
-
-                    var rowsAffected = connection.Execute("SP_Reservas", parameters, commandType: CommandType.StoredProcedure);
-
-                    return true;
+                    using (var result = connection.ExecuteReader("SP_Reservas", parameters, commandType: CommandType.StoredProcedure))
+                    {
+                        if (accion == 1) 
+                        {
+                            while (result.Read())
+                            {
+                                var mensaje = result["Mensaje"].ToString();
+                                if (mensaje == "Reserva creada exitosamente.")
+                                {
+                                    var idReservaGenerado = result["ID_Reserva"].ToString();  
+                                    return idReservaGenerado; 
+                                }
+                            }
+                            return null; 
+                        }
+                        else if (accion == 2) 
+                        {
+                            return null;
+                        }
+                        else if (accion == 3) 
+                        {
+                            while (result.Read())
+                            {
+                                var mensaje = result["Mensaje"].ToString();
+                                if (mensaje == "Mesa liberada exitosamente.")
+                                {
+                                    return true;
+                                }
+                            }
+                            return true;  
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en la ejecución del SP: {ex.Message}");
-                return false;
+                return false; 
             }
+
+            return null;
         }
 
-
-        public bool CrearReserva(string nombreUsuario, string idMesa, DateOnly fechaReserva, TimeOnly horaReserva, int cantidadPersonas, string? idReserva = null)
+        public object CrearReserva(string nombreUsuario, string idMesa, DateOnly fechaReserva, TimeOnly horaReserva, int cantidadPersonas, string? idReserva = null)
         {
-            return EjecutarSP(1, nombreUsuario, idMesa, fechaReserva, horaReserva, cantidadPersonas,idReserva);
+            return EjecutarSP(1, nombreUsuario, idMesa, fechaReserva, horaReserva, cantidadPersonas, idReserva);
         }
+
         public IEnumerable<dynamic> ListarReservas(string? idReserva = null)
         {
             try
@@ -68,16 +97,15 @@ namespace Michus.DAO
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                return new List<dynamic>(); 
+                return new List<dynamic>();
             }
         }
 
-        public bool LiberarMesa(string idReserva)
+        public object LiberarMesa(string idReserva)
         {
             return EjecutarSP(3, null, null, null, null, null, idReserva);
         }
 
-        // Método para listar mesas
         public IEnumerable<dynamic> ListarMesas()
         {
             try

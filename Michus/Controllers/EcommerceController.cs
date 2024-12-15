@@ -436,7 +436,6 @@ using System.Net;
                 return Json(resultado);
             }
 
-            // Preparar la llamada al SP para crear la reserva
             using (SqlConnection connection = new SqlConnection(_cnx))
             {
                 try
@@ -467,7 +466,7 @@ using System.Net;
                                 if (mensaje == "Reserva creada exitosamente.")
                                 {
                                     // Obtener el ID de la reserva (como string)
-                                    var idReserva = result["ID_Reserva"].ToString();  // Aquí lo tratamos como string
+                                    var idReserva = result["ID_Reserva"].ToString();
 
                                     // Enviar correo de confirmación
                                     await EnviarCorreoConfirmacion(reserva.CorreoElectronico, idReserva, fecha, hora, _env);
